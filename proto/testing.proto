@@ -1,17 +1,17 @@
-package bacs.api.pb;
+package bacs.api.pb.testing;
 
 import "settings.proto";
 
 message SolutionTesting
 {
-    repeated TestGroupSettings profile = 1;
+    repeated settings.TestGroupSettings profile = 1;
     repeated TestGroup test_group = 2;
 }
 
 message TestGroup
 {
     required string id = 1;
-    required TestGroupSettings settings = 2;
+    required settings.TestGroupSettings settings = 2;
     repeated TestQuery test_set = 3;
 }
 
