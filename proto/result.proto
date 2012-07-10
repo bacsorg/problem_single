@@ -1,0 +1,72 @@
+package bacs.api.pb.result;
+
+import "resource.proto";
+
+message Result
+{
+    required BuildResult build = 1;
+    repeated TestGroupResult test_group = 2;
+}
+
+message BuildResult
+{
+    required Execution execution = 1;
+    required bytes output = 2;
+}
+
+message Execution
+{
+    enum Status
+    {
+        ABNORMAL_EXIT = 0;
+        OK = 1;
+    }
+    message Terminated
+    {
+        message RlimitExceeded
+        {
+            required ResourceId rlimit = 1;
+        }
+        message SecurityViolation
+        {
+            required string violation = 1;
+        }
+        optional RlimitExceeded exceeded = 1;
+        optional SecurityViolation security = 2;
+    }
+    required Status status = 1;
+    optional Terminated terminated = 2;
+    repeated Resource rusage = 3;
+    optional bytes full = 4;
+}
+
+message TestGroupResult
+{
+    required string id = 1;
+    repeated TestResult test = 2;
+}
+
+message TestResult
+{
+    message Checking
+    {
+        enum Status
+        {
+            OK = 0;
+            WRONG_ANSWER = 1;
+            PRESENTATION_ERROR = 2;
+            FAIL_TEST = 3;
+        }
+        required Status status = 1;
+        required bytes output = 2;
+    }
+    message File
+    {
+        required string id = 1;
+        required bytes data = 2;
+    }
+    required string id = 1;
+    required Execution execution = 2;
+    optional Checking checking = 3;
+    repeated File file = 4;
+}
