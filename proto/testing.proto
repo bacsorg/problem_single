@@ -1,0 +1,33 @@
+package bacs.api.pb;
+
+import "settings.proto";
+
+message SolutionTesting
+{
+    repeated TestGroupSettings profile = 1;
+    repeated TestGroup test_group = 2;
+}
+
+message TestGroup
+{
+    required string id = 1;
+    required TestGroupSettings settings = 2;
+    repeated TestQuery test_set = 3;
+}
+
+message TestQuery
+{
+    optional string id = 1;
+    optional string wildcard = 2;
+    optional RegexQuery regex = 3;
+}
+
+message RegexQuery
+{
+    enum RegexFlag
+    {
+        IGNORE_CASE = 0;
+    }
+    repeated RegexFlag flag = 1;
+    required string value = 2;
+}
