@@ -40,6 +40,17 @@ message Execution
     {
         repeated string arg = 1;
     }
+    message Redirection
+    {
+        enum Stream
+        {
+            STDIN = 0;
+            STDOUT = 1;
+            STDERR = 2;
+        }
+        required Stream stream = 3;
+        required string file_id = 2;
+    }
     optional Argv argv = 1;
     optional Path cwd = 2;
     repeated Redirection redirection = 3;
