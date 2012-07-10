@@ -1,0 +1,83 @@
+package bacs.api.pb.problem;
+
+import "settings.proto";
+import "testing.proto";
+
+message Problem
+{
+    required Info info = 1;
+    required Tests tests = 2;
+    required Statement statement = 3;
+    required Profiles profiles = 4;
+    required Utilities utilities = 5;
+}
+
+message Info
+{
+    message Name
+    {
+        required string lang = 1;
+        required string value = 2;
+    }
+    message System
+    {
+        required bytes hash = 1;
+        required string package = 2;
+    }
+    repeated Name name = 1;
+    repeated string author = 2;
+    optional string source = 3;
+    repeated string maintainer = 4;
+    repeated string restriction = 5;
+    required System system = 6;
+}
+
+message Tests
+{
+    message Data
+    {
+        enum Format
+        {
+            BINARY = 0;
+            TEXT = 1;
+        }
+        required string id = 1;
+        required Format format = 2;
+    }
+    repeated Data data_set = 1;
+    repeated string test_set = 2;
+}
+
+message Statement
+{
+    message Version
+    {
+        required string lang = 1;
+        required string format = 2;
+        required string package = 3;
+    }
+    repeated Version version = 1;
+}
+
+message Profile
+{
+    optional string description = 1;
+    required testing.TestGroup test_group = 2;
+}
+
+message Profiles
+{
+    repeated settings.TestGroupSettings common_profile = 1;
+    repeated Profile profile = 2;
+}
+
+message Utilities
+{
+    required Utility checker = 1;
+    optional Utility validator = 2;
+}
+
+message Utility
+{
+    required string builder = 1;
+}
