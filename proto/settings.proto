@@ -1,0 +1,75 @@
+package bacs.api.pb;
+
+import "resource.proto";
+
+message TestGroupSettings
+{
+    required string id = 1;
+    repeated string base = 2;
+    repeated Rlimit rlimit = 3;
+    required Run run = 4;
+    repeated File file = 5;
+    required Execution execution = 6;
+}
+
+message Run
+{
+    enum Security
+    {
+        OFF = 0;
+        ON = 1;
+    }
+    enum Order
+    {
+        NUMERIC = 0;
+        LEXICOGRAPHICAL = 1;
+    }
+    enum Algorithm
+    {
+        ALL = 0;
+        WHILE_NOT_FAIL = 1;
+    }
+    required Security security = 1;
+    required Order order = 2;
+    required Algorithm algorithm = 3;
+}
+
+message Execution
+{
+    message Argv
+    {
+        repeated string arg = 1;
+    }
+    optional Argv argv = 1;
+    optional Path cwd = 2;
+    repeated Redirection redirection = 3;
+}
+
+/// Filesystem path.
+message Path
+{
+    /// If specified, path is absolute, otherwise -- relative.
+    optional string root = 1;
+    /// Path elements, will be concatenated using OS-specific delimiter.
+    repeated string element = 2;
+}
+
+message File
+{
+    enum OpenMode
+    {
+        READ = 0;
+        WRITE = 1;
+        EXECUTE = 2;
+    }
+    message Range
+    {
+        optional int64 begin = 1;
+        optional int64 end = 2;
+    }
+    required string id = 1;
+    repeated OpenMode mode = 2;
+    optional /*DataId*/string init = 3;
+    optional Path path = 4;
+    optional Range receive = 5;
+}
