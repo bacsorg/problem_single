@@ -9,15 +9,7 @@ enum ResourceId
     OUTPUT = 3;
 }
 
-/// Resource limit
-message Rlimit
-{
-    required ResourceId id = 1;
-    required uint64 value = 2;
-}
-
-/// Resource usage
-message Rusage
+message Resource
 {
     required ResourceId id = 1;
     required uint64 value = 2;

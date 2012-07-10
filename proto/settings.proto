@@ -6,7 +6,7 @@ message TestGroupSettings
 {
     required string id = 1;
     repeated string base = 2;
-    repeated Rlimit rlimit = 3;
+    repeated Resource rlimit = 3;
     required Run run = 4;
     repeated File file = 5;
     required Execution execution = 6;
