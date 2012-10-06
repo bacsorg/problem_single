@@ -14,12 +14,6 @@ message TestGroupSettings
 
 message Run
 {
-    // TODO: not used (everything not prohibited is allowed?)
-    /*enum Security
-    {
-        OFF = 0;
-        ON = 1;
-    }*/
     enum Order
     {
         NUMERIC = 0;
@@ -30,7 +24,6 @@ message Run
         ALL = 0;
         WHILE_NOT_FAIL = 1;
     }
-    //required Security security = 1;
     required Order order = 2;
     required Algorithm algorithm = 3;
 }
