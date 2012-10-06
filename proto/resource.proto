@@ -1,16 +1,17 @@
 package bacs.api.pb;
 
-/// Resource identifier
-enum ResourceId
+message ResourceLimits
 {
-    CPU = 0;
-    TIME = 1;
-    MEMORY = 2;
-    OUTPUT = 3;
+    optional uint64 time_limit_millis = 1;
+    optional uint64 memory_limit_bytes = 2;
+    optional uint64 output_limit_bytes = 3;
+    optional uint64 number_of_processes = 4;
+    optional uint64 real_time_limit_millis = 5;
 }
 
-message Resource
+message ResourceUsage
 {
-    required ResourceId id = 1;
-    required uint64 value = 2;
+    // TODO: do we need to export Process::ResourceUsage::timeUsage?
+    required uint64 time_usage_millis = 1;
+    required uint64 memory_usage_bytes = 2;
 }

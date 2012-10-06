@@ -5,7 +5,7 @@ import "resource.proto";
 message Result
 {
     required BuildResult build = 1;
-    repeated TestGroupResult test_group = 2;
+    repeated TestGroupResult test_groups = 2;
 }
 
 message BuildResult
@@ -16,34 +16,27 @@ message BuildResult
 
 message Execution
 {
-    enum Status
+    enum CompletionStatus
     {
-        ABNORMAL_EXIT = 0;
-        OK = 1;
+        OK = 0;
+        ABNORMAL_EXIT = 1;
+        TERMINATED_BY_SYSTEM = 2;
+        MEMORY_LIMIT_EXCEEDED = 3;
+        TIME_LIMIT_EXCEEDED = 4;
+        OUTPUT_LIMIT_EXCEEDED = 5;
+        START_FAILED = 6;
+        STOPPED = 7;
+        REAL_TIME_LIMIT_EXCEEDED = 8;
     }
-    message Terminated
-    {
-        message RlimitExceeded
-        {
-            required ResourceId rlimit = 1;
-        }
-        message SecurityViolation
-        {
-            required string violation = 1;
-        }
-        optional RlimitExceeded exceeded = 1;
-        optional SecurityViolation security = 2;
-    }
-    required Status status = 1;
-    optional Terminated terminated = 2;
-    repeated Resource rusage = 3;
+    required CompletionStatus status = 1;
+    required ResourceUsage resource_usage = 3;
     optional bytes full = 4;
 }
 
 message TestGroupResult
 {
     required string id = 1;
-    repeated TestResult test = 2;
+    repeated TestResult tests = 2;
 }
 
 message TestResult
@@ -68,5 +61,5 @@ message TestResult
     required string id = 1;
     required Execution execution = 2;
     optional Checking checking = 3;
-    repeated File file = 4;
+    repeated File files = 4;
 }

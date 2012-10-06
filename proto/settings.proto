@@ -5,20 +5,21 @@ import "resource.proto";
 message TestGroupSettings
 {
     required string id = 1;
-    repeated string base = 2;
-    repeated Resource rlimit = 3;
+    repeated string bases = 2;
+    required ResourceLimits resource_limits = 3;
     required Run run = 4;
-    repeated File file = 5;
+    repeated File files = 5;
     required Execution execution = 6;
 }
 
 message Run
 {
-    enum Security
+    // TODO: not used (everything not prohibited is allowed?)
+    /*enum Security
     {
         OFF = 0;
         ON = 1;
-    }
+    }*/
     enum Order
     {
         NUMERIC = 0;
@@ -29,17 +30,13 @@ message Run
         ALL = 0;
         WHILE_NOT_FAIL = 1;
     }
-    required Security security = 1;
+    //required Security security = 1;
     required Order order = 2;
     required Algorithm algorithm = 3;
 }
 
 message Execution
 {
-    message Argv
-    {
-        repeated string arg = 1;
-    }
     message Redirection
     {
         enum Stream
@@ -51,9 +48,9 @@ message Execution
         required Stream stream = 3;
         required string file_id = 2;
     }
-    optional Argv argv = 1;
-    optional Path cwd = 2;
-    repeated Redirection redirection = 3;
+    repeated string arguments = 1;
+    optional Path current_path = 2;
+    repeated Redirection redirections = 3;
 }
 
 /// Filesystem path.
@@ -62,24 +59,27 @@ message Path
     /// If specified, path is absolute, otherwise -- relative.
     optional string root = 1;
     /// Path elements, will be concatenated using OS-specific delimiter.
-    repeated string element = 2;
+    repeated string elements = 2;
 }
 
 message File
 {
-    enum OpenMode
+    enum Permissions
     {
         READ = 0;
         WRITE = 1;
         EXECUTE = 2;
     }
+    /// \note: It may more convenient to declare Offset class.
     message Range
     {
+        /// Offset: positive from the beginning, negative from the end.
         optional int64 begin = 1;
+        /// Offset: positive from the end, negative from the beginning.
         optional int64 end = 2;
     }
     required string id = 1;
-    repeated OpenMode mode = 2;
+    repeated Permissions permissions = 2;
     optional /*DataId*/string init = 3;
     optional Path path = 4;
     optional Range receive = 5;

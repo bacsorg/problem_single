@@ -24,11 +24,11 @@ message Info
         required bytes hash = 1;
         required string package = 2;
     }
-    repeated Name name = 1;
-    repeated string author = 2;
+    repeated Name names = 1;
+    repeated string authors = 2;
     optional string source = 3;
-    repeated string maintainer = 4;
-    repeated string restriction = 5;
+    repeated string maintainers = 4;
+    repeated string restrictions = 5;
     required System system = 6;
 }
 
@@ -56,7 +56,7 @@ message Statement
         required string format = 2;
         required string package = 3;
     }
-    repeated Version version = 1;
+    repeated Version versions = 1;
 }
 
 message Profile
@@ -67,8 +67,8 @@ message Profile
 
 message Profiles
 {
-    repeated settings.TestGroupSettings common_profile = 1;
-    repeated Profile profile = 2;
+    repeated settings.TestGroupSettings common_profiles = 1;
+    repeated Profile profiles = 2;
 }
 
 message Utilities

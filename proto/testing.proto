@@ -4,8 +4,8 @@ import "settings.proto";
 
 message SolutionTesting
 {
-    repeated settings.TestGroupSettings profile = 1;
-    repeated TestGroup test_group = 2;
+    repeated settings.TestGroupSettings profiles = 1;
+    repeated TestGroup test_groups = 2;
 }
 
 message TestGroup
@@ -28,6 +28,6 @@ message RegexQuery
     {
         IGNORE_CASE = 0;
     }
-    repeated RegexFlag flag = 1;
+    repeated RegexFlag flags = 1;
     required string value = 2;
 }

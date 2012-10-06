@@ -14,7 +14,7 @@ message Task
      * If is not the same as worker's, task is rejected.
      */
     required bytes hash = 1;
-    repeated Callback callback = 2;
+    repeated Callback callbacks = 2;
     required Solution solution = 3;
     required testing.SolutionTesting testing = 4;
 }
@@ -31,7 +31,7 @@ message Callback
     }
     required Target target = 1;
     required string type = 2;
-    repeated string arg = 3;
+    repeated string arguments = 3;
 }
 
 message Solution
@@ -43,12 +43,12 @@ message Solution
 message Build
 {
     /// Constraints for build system
-    repeated Resource rlimit = 1;
+    optional ResourceLimits resource_limits = 1;
     required Builder builder = 2;
 }
 
 message Builder
 {
     required string type = 1;
-    repeated string arg = 2;
+    repeated string arguments = 2;
 }
