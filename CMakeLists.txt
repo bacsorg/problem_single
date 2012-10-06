@@ -1,25 +1,10 @@
-project(bunsan_bacs_api)
+project(bunsan_bacs_single_api)
+
+include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 
 cmake_minimum_required(VERSION 2.8)
 
-if(${CMAKE_COMPILER_IS_GNUCXX})
-    set(gxx_flags "-std=c++0x -Wall -Wextra")
-    if(${UNIX})
-        set(gxx_flags "-pthread ${gxx_flags}")
-    endif()
-    set(CMAKE_CXX_FLAGS_DEBUG "-g ${gxx_flags}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 ${gxx_flags}")
-endif()
-
-include(${CMAKE_SOURCE_DIR}/user-config.cmake OPTIONAL)
-
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: Debug Release" FORCE)
-endif()
-
-if(NOT DEFINED ENABLE_TESTS)
-    set(ENABLE_TESTS ON CACHE BOOL "Do you want to enable testing?" FORCE)
-endif()
+include(YandexContestCommon)
 
 # BOOST
 set(Boost_USE_STATIC_LIBS OFF)
@@ -29,7 +14,6 @@ list(APPEND includes ${Boost_INCLUDE_DIRS})
 list(APPEND libraries ${Boost_LIBRARIES})
 
 # ProtoBuf
-
 find_package(Protobuf REQUIRED)
 
 # bacs/api/pb includes
@@ -37,27 +21,31 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_BINAR
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/api)
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/pb)
 
-# find all proto files
-file(GLOB proto proto/*.proto)
-
-# compile proto files
+# Compile proto files
 set(PROTOBUF_IMPORT_DIRS proto)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-PROTOBUF_GENERATE_CPP(proto_srcs proto_hdrs ${proto})
+PROTOBUF_GENERATE_CPP(proto_srcs proto_hdrs
+    proto/task.proto
+    proto/result.proto
+    proto/resource.proto
+    proto/problem.proto
+    proto/testing.proto
+    proto/settings.proto
+)
 list(APPEND includes ${PROTOBUF_INCLUDE_DIRS})
 list(APPEND libraries ${PROTOBUF_LIBRARIES})
 
-# sources
-
-aux_source_directory(src srcs)
-
+# Local
 include_directories(include ${includes})
 
-add_library(${PROJECT_NAME} SHARED ${srcs} ${proto_srcs})
+# Targets
+add_library(${PROJECT_NAME} SHARED
+    ${srcs}
+    ${proto_srcs}
+)
 target_link_libraries(${PROJECT_NAME} ${libraries})
 
-# install
-
+# Installation
 install(DIRECTORY include DESTINATION .)
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
@@ -65,10 +53,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib)
 install(FILES ${proto_hdrs} DESTINATION include/bacs/api/pb)
 
-# testing
-
-if(${ENABLE_TESTS})
-    enable_testing()
-    add_subdirectory(tests ${PROJECT_BINARY_DIR}/tests)
-endif()
-
+yandex_contest_tests()
