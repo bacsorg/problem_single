@@ -4,8 +4,19 @@ import "resource.proto";
 
 message Result
 {
-    required BuildResult build = 1;
-    repeated TestGroupResult test_groups = 2;
+    required SystemResult system = 1;
+    optional BuildResult build = 2;
+    repeated TestGroupResult test_groups = 3;
+}
+
+message SystemResult
+{
+    enum Status
+    {
+        OK = 0;
+        INVALID_HASH = 1;
+    }
+    required Status status = 1;
 }
 
 message BuildResult
@@ -16,7 +27,7 @@ message BuildResult
 
 message Execution
 {
-    enum CompletionStatus
+    enum Status
     {
         OK = 0;
         ABNORMAL_EXIT = 1;
@@ -28,7 +39,7 @@ message Execution
         STOPPED = 7;
         REAL_TIME_LIMIT_EXCEEDED = 8;
     }
-    required CompletionStatus status = 1;
+    required Status status = 1;
     required ResourceUsage resource_usage = 3;
     optional bytes full = 4;
 }
