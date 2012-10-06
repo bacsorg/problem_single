@@ -40,8 +40,10 @@ message Execution
         REAL_TIME_LIMIT_EXCEEDED = 8;
     }
     required Status status = 1;
-    required ResourceUsage resource_usage = 3;
-    optional bytes full = 4;
+    optional int32 exit_status = 2;
+    optional int32 term_sig = 3;
+    required ResourceUsage resource_usage = 4;
+    optional bytes full = 5;
 }
 
 message TestGroupResult
