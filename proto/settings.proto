@@ -4,12 +4,10 @@ import "resource.proto";
 
 message TestGroupSettings
 {
-    required string id = 1;
-    repeated string bases = 2;
-    required ResourceLimits resource_limits = 3;
-    required Run run = 4;
-    repeated File files = 5;
-    required Execution execution = 6;
+    required ResourceLimits resource_limits = 1;
+    required Run run = 2;
+    repeated File files = 3;
+    required Execution execution = 4;
 }
 
 message Run

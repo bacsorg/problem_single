@@ -8,7 +8,7 @@ message Problem
     required Info info = 1;
     required Tests tests = 2;
     required Statement statement = 3;
-    required Profiles profiles = 4;
+    repeated Profile profiles = 4;
     required Utilities utilities = 5;
 }
 
@@ -62,13 +62,7 @@ message Statement
 message Profile
 {
     optional string description = 1;
-    required testing.TestGroup test_group = 2;
-}
-
-message Profiles
-{
-    repeated settings.TestGroupSettings common_profiles = 1;
-    repeated Profile profiles = 2;
+    repeated testing.SolutionTesting testing = 2;
 }
 
 message Utilities

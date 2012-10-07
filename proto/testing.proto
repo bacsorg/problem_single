@@ -4,8 +4,7 @@ import "settings.proto";
 
 message SolutionTesting
 {
-    repeated settings.TestGroupSettings profiles = 1;
-    repeated TestGroup test_groups = 2;
+    repeated TestGroup test_groups = 1;
 }
 
 message TestGroup
@@ -15,6 +14,7 @@ message TestGroup
     repeated TestQuery test_set = 3;
 }
 
+// TODO: specify behavior on no/multiple options
 message TestQuery
 {
     optional string id = 1;
