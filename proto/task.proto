@@ -47,6 +47,11 @@ message Build
     required Builder builder = 2;
 }
 
+/*!
+ * One of implemented build systems.
+ * For simple cases it may be compiler name with options,
+ * e.g. {type = "gcc", arguments = ["-O2"]}.
+ */
 message Builder
 {
     required string type = 1;
