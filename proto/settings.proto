@@ -61,12 +61,17 @@ message File
         WRITE = 1;
         EXECUTE = 2;
     }
-    /// \note: It may be more convenient to declare Offset class.
+
+    /*!
+     * \note: It may be more convenient to declare Offset class.
+     * Range is looped, i.e. {begin = 5, end = 2}
+     * for file of length 7 "0123456" will return "5601".
+     */
     message Range
     {
-        /// Offset: positive from the beginning, negative from the end.
+        /// Offset: positive from the beginning, negative from the end (inclusive).
         optional int64 begin = 1;
-        /// Offset: positive from the end, negative from the beginning.
+        /// Offset: positive from the beginning, negative from the end (exclusive).
         optional int64 end = 2;
     }
     required string id = 1;
