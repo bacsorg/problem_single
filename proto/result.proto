@@ -31,13 +31,11 @@ message Execution
     {
         OK = 0;
         ABNORMAL_EXIT = 1;
-        TERMINATED_BY_SYSTEM = 2;
-        MEMORY_LIMIT_EXCEEDED = 3;
-        TIME_LIMIT_EXCEEDED = 4;
-        OUTPUT_LIMIT_EXCEEDED = 5;
-        START_FAILED = 6;
-        STOPPED = 7;
-        REAL_TIME_LIMIT_EXCEEDED = 8;
+        MEMORY_LIMIT_EXCEEDED = 2;
+        TIME_LIMIT_EXCEEDED = 3;
+        OUTPUT_LIMIT_EXCEEDED = 4;
+        REAL_TIME_LIMIT_EXCEEDED = 5;
+        FAILED = 6;
     }
     required Status status = 1;
     optional int32 exit_status = 2;
