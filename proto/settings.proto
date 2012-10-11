@@ -1,4 +1,4 @@
-package bacs.api.pb.settings;
+package bacs.single.api.pb.settings;
 
 import "resource.proto";
 

@@ -1,4 +1,4 @@
-package bacs.api.pb.result;
+package bacs.single.api.pb.result;
 
 import "resource.proto";
 

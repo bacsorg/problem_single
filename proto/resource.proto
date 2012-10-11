@@ -1,4 +1,4 @@
-package bacs.api.pb;
+package bacs.single.api.pb;
 
 message ResourceLimits
 {

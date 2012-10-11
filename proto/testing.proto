@@ -1,4 +1,4 @@
-package bacs.api.pb.testing;
+package bacs.single.api.pb.testing;
 
 import "settings.proto";
 

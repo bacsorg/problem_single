@@ -1,4 +1,4 @@
-package bacs.api.pb.task;
+package bacs.single.api.pb.task;
 
 import "resource.proto";
 import "testing.proto";
