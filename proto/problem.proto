@@ -62,7 +62,7 @@ message Statement
 message Profile
 {
     optional string description = 1;
-    repeated testing.SolutionTesting testing = 2;
+    required testing.SolutionTesting testing = 2;
 }
 
 message Utilities
