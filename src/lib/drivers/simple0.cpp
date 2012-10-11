@@ -26,8 +26,11 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     api::pb::problem::Problem simple0::overview()
     {
         api::pb::problem::Problem problem;
+        read_info(*problem.mutable_info());
         read_tests(*problem.mutable_tests());
-        // TODO
+        read_statement(*problem.mutable_statement());
+        read_profiles(*problem.mutable_profiles());
+        read_utilities(*problem.mutable_utilities());
         return problem;
     }
 
@@ -53,6 +56,10 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     }
 
     //void *simple0::statement() { return nullptr; }
+
+    void simple0::read_info(api::pb::problem::Info &info)
+    {
+    }
 
     void simple0::read_tests(api::pb::problem::Tests &tests)
     {
@@ -94,5 +101,31 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             else
                 BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
         }
+    }
+
+    void simple0::read_statement(api::pb::problem::Statement &statement)
+    {
+        // TODO
+    }
+
+    void simple0::read_profiles(google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles)
+    {
+        profiles.Clear();
+        api::pb::problem::Profile &profile = *profiles.Add();
+        api::pb::testing::SolutionTesting &testing = *profile.mutable_testing();
+        testing.Clear();
+        api::pb::testing::TestGroup &test_group = *testing.add_test_groups();
+        api::pb::settings::TestGroupSettings &settings = *test_group.mutable_settings();
+        {
+            // TODO fill settings
+        }
+        test_group.clear_test_set();
+        api::pb::testing::TestQuery &test_query = *test_group.add_test_set();
+        test_query.set_wildcard("*"); // select all tests
+    }
+
+    void simple0::read_utilities(api::pb::problem::Utilities &utilities)
+    {
+        // TODO
     }
 }}}}

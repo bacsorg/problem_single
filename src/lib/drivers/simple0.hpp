@@ -26,7 +26,11 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         void *statement() override { return nullptr; }
 
     private:
+        void read_info(api::pb::problem::Info &info);
         void read_tests(api::pb::problem::Tests &tests);
+        void read_statement(api::pb::problem::Statement &statement);
+        void read_profiles(google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles);
+        void read_utilities(api::pb::problem::Utilities &utilities);
 
     private:
         const boost::filesystem::path m_location;
