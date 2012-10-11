@@ -16,6 +16,9 @@ list(APPEND libraries ${Boost_LIBRARIES})
 # Local
 include_directories(include ${includes})
 
+# bunsan
+list(APPEND libraries bunsan_common)
+
 # bacs::single::api
 list(APPEND libraries bunsan_bacs_single_api)
 
@@ -32,6 +35,8 @@ add_library(${PROJECT_NAME} SHARED
     src/lib/driver.cpp
 
     src/lib/utilities/single.cpp
+
+    src/lib/drivers/simple0.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${libraries})
 
