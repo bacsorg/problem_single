@@ -6,8 +6,6 @@
 
 #include "bunsan/factory_helper.hpp"
 
-#include <unordered_set>
-
 #include <boost/filesystem/path.hpp>
 
 namespace bacs{namespace single{namespace problem
@@ -20,9 +18,6 @@ namespace bacs{namespace single{namespace problem
     public:
         virtual api::pb::problem::Problem overview()=0;
 
-        // tests
-        virtual std::unordered_set<std::string> test_set()=0;
-        virtual std::unordered_set<std::string> data_set()=0;
         virtual boost::filesystem::path test(const std::string &test_id,
                                              const std::string &data_id)=0;
 
