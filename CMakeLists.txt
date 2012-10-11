@@ -27,7 +27,7 @@ list(APPEND libraries
 
 # Targets
 add_library(${PROJECT_NAME} SHARED
-    src/lib/null.cpp
+    src/lib/buildable.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${libraries})
 
