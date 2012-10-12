@@ -2,6 +2,8 @@
 
 #include "bacs/single/problem/error.hpp"
 
+#include "bacs/single/problem/detail/split.hpp"
+
 #include <unordered_set>
 #include <unordered_map>
 
@@ -59,6 +61,24 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     void simple0::read_info(api::pb::problem::Info &info)
     {
+        info.Clear();
+        const boost::property_tree::ptree m_info = m_config.get_child("info");
+        // name
+        api::pb::problem::Info::Name &name = *info.add_names();
+        name.set_lang("C");
+        name.set_value(m_info.get<std::string>("name"));
+        // authors
+        detail::parse_repeated(*info.mutable_authors(), m_info, "authors");
+        // source
+        boost::optional<std::string> value;
+        if ((value = m_info.get_optional<std::string>("source")))
+            info.set_source(value.get());
+        // maintainers
+        detail::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
+        // restrictions
+        detail::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
+        // system
+        // TODO
     }
 
     void simple0::read_tests(api::pb::problem::Tests &tests)
