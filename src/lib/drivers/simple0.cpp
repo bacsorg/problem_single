@@ -3,12 +3,17 @@
 #include "bacs/single/problem/error.hpp"
 
 #include "bacs/single/problem/detail/split.hpp"
+#include "bacs/single/problem/detail/resource.hpp"
+#include "bacs/single/problem/detail/path.hpp"
 
+#include <algorithm>
 #include <unordered_set>
 #include <unordered_map>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/assert.hpp>
 
 namespace bacs{namespace single{namespace problem{namespace drivers
 {
@@ -33,6 +38,17 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         read_statement(*problem.mutable_statement());
         read_profiles(*problem.mutable_profiles());
         read_utilities(*problem.mutable_utilities());
+        BOOST_ASSERT(problem.profiles_size() == 1);
+        BOOST_ASSERT(problem.mutable_profiles(0)->mutable_testing()->test_groups_size() == 1);
+        bool only_digits = true;
+        for (const std::string &id: problem.tests().test_set())
+        {
+            if (!(only_digits = only_digits && std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
+                break;
+        }
+        problem.mutable_profiles(0)->mutable_testing()->mutable_test_groups(0)->
+            mutable_settings()->mutable_run()->set_order(
+                only_digits ? api::pb::settings::Run::NUMERIC : api::pb::settings::Run::LEXICOGRAPHICAL);
         return problem;
     }
 
@@ -77,8 +93,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         detail::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
         // restrictions
         detail::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
-        // system
-        // TODO
+        // system is set by BACS.ARCHIVE
     }
 
     void simple0::read_tests(api::pb::problem::Tests &tests)
@@ -137,7 +152,51 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         api::pb::testing::TestGroup &test_group = *testing.add_test_groups();
         api::pb::settings::TestGroupSettings &settings = *test_group.mutable_settings();
         {
-            // TODO fill settings
+            boost::optional<std::string> value;
+            // resource limits
+            api::pb::ResourceLimits &resource_limits = *settings.mutable_resource_limits();
+            if ((value = m_config.get_optional<std::string>("rlimits.time")))
+                resource_limits.set_time_limit_millis(detail::parse_time_millis(value.get()));
+            if ((value = m_config.get_optional<std::string>("rlimits.memory")))
+                resource_limits.set_memory_limit_bytes(detail::parse_memory_bytes(value.get()));
+            if ((value = m_config.get_optional<std::string>("rlimits.output")))
+                resource_limits.set_output_limit_bytes(detail::parse_memory_bytes(value.get()));
+            // number of processes is not supported here
+            if ((value = m_config.get_optional<std::string>("rlimits.real_time")))
+                resource_limits.set_real_time_limit_millis(detail::parse_time_millis(value.get()));
+            // run
+            api::pb::settings::Run &run = *settings.mutable_run();
+            //run.set_order(); // depending on tests, is set in other location
+            run.set_algorithm(api::pb::settings::Run::WHILE_NOT_FAIL);
+            // files & execution
+            api::pb::settings::File *file = settings.add_files();
+            api::pb::settings::Execution &execution = *settings.mutable_execution();
+            file->set_id("stdin");
+            file->add_permissions(api::pb::settings::File::READ);
+            if ((value = m_config.get_optional<std::string>("files.stdin")))
+            {
+                detail::to_pb_path(value.get(), *file->mutable_path());
+            }
+            else
+            {
+                api::pb::settings::Execution::Redirection &rd = *execution.add_redirections();
+                rd.set_stream(api::pb::settings::Execution::Redirection::STDIN);
+                rd.set_file_id("stdin");
+            }
+            file = settings.add_files();
+            file->set_id("stdout");
+            file->add_permissions(api::pb::settings::File::READ);
+            file->add_permissions(api::pb::settings::File::WRITE);
+            if ((value = m_config.get_optional<std::string>("files.stdout")))
+            {
+                detail::to_pb_path(value.get(), *file->mutable_path());
+            }
+            else
+            {
+                api::pb::settings::Execution::Redirection &rd = *execution.add_redirections();
+                rd.set_stream(api::pb::settings::Execution::Redirection::STDOUT);
+                rd.set_file_id("stdout");
+            }
         }
         test_group.clear_test_set();
         api::pb::testing::TestQuery &test_query = *test_group.add_test_set();
