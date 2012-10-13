@@ -136,6 +136,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             else
                 BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
         }
+        if (data_set.find("in") == data_set.end())
+            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
     }
 
     void simple0::read_statement(api::pb::problem::Statement &statement)
@@ -172,6 +174,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             api::pb::settings::File *file = settings.add_files();
             api::pb::settings::Execution &execution = *settings.mutable_execution();
             file->set_id("stdin");
+            file->set_init("in");
             file->add_permissions(api::pb::settings::File::READ);
             if ((value = m_config.get_optional<std::string>("files.stdin")))
             {
