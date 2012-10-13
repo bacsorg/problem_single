@@ -16,6 +16,11 @@ list(APPEND libraries ${Boost_LIBRARIES})
 # Local
 include_directories(include ${includes})
 
+# ProtoBuf
+find_package(Protobuf REQUIRED)
+list(APPEND includes ${PROTOBUF_INCLUDE_DIRS})
+list(APPEND libraries ${PROTOBUF_LIBRARIES})
+
 # bunsan
 list(APPEND libraries bunsan_common)
 
