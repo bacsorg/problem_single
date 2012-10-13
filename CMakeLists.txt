@@ -39,6 +39,8 @@ add_library(${PROJECT_NAME} SHARED
     src/lib/utility.cpp
     src/lib/driver.cpp
 
+    src/lib/detail/path.cpp
+
     src/lib/utilities/single.cpp
 
     src/lib/drivers/simple0.cpp
