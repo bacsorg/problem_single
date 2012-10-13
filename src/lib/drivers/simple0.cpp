@@ -155,14 +155,14 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             boost::optional<std::string> value;
             // resource limits
             api::pb::ResourceLimits &resource_limits = *settings.mutable_resource_limits();
-            if ((value = m_config.get_optional<std::string>("rlimits.time")))
+            if ((value = m_config.get_optional<std::string>("resource_limits.time")))
                 resource_limits.set_time_limit_millis(detail::parse_time_millis(value.get()));
-            if ((value = m_config.get_optional<std::string>("rlimits.memory")))
+            if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
                 resource_limits.set_memory_limit_bytes(detail::parse_memory_bytes(value.get()));
-            if ((value = m_config.get_optional<std::string>("rlimits.output")))
+            if ((value = m_config.get_optional<std::string>("resource_limits.output")))
                 resource_limits.set_output_limit_bytes(detail::parse_memory_bytes(value.get()));
             // number of processes is not supported here
-            if ((value = m_config.get_optional<std::string>("rlimits.real_time")))
+            if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
                 resource_limits.set_real_time_limit_millis(detail::parse_time_millis(value.get()));
             // run
             api::pb::settings::Run &run = *settings.mutable_run();
