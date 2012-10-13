@@ -15,6 +15,8 @@ list(APPEND libraries ${Boost_LIBRARIES})
 
 # ProtoBuf
 find_package(Protobuf REQUIRED)
+list(APPEND includes ${PROTOBUF_INCLUDE_DIRS})
+list(APPEND libraries ${PROTOBUF_LIBRARIES})
 
 # bacs/api/pb includes
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/bacs)
@@ -33,8 +35,6 @@ PROTOBUF_GENERATE_CPP(proto_srcs proto_hdrs
     proto/testing.proto
     proto/settings.proto
 )
-list(APPEND includes ${PROTOBUF_INCLUDE_DIRS})
-list(APPEND libraries ${PROTOBUF_LIBRARIES})
 
 # Local
 include_directories(include ${includes})
