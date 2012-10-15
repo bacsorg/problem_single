@@ -40,6 +40,7 @@ add_library(${PROJECT_NAME} SHARED
     src/lib/driver.cpp
 
     src/lib/detail/path.cpp
+    src/lib/detail/resource.cpp
 
     src/lib/utilities/single.cpp
 
