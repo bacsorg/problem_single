@@ -7,6 +7,7 @@
 
 #include <boost/cast.hpp>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
 
 namespace bacs{namespace single{namespace problem{namespace detail
 {
@@ -70,9 +71,9 @@ namespace bacs{namespace single{namespace problem{namespace detail
     {
         time_parser(): time_parser::base_type(start)
         {
-            multiple = -(si_multiple_ | si_submultiple_) >> qi::char_('s');
-            multiple_unit = multiple | qi::eps;
-            start = qi::double_ >> multiple_unit;
+            multiple = (si_multiple_[qi::_val = qi::_1] | si_submultiple_[qi::_val = qi::_1] | qi::eps[qi::_val = 1]) >> qi::lit('s');
+            multiple_unit = multiple[qi::_val = qi::_1] | qi::eps[qi::_val = 1];
+            start = (qi::double_ >> multiple_unit)[qi::_val = qi::_1 * qi::_2];
         }
 
         qi::rule<Iterator, double()> start, multiple, multiple_unit;
@@ -85,9 +86,9 @@ namespace bacs{namespace single{namespace problem{namespace detail
     {
         memory_parser(): memory_parser::base_type(start)
         {
-            multiple = -binary_multiple_ >> qi::char_('B');
-            multiple_unit = multiple | qi::eps;
-            start = qi::double_ >> multiple_unit;
+            multiple = (binary_multiple_[qi::_val = qi::_1] | qi::eps[qi::_val = 1]) >> qi::lit('B');
+            multiple_unit = (multiple[qi::_val = qi::_1] | qi::eps[qi::_val = 1]);
+            start = (qi::double_ >> multiple_unit)[qi::_val = qi::_1 * qi::_2];
         }
 
         qi::rule<Iterator, double()> start, multiple, multiple_unit;
