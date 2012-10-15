@@ -14,6 +14,7 @@ BOOST_AUTO_TEST_CASE(parse_time_millis)
     BOOST_CHECK_EQUAL(de::parse_time_millis("10s"), 10000);
     BOOST_CHECK_EQUAL(de::parse_time_millis("10ms"), 10);
     BOOST_CHECK_EQUAL(de::parse_time_millis("10hs"), 10 * 100 * 1000);
+    BOOST_CHECK_THROW(de::parse_time_millis("10 hs"), de::time_format_error);
 }
 
 BOOST_AUTO_TEST_CASE(parse_memory_bytes)
@@ -23,6 +24,7 @@ BOOST_AUTO_TEST_CASE(parse_memory_bytes)
     BOOST_CHECK_EQUAL(de::parse_memory_bytes("15B"), 15);
     BOOST_CHECK_EQUAL(de::parse_memory_bytes("1KiB"), 1024);
     BOOST_CHECK_EQUAL(de::parse_memory_bytes("1MiB"), 1024 * 1024);
+    BOOST_CHECK_THROW(de::parse_memory_bytes("10 B"), de::memory_format_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // resource
