@@ -70,12 +70,14 @@ namespace bacs{namespace single{namespace problem{namespace detail
     {
         time_parser(): time_parser::base_type(start)
         {
-            qi::rule<Iterator> multiple = (si_multiple() | si_submultiple()) >> qi::char_('s');
-            qi::rule<Iterator> multiple_unit = qi::eps | multiple;
+            multiple = -(si_multiple_ | si_submultiple_) >> qi::char_('s');
+            multiple_unit = multiple | qi::eps;
             start = qi::double_ >> multiple_unit;
         }
 
-        qi::rule<Iterator, double()> start;
+        qi::rule<Iterator, double()> start, multiple, multiple_unit;
+        si_multiple si_multiple_;
+        si_submultiple si_submultiple_;
     };
 
     template <typename Iterator>
@@ -83,19 +85,26 @@ namespace bacs{namespace single{namespace problem{namespace detail
     {
         memory_parser(): memory_parser::base_type(start)
         {
-            qi::rule<Iterator> multiple = binary_multiple() >> qi::char_('s');
-            qi::rule<Iterator> multiple_unit = qi::eps | multiple;
+            multiple = -binary_multiple_ >> qi::char_('B');
+            multiple_unit = multiple | qi::eps;
             start = qi::double_ >> multiple_unit;
         }
 
-        qi::rule<Iterator, double()> start;
+        qi::rule<Iterator, double()> start, multiple, multiple_unit;
+        binary_multiple binary_multiple_;
     };
 
     std::uint64_t parse_time_millis(const std::string &time)
     {
         std::string::const_iterator begin = time.begin();
         double result;
-        qi::parse(begin, time.end(), time_parser<std::string::const_iterator>(), result);
+        if (!qi::parse(begin, time.end(), time_parser<std::string::const_iterator>(), result) ||
+            begin != time.end())
+        {
+            BOOST_THROW_EXCEPTION(time_format_error() <<
+                                  time_format_error::value(time) <<
+                                  time_format_error::pos(begin - time.begin()));
+        }
         return boost::numeric_cast<std::uint64_t>(std::round(result * 1000));
     }
 
@@ -103,7 +112,13 @@ namespace bacs{namespace single{namespace problem{namespace detail
     {
         std::string::const_iterator begin = memory.begin();
         double result;
-        qi::parse(begin, memory.end(), memory_parser<std::string::const_iterator>(), result);
+        if (!qi::parse(begin, memory.end(), memory_parser<std::string::const_iterator>(), result) ||
+            begin != memory.end())
+        {
+            BOOST_THROW_EXCEPTION(memory_format_error() <<
+                                  memory_format_error::value(memory) <<
+                                  memory_format_error::pos(begin - memory.begin()));
+        }
         return boost::numeric_cast<std::uint64_t>(std::round(result));
     }
 }}}}
