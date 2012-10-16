@@ -142,7 +142,15 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     void simple0::read_statement(api::pb::problem::Statement &statement)
     {
-        // TODO
+        const boost::filesystem::directory_iterator end;
+        for (boost::filesystem::directory_iterator i(m_location / "statement"); i != end; ++i)
+        {
+            if (i->path().filename().extension() == ".ini" &&
+                boost::filesystem::is_regular_file(i->path()))
+            {
+                // TODO
+            }
+        }
     }
 
     void simple0::read_profiles(google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles)
