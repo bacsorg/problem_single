@@ -22,7 +22,7 @@ list(APPEND includes ${PROTOBUF_INCLUDE_DIRS})
 list(APPEND libraries ${PROTOBUF_LIBRARIES})
 
 # bunsan
-list(APPEND libraries bunsan_common)
+list(APPEND libraries bunsan_common bunsan_pm)
 
 # bacs::single::api
 list(APPEND libraries bunsan_bacs_single_api)
