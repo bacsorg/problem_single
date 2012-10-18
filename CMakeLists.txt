@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} SHARED
     src/lib/buildable.cpp
     src/lib/utility.cpp
     src/lib/driver.cpp
+    src/lib/generator.cpp
 
     src/lib/detail/path.cpp
     src/lib/detail/resource.cpp
