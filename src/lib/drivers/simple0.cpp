@@ -56,9 +56,9 @@ namespace bacs{namespace single{namespace problem{namespace drivers
                                           const std::string &data_id)
     {
         if (test_id.find('.') != std::string::npos)
-            BOOST_THROW_EXCEPTION(error() << error::message("Invalid test id."));
+            BOOST_THROW_EXCEPTION(invalid_test_id_error());
         if (data_id.find('.') != std::string::npos)
-            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data id."));
+            BOOST_THROW_EXCEPTION(invalid_data_id_error());
         return m_location / (test_id + "." + data_id);
     }
 
@@ -105,13 +105,13 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         for (boost::filesystem::directory_iterator i(m_location / "tests"); i != end; ++i)
         {
             if (!boost::filesystem::is_regular_file(i->path()))
-                BOOST_THROW_EXCEPTION(error() << error::message("Invalid tests format."));
+                BOOST_THROW_EXCEPTION(test_format_error());
             const std::string fname = i->path().filename().string();
             const std::string::size_type dot = fname.find('.');
             if (dot == std::string::npos)
-                BOOST_THROW_EXCEPTION(error() << error::message("Invalid tests format."));
+                BOOST_THROW_EXCEPTION(test_format_error());
             if (fname.find('.', dot + 1) != std::string::npos)
-                BOOST_THROW_EXCEPTION(error() << error::message("Invalid tests format."));
+                BOOST_THROW_EXCEPTION(test_format_error());
             const std::string test_id = fname.substr(0, dot);
             const std::string data_id = fname.substr(dot + 1);
             test_set.insert(test_id);
@@ -120,7 +120,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         }
         for (const auto &test_info: test_files)
             if (test_info.second != data_set)
-                BOOST_THROW_EXCEPTION(error() << error::message("Invalid tests format."));
+                BOOST_THROW_EXCEPTION(test_format_error());
         tests.Clear();
         for (const std::string &test_id: test_set)
             tests.add_test_set(test_id);
@@ -134,15 +134,15 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             else if (format == "binary")
                 data.set_format(api::pb::problem::Tests::Data::BINARY);
             else
-                BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+                BOOST_THROW_EXCEPTION(test_data_format_error());
         }
         // simple0-related restriction
         if (data_set.find("in") == data_set.end())
-            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+            BOOST_THROW_EXCEPTION(test_data_format_error());
         if (data_set.find("out") == data_set.end())
-            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+            BOOST_THROW_EXCEPTION(test_data_format_error());
         if (data_set.size() != 2)
-            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+            BOOST_THROW_EXCEPTION(test_data_format_error());
     }
 
     void simple0::read_statement(api::pb::problem::Statement &statement)
