@@ -11,12 +11,15 @@
 namespace bacs{namespace single{namespace problem
 {
     class generator
-    BUNSAN_FACTORY_BEGIN(generator, const driver_ptr &/*driver_*/,
-                         const boost::property_tree::ptree &/*config*/)
+    BUNSAN_FACTORY_BEGIN(generator, const boost::property_tree::ptree &/*config*/)
     public:
         struct options
         {
+            driver_ptr driver;
+
+            /// Root package directory
             boost::filesystem::path destination;
+
             bunsan::pm::entry root_package;
         };
 

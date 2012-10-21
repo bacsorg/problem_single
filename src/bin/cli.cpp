@@ -45,13 +45,14 @@ int main(int argc, char *argv[])
                 return 1;
             }
             STREAM_DEBUG << drv->overview().DebugString();
-            generator_ptr gen = generator::instance(generator_type, drv, generator_config);
+            generator_ptr gen = generator::instance(generator_type, generator_config);
             if (!gen)
             {
                 STREAM_ERROR << "Unable to initialize generator of \"" << generator_type << "\" type.";
                 return 1;
             }
             generator::options opts;
+            opts.driver = drv;
             opts.destination = problem_destination;
             opts.root_package = problem_prefix; // TODO: should be fixed, this implementation is unreliable
             gen->generate(opts);
