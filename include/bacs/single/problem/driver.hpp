@@ -23,6 +23,8 @@ namespace bacs{namespace single{namespace problem
 
         // utilities
         virtual utility_ptr checker()=0;
+
+        /// \return nullptr if not provided
         virtual utility_ptr validator()=0;
 
         /// \todo this is a stub

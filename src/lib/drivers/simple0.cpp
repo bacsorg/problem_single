@@ -65,12 +65,27 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     // utilities
     utility_ptr simple0::checker()
     {
-        return utility::instance(m_location / "checker");
+        const utility_ptr checker_ = utility::instance(m_location / "checker");
+        if (!checker_)
+            BOOST_THROW_EXCEPTION(checker_error() <<
+                                  checker_error::message("Unable to initialize checker's driver."));
+        return checker_;
     }
 
     utility_ptr simple0::validator()
     {
-        return utility::instance(m_location / "checker");
+        if (boost::filesystem::exists(m_location / "validator"))
+        {
+            const utility_ptr validator_ = utility::instance(m_location / "validator");
+            if (!validator_)
+                BOOST_THROW_EXCEPTION(validator_error() <<
+                                      validator_error::message("Unable to initialize validator's driver."));
+            return validator_;
+        }
+        else
+        {
+            return utility_ptr();
+        }
     }
 
     //void *simple0::statement() { return nullptr; }
@@ -221,6 +236,10 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     void simple0::read_utilities(api::pb::problem::Utilities &utilities)
     {
-        // TODO
+        const utility_ptr checker_ = checker(), validator_ = validator();
+        BOOST_ASSERT(checker_);
+        *utilities.mutable_checker() = checker_->info();
+        if (validator_)
+            *utilities.mutable_validator() = validator_->info();
     }
 }}}}
