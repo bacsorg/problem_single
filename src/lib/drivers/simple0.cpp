@@ -136,7 +136,12 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             else
                 BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
         }
+        // simple0-related restriction
         if (data_set.find("in") == data_set.end())
+            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+        if (data_set.find("out") == data_set.end())
+            BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
+        if (data_set.size() != 2)
             BOOST_THROW_EXCEPTION(error() << error::message("Invalid data format."));
     }
 
