@@ -46,6 +46,8 @@ add_library(${PROJECT_NAME} SHARED
     src/lib/utilities/single.cpp
 
     src/lib/drivers/simple0.cpp
+
+    src/lib/generators/internal0.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${libraries})
 
