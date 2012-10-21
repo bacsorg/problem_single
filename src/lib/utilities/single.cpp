@@ -15,9 +15,9 @@ namespace bacs{namespace single{namespace problem{namespace utilities
     single::single(const boost::filesystem::path &location,
                    const boost::property_tree::ptree &config):
         m_location(location),
-        m_source(config.get<std::string>("source")),
-        m_std(config.get_optional<std::string>("std")),
-        m_libs(detail::get_vector(config, "libs")) {}
+        m_source(config.get<std::string>("build.source")),
+        m_std(config.get_optional<std::string>("build.std")),
+        m_libs(detail::get_vector(config, "build.libs")) {}
 
     api::pb::problem::Utility single::info() const
     {
