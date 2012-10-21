@@ -19,6 +19,13 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         m_std(config.get_optional<std::string>("std")),
         m_libs(detail::get_vector(config, "libs")) {}
 
+    api::pb::problem::Utility single::info() const
+    {
+        api::pb::problem::Utility info_;
+        info_.set_builder("single");
+        return info_;
+    }
+
     void single::make_package(const boost::filesystem::path &destination)
     {
         // TODO

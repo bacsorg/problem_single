@@ -13,6 +13,8 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         single(const boost::filesystem::path &location,
                const boost::property_tree::ptree &config);
 
+        api::pb::problem::Utility info() const override;
+
         void make_package(const boost::filesystem::path &destination) override;
 
     private:
