@@ -153,11 +153,11 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         }
         // simple0-related restriction
         if (data_set.find("in") == data_set.end())
-            BOOST_THROW_EXCEPTION(test_data_format_error());
+            BOOST_THROW_EXCEPTION(test_no_in_data_error());
         if (data_set.find("out") == data_set.end())
-            BOOST_THROW_EXCEPTION(test_data_format_error());
+            BOOST_THROW_EXCEPTION(test_no_out_data_error());
         if (data_set.size() != 2)
-            BOOST_THROW_EXCEPTION(test_data_format_error());
+            BOOST_THROW_EXCEPTION(test_unknown_data_error());
     }
 
     void simple0::read_statement(api::pb::problem::Statement &statement)

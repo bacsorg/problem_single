@@ -14,5 +14,9 @@ namespace bacs{namespace single{namespace problem
     struct invalid_test_id_error: virtual invalid_id_error, virtual test_error {};
     struct invalid_data_id_error: virtual invalid_id_error, virtual test_error {};
     struct test_format_error: virtual error {};
-    struct test_data_format_error: virtual test_format_error {};
+
+    struct test_data_format_error: virtual test_format_error
+    {
+        typedef boost::error_info<struct tag_data_id, std::string> data_id;
+    };
 }}}

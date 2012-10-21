@@ -1,4 +1,5 @@
 #include "bacs/single/problem/driver.hpp"
+#include "bacs/single/problem/error.hpp"
 
 #include <string>
 #include <vector>
@@ -8,6 +9,10 @@
 
 namespace bacs{namespace single{namespace problem{namespace drivers
 {
+    struct test_no_in_data_error: virtual test_data_format_error {};
+    struct test_no_out_data_error: virtual test_data_format_error {};
+    struct test_unknown_data_error: virtual test_data_format_error {};
+
     class simple0: public driver
     {
     public:
