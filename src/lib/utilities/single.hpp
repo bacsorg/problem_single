@@ -15,7 +15,8 @@ namespace bacs{namespace single{namespace problem{namespace utilities
 
         api::pb::problem::Utility info() const override;
 
-        void make_package(const boost::filesystem::path &destination) override;
+        void make_package(const boost::filesystem::path &destination,
+                          const bunsan::pm::entry &package) override;
 
     private:
         const boost::filesystem::path m_location;

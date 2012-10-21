@@ -26,7 +26,8 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         return info_;
     }
 
-    void single::make_package(const boost::filesystem::path &destination)
+    void single::make_package(const boost::filesystem::path &destination,
+                              const bunsan::pm::entry &package)
     {
         // TODO
     }

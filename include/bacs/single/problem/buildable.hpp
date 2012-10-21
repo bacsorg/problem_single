@@ -1,5 +1,7 @@
 #pragma once
 
+#include "bunsan/pm/entry.hpp"
+
 #include <boost/filesystem/path.hpp>
 
 namespace bacs{namespace single{namespace problem
@@ -10,6 +12,7 @@ namespace bacs{namespace single{namespace problem
         virtual ~buildable();
 
     public:
-        virtual void make_package(const boost::filesystem::path &destination)=0;
+        virtual void make_package(const boost::filesystem::path &destination,
+                                  const bunsan::pm::entry &package)=0;
     };
 }}}
