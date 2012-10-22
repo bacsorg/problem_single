@@ -22,8 +22,8 @@ message Run
         ALL = 0;
         WHILE_NOT_FAIL = 1;
     }
-    required Order order = 2;
-    required Algorithm algorithm = 3;
+    required Order order = 1;
+    required Algorithm algorithm = 2;
 }
 
 message Execution
@@ -36,7 +36,7 @@ message Execution
             STDOUT = 1;
             STDERR = 2;
         }
-        required Stream stream = 3;
+        required Stream stream = 1;
         required string file_id = 2;
     }
     repeated string arguments = 1;
