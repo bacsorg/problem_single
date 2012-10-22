@@ -18,10 +18,9 @@ namespace bacs{namespace single{namespace problem
     public:
         virtual api::pb::problem::Problem overview()=0;
 
-        virtual boost::filesystem::path test(const std::string &test_id,
-                                             const std::string &data_id)=0;
-
         // utilities
+        virtual utility_ptr tests()=0;
+
         virtual utility_ptr checker()=0;
 
         /// \return nullptr if not provided
