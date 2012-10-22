@@ -11,7 +11,7 @@ namespace bacs{namespace single{namespace problem
         boost::property_tree::ptree config;
         boost::property_tree::read_ini((location / "config.ini").string(), config);
         // FIXME Is it OK to hardcode "single" here?
-        return instance(config.get<std::string>("builder", "single"), location, config);
+        return instance(config.get<std::string>("build.builder", "single"), location, config);
     }
 
     utility::utility(const boost::property_tree::ptree &config):
