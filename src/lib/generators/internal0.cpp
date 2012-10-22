@@ -23,7 +23,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination;
             const bunsan::pm::entry package = options_.root_package;
-            boost::filesystem::create_directories(package_root);
+            boost::filesystem::create_directory(package_root);
             bunsan::pm::depends index;
             //index.source.import.source.insert(/*bacs::base*/); // source code  ??? Which
             //index.source.import.package.insert(/*bacs::base*/); // static libs ??? is better?
@@ -35,7 +35,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination / "tests";
             const bunsan::pm::entry package = options_.root_package / "tests";
-            boost::filesystem::create_directories(package_root);
+            boost::filesystem::create_directory(package_root);
             const utility_ptr tests = options_.driver->tests();
             bunsan::pm::depends index;
             BOOST_ASSERT(tests);
@@ -55,7 +55,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination / "checker";
             const bunsan::pm::entry package = options_.root_package / "checker";
-            boost::filesystem::create_directories(package_root);
+            boost::filesystem::create_directory(package_root);
             const utility_ptr checker = options_.driver->checker();
             bunsan::pm::depends index;
             BOOST_ASSERT(checker);
@@ -75,7 +75,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination / "validator";
             const bunsan::pm::entry package = options_.root_package / "validator";
-            boost::filesystem::create_directories(package_root);
+            boost::filesystem::create_directory(package_root);
             const utility_ptr validator = options_.driver->validator();
             bunsan::pm::depends index;
             if (validator)
@@ -99,7 +99,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination / "statement";
             const bunsan::pm::entry package = options_.root_package / "statement";
-            boost::filesystem::create_directories(package_root);
+            boost::filesystem::create_directory(package_root);
             bunsan::pm::depends index;
             index.save(package_root / "index");
         }
