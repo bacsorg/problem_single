@@ -66,8 +66,9 @@ message Profile
 
 message Utilities
 {
-    required Utility checker = 1;
-    optional Utility validator = 2;
+    required Utility tests = 1;
+    required Utility checker = 2;
+    optional Utility validator = 3;
 }
 
 message Utility
