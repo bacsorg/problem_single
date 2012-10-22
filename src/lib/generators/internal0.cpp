@@ -31,6 +31,26 @@ namespace bacs{namespace single{namespace problem{namespace generators
             index.package.insert(std::make_pair(".", package / "tests")); // files
             index.save(package_root / "index");
         }
+        // tests package
+        {
+            const boost::filesystem::path package_root = options_.destination / "tests";
+            const bunsan::pm::entry package = options_.root_package / "tests";
+            boost::filesystem::create_directories(package_root);
+            const utility_ptr tests = options_.driver->tests();
+            bunsan::pm::depends index;
+            BOOST_ASSERT(tests);
+            {
+                const boost::filesystem::path bin_package_root = package_root / "bin";
+                const bunsan::pm::entry bin_package = package / "bin";
+                tests->make_package(bin_package_root, bin_package);
+                index.package.insert(std::make_pair(".", bin_package));
+                // calling conventions
+                index.source.import.source.insert(std::make_pair(".",
+                    bunsan::pm::entry("bacs/system/tests/call") /
+                    tests->section("call").get<std::string>("wrapper")));
+            }
+            index.save(package_root / "index");
+        }
         // checker package
         {
             const boost::filesystem::path package_root = options_.destination / "checker";
@@ -73,15 +93,6 @@ namespace bacs{namespace single{namespace problem{namespace generators
             {
                 index.package.insert(std::make_pair(".", "bacs/system/validator/std/ok"));
             }
-            index.save(package_root / "index");
-        }
-        // tests package
-        {
-            const boost::filesystem::path package_root = options_.destination / "tests";
-            const bunsan::pm::entry package = options_.root_package / "tests";
-            boost::filesystem::create_directories(package_root);
-            bunsan::pm::depends index;
-            // TODO use generator here
             index.save(package_root / "index");
         }
         // statement package
