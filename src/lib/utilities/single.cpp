@@ -2,6 +2,11 @@
 
 #include "bacs/single/problem/detail/split.hpp"
 
+#include "bunsan/pm/depends.hpp"
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
 namespace bacs{namespace single{namespace problem{namespace utilities
 {
     bool single::factory_reg_hook = utility::register_new("single",
@@ -21,8 +26,23 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         m_libs(detail::get_vector(config, "build.libs")) {}
 
     void single::make_package(const boost::filesystem::path &destination,
-                              const bunsan::pm::entry &package)
+                              const bunsan::pm::entry &/*package*/)
     {
-        // TODO
+        boost::filesystem::create_directories(destination);
+        bunsan::pm::depends index;
+        // sources
+        {
+            index.source.self.insert(std::make_pair(".", "src"));
+            boost::property_tree::ptree config;
+            config.put_child("build", section("build"));
+            boost::filesystem::create_directories(destination / "src");
+            boost::property_tree::write_ini((destination / "src" / "config.ini").string(), config);
+            // TODO
+        }
+        // dependencies
+        {
+            // TODO libs
+        }
+        index.save(destination / "index");
     }
 }}}}
