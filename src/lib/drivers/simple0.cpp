@@ -1,4 +1,5 @@
 #include "simple0.hpp"
+#include "simple0_tests.hpp"
 
 #include "bacs/single/problem/error.hpp"
 
@@ -52,17 +53,13 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         return problem;
     }
 
-    boost::filesystem::path simple0::test(const std::string &test_id,
-                                          const std::string &data_id)
+    // utilities
+    utility_ptr simple0::tests()
     {
-        if (test_id.find('.') != std::string::npos)
-            BOOST_THROW_EXCEPTION(invalid_test_id_error());
-        if (data_id.find('.') != std::string::npos)
-            BOOST_THROW_EXCEPTION(invalid_data_id_error());
-        return m_location / (test_id + "." + data_id);
+        const utility_ptr tmp(new simple0_tests(m_location / "tests"));
+        return tmp;
     }
 
-    // utilities
     utility_ptr simple0::checker()
     {
         const utility_ptr checker_ = utility::instance(m_location / "checker");
@@ -236,7 +233,9 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     void simple0::read_utilities(api::pb::problem::Utilities &utilities)
     {
-        const utility_ptr checker_ = checker(), validator_ = validator();
+        const utility_ptr tests_ = tests(), checker_ = checker(), validator_ = validator();
+        BOOST_ASSERT(tests_);
+        *utilities.mutable_tests() = tests_->info();
         BOOST_ASSERT(checker_);
         *utilities.mutable_checker() = checker_->info();
         if (validator_)

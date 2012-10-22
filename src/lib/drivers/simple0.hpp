@@ -20,10 +20,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
         api::pb::problem::Problem overview() override;
 
-        boost::filesystem::path test(const std::string &test_id,
-                                     const std::string &data_id) override;
-
         // utilities
+        utility_ptr tests() override;
         utility_ptr checker() override;
         utility_ptr validator() override;
 
