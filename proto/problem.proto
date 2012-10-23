@@ -33,17 +33,7 @@ message Info
 
 message Tests
 {
-    message Data
-    {
-        enum Format
-        {
-            BINARY = 0;
-            TEXT = 1;
-        }
-        required string id = 1;
-        required Format format = 2;
-    }
-    repeated Data data_set = 1;
+    repeated string data_set = 1;
     repeated string test_set = 2;
 }
 
