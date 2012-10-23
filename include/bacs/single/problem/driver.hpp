@@ -1,6 +1,7 @@
 #pragma once
 
 #include "bacs/single/problem/utility.hpp"
+#include "bacs/single/problem/tests.hpp"
 
 #include "bacs/single/api/pb/problem.pb.h"
 
@@ -19,7 +20,7 @@ namespace bacs{namespace single{namespace problem
         virtual api::pb::problem::Problem overview()=0;
 
         // utilities
-        virtual utility_ptr tests()=0;
+        virtual tests_ptr tests()=0;
 
         virtual utility_ptr checker()=0;
 
