@@ -54,9 +54,25 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     }
 
     // utilities
-    utility_ptr simple0::tests()
+    tests_ptr simple0::tests()
     {
-        const utility_ptr tmp(new simple0_tests(m_location / "tests"));
+        const boost::optional<boost::property_tree::ptree &> tests_ =
+            m_config.get_child_optional("tests");
+        std::unordered_set<std::string> text_data_set = {"in", "out"};
+        if (tests_)
+            for (const auto kv: tests_.get())
+            {
+                const std::string data_type = kv.second.get_value<std::string>();
+                BOOST_ASSERT(kv.first == "in" || kv.first == "out");
+                if (data_type == "binary")
+                    text_data_set.erase(kv.first);
+                else if (data_type == "text")
+                    text_data_set.insert(kv.first);
+                else
+                    BOOST_THROW_EXCEPTION(test_data_format_error() <<
+                                          test_data_format_error::data_id(kv.first));
+            }
+        const tests_ptr tmp(new simple0_tests(m_location / "tests", text_data_set));
         return tmp;
     }
 
@@ -108,53 +124,15 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         // system is set by BACS.ARCHIVE
     }
 
-    void simple0::read_tests(api::pb::problem::Tests &tests)
+    void simple0::read_tests(api::pb::problem::Tests &tests__)
     {
-        const boost::filesystem::directory_iterator end;
-        std::unordered_set<std::string> test_set;
-        std::unordered_set<std::string> data_set;
-        std::unordered_map<std::string, std::unordered_set<std::string>> test_files;
-        for (boost::filesystem::directory_iterator i(m_location / "tests"); i != end; ++i)
-        {
-            if (!boost::filesystem::is_regular_file(i->path()))
-                BOOST_THROW_EXCEPTION(test_format_error());
-            const std::string fname = i->path().filename().string();
-            const std::string::size_type dot = fname.find('.');
-            if (dot == std::string::npos)
-                BOOST_THROW_EXCEPTION(test_format_error());
-            if (fname.find('.', dot + 1) != std::string::npos)
-                BOOST_THROW_EXCEPTION(test_format_error());
-            const std::string test_id = fname.substr(0, dot);
-            const std::string data_id = fname.substr(dot + 1);
-            test_set.insert(test_id);
-            data_set.insert(data_id);
-            test_files[test_id].insert(data_id);
-        }
-        for (const auto &test_info: test_files)
-            if (test_info.second != data_set)
-                BOOST_THROW_EXCEPTION(test_format_error());
-        tests.Clear();
-        for (const std::string &test_id: test_set)
-            tests.add_test_set(test_id);
-        for (const std::string &data_id: data_set)
-        {
-            api::pb::problem::Tests::Data &data = *tests.add_data_set();
-            data.set_id(data_id);
-            const std::string format = m_config.get<std::string>("tests." + data_id, "text");
-            if (format == "text")
-                data.set_format(api::pb::problem::Tests::Data::TEXT);
-            else if (format == "binary")
-                data.set_format(api::pb::problem::Tests::Data::BINARY);
-            else
-                BOOST_THROW_EXCEPTION(test_data_format_error());
-        }
-        // simple0-related restriction
-        if (data_set.find("in") == data_set.end())
-            BOOST_THROW_EXCEPTION(test_no_in_data_error());
-        if (data_set.find("out") == data_set.end())
-            BOOST_THROW_EXCEPTION(test_no_out_data_error());
-        if (data_set.size() != 2)
-            BOOST_THROW_EXCEPTION(test_unknown_data_error());
+        const tests_ptr tests_ = tests();
+        BOOST_ASSERT(tests_);
+        tests__.Clear();
+        for (const std::string &data_id: tests_->data_set())
+            tests__.add_data_set(data_id);
+        for (const std::string &test_id: tests_->test_set())
+            tests__.add_test_set(test_id);
     }
 
     void simple0::read_statement(api::pb::problem::Statement &statement)
