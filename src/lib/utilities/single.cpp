@@ -2,6 +2,7 @@
 
 #include "bacs/single/problem/detail/split.hpp"
 
+#include "bunsan/filesystem/operations.hpp"
 #include "bunsan/pm/depends.hpp"
 
 #include <boost/filesystem/operations.hpp>
@@ -30,19 +31,15 @@ namespace bacs{namespace single{namespace problem{namespace utilities
     {
         boost::filesystem::create_directories(destination);
         bunsan::pm::depends index;
-        // sources
-        {
-            index.source.self.insert(std::make_pair(".", "src"));
-            boost::property_tree::ptree config;
-            config.put_child("build", section("build"));
-            boost::filesystem::create_directories(destination / "src");
-            boost::property_tree::write_ini((destination / "src" / "config.ini").string(), config);
-            // TODO
-        }
+        // builder itself
+        index.source.import.source.insert(std::make_pair(".", "bacs/system/utility/single"));
+        // sources, note: only build section is needed from config
+        index.source.self.insert(std::make_pair("src", "src"));
+        bunsan::filesystem::copy_tree(m_location, destination / "src");
         // dependencies
-        {
-            // TODO libs
-        }
+        for (const std::string &lib: m_libs)
+            index.source.import.package.insert(std::make_pair(".", "bacs/lib/" + lib));
+        // save it
         index.save(destination / "index");
     }
 }}}}
