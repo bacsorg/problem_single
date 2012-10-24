@@ -25,8 +25,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             const bunsan::pm::entry package = options_.root_package;
             boost::filesystem::create_directory(package_root);
             bunsan::pm::depends index;
-            //index.source.import.source.insert(/*bacs::base*/); // source code  ??? Which
-            //index.source.import.package.insert(/*bacs::base*/); // static libs ??? is better?
+            index.source.import.source.insert(std::make_pair(".", "bacs/system/single")); // TODO: think about library import
             index.source.import.source.insert(std::make_pair(".", package / "checker")); // function
             index.package.insert(std::make_pair(".", package / "tests")); // files
             index.save(package_root / "index");
@@ -62,8 +61,8 @@ namespace bacs{namespace single{namespace problem{namespace generators
             {
                 const boost::filesystem::path bin_package_root = package_root / "bin";
                 const bunsan::pm::entry bin_package = package / "bin";
-                checker->make_package(bin_package_root, bin_package);
-                index.package.insert(std::make_pair(".", bin_package));
+                if (checker->make_package(bin_package_root, bin_package))
+                    index.package.insert(std::make_pair(".", bin_package));
                 // calling conventions
                 index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/checker/call") /
@@ -82,8 +81,8 @@ namespace bacs{namespace single{namespace problem{namespace generators
             {
                 const boost::filesystem::path bin_package_root = package_root / "bin";
                 const bunsan::pm::entry bin_package = package / "bin";
-                validator->make_package(bin_package_root, bin_package);
-                index.package.insert(std::make_pair(".", bin_package));
+                if (validator->make_package(bin_package_root, bin_package))
+                    index.package.insert(std::make_pair(".", bin_package));
                 // calling conventions
                 index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/validator/call") /
