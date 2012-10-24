@@ -13,7 +13,8 @@ namespace bacs{namespace single{namespace problem
         virtual ~buildable();
 
     public:
-        virtual void make_package(const boost::filesystem::path &destination,
+        /// \return false if no package is needed
+        virtual bool make_package(const boost::filesystem::path &destination,
                                   const bunsan::pm::entry &package)=0;
     };
 }}}
