@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
             }
             generator::options opts;
             opts.driver = drv;
-            opts.destination = problem_destination;
+            opts.destination = problem_destination / boost::filesystem::path(problem).filename();
             opts.root_package = bunsan::pm::entry(problem_prefix) /
                                 boost::filesystem::path(problem).filename().string();
             gen->generate(opts);
