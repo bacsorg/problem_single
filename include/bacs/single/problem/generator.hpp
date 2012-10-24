@@ -5,12 +5,13 @@
 #include "bunsan/factory_helper.hpp"
 #include "bunsan/pm/entry.hpp"
 
+#include <boost/noncopyable.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/property_tree/ptree.hpp>
 
 namespace bacs{namespace single{namespace problem
 {
-    class generator
+    class generator: private boost::noncopyable
     BUNSAN_FACTORY_BEGIN(generator, const boost::property_tree::ptree &/*config*/)
     public:
         struct options

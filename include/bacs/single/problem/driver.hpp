@@ -7,11 +7,12 @@
 
 #include "bunsan/factory_helper.hpp"
 
+#include <boost/noncopyable.hpp>
 #include <boost/filesystem/path.hpp>
 
 namespace bacs{namespace single{namespace problem
 {
-    class driver
+    class driver: private boost::noncopyable
     BUNSAN_FACTORY_BEGIN(driver, const boost::filesystem::path &/*location*/)
     public:
         static driver_ptr instance(const boost::filesystem::path &location);

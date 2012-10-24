@@ -2,11 +2,12 @@
 
 #include "bunsan/pm/entry.hpp"
 
+#include <boost/noncopyable.hpp>
 #include <boost/filesystem/path.hpp>
 
 namespace bacs{namespace single{namespace problem
 {
-    class buildable
+    class buildable: private boost::noncopyable
     {
     public:
         virtual ~buildable();
