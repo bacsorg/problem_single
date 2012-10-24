@@ -26,7 +26,7 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         m_std(config.get_optional<std::string>("build.std")),
         m_libs(detail::get_vector(config, "build.libs")) {}
 
-    void single::make_package(const boost::filesystem::path &destination,
+    bool single::make_package(const boost::filesystem::path &destination,
                               const bunsan::pm::entry &/*package*/)
     {
         boost::filesystem::create_directories(destination);
@@ -41,5 +41,6 @@ namespace bacs{namespace single{namespace problem{namespace utilities
             index.source.import.package.insert(std::make_pair(".", "bacs/lib/" + lib));
         // save it
         index.save(destination / "index");
+        return true;
     }
 }}}}
