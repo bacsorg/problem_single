@@ -57,7 +57,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             BOOST_THROW_EXCEPTION(test_unknown_data_error());
     }
 
-    void simple0_tests::make_package(const boost::filesystem::path &destination,
+    bool simple0_tests::make_package(const boost::filesystem::path &destination,
                                      const bunsan::pm::entry &package)
     {
         boost::filesystem::create_directories(destination);
@@ -85,6 +85,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         for (const std::string &data_id: m_text_data_set)
             touch(destination / "etc" / "tests" / "convert" / data_id);
         index.save(destination / "index");
+        return true;
     }
 
     std::unordered_set<std::string> simple0_tests::data_set()
