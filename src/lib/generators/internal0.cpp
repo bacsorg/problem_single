@@ -19,80 +19,58 @@ namespace bacs{namespace single{namespace problem{namespace generators
     {
         boost::filesystem::remove_all(options_.destination);
         boost::filesystem::create_directories(options_.destination);
+        bunsan::pm::depends root_index;
         // root package
         {
-            const boost::filesystem::path package_root = options_.destination;
-            const bunsan::pm::entry package = options_.root_package;
-            boost::filesystem::create_directory(package_root);
-            bunsan::pm::depends index;
-            index.source.import.source.insert(std::make_pair(".", "bacs/system/single")); // TODO: think about library import
-            index.source.import.source.insert(std::make_pair(".", package / "checker")); // function
-            index.package.insert(std::make_pair(".", package / "tests")); // files
-            index.save(package_root / "index");
+            boost::filesystem::create_directory(options_.destination);
+            // TODO: think about library import
+            root_index.source.import.source.insert(std::make_pair(".", "bacs/system/single"));
         }
         // tests package
         {
             const boost::filesystem::path package_root = options_.destination / "tests";
             const bunsan::pm::entry package = options_.root_package / "tests";
-            boost::filesystem::create_directory(package_root);
             const utility_ptr tests = options_.driver->tests();
-            bunsan::pm::depends index;
             BOOST_ASSERT(tests);
-            {
-                const boost::filesystem::path bin_package_root = package_root / "bin";
-                const bunsan::pm::entry bin_package = package / "bin";
-                tests->make_package(bin_package_root, bin_package);
-                index.package.insert(std::make_pair(".", bin_package));
-                // calling conventions
-                index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/tests/call") /
-                    tests->section("call").get<std::string>("wrapper")));
-            }
-            index.save(package_root / "index");
+            if (tests->make_package(package_root, package))
+                root_index.package.insert(std::make_pair(".", package));
+            // calling conventions
+            root_index.source.import.source.insert(std::make_pair(".",
+                bunsan::pm::entry("bacs/system/tests/call") /
+                tests->section("call").get<std::string>("wrapper")));
         }
         // checker package
         {
             const boost::filesystem::path package_root = options_.destination / "checker";
             const bunsan::pm::entry package = options_.root_package / "checker";
-            boost::filesystem::create_directory(package_root);
             const utility_ptr checker = options_.driver->checker();
-            bunsan::pm::depends index;
             BOOST_ASSERT(checker);
-            {
-                const boost::filesystem::path bin_package_root = package_root / "bin";
-                const bunsan::pm::entry bin_package = package / "bin";
-                if (checker->make_package(bin_package_root, bin_package))
-                    index.package.insert(std::make_pair(".", bin_package));
-                // calling conventions
-                index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/checker/call") /
-                    checker->section("call").get<std::string>("wrapper")));
-            }
-            index.save(package_root / "index");
+            if (checker->make_package(package_root, package))
+                root_index.package.insert(std::make_pair(".", package));
+            // calling conventions
+            root_index.source.import.source.insert(std::make_pair(".",
+                bunsan::pm::entry("bacs/system/checker/call") /
+                checker->section("call").get<std::string>("wrapper")));
         }
         // validator package
         {
             const boost::filesystem::path package_root = options_.destination / "validator";
             const bunsan::pm::entry package = options_.root_package / "validator";
-            boost::filesystem::create_directory(package_root);
             const utility_ptr validator = options_.driver->validator();
             bunsan::pm::depends index;
             if (validator)
             {
-                const boost::filesystem::path bin_package_root = package_root / "bin";
-                const bunsan::pm::entry bin_package = package / "bin";
-                if (validator->make_package(bin_package_root, bin_package))
-                    index.package.insert(std::make_pair(".", bin_package));
+                if (validator->make_package(package_root, package))
+                    root_index.package.insert(std::make_pair(".", package));
                 // calling conventions
-                index.source.import.source.insert(std::make_pair(".",
+                root_index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/validator/call") /
                     validator->section("call").get<std::string>("wrapper")));
             }
             else
             {
-                index.package.insert(std::make_pair(".", "bacs/system/validator/std/ok"));
+                root_index.source.import.source.insert(std::make_pair(".", "bacs/system/validator/std/ok"));
             }
-            index.save(package_root / "index");
         }
         // statement package
         {
@@ -102,5 +80,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             bunsan::pm::depends index;
             index.save(package_root / "index");
         }
+        // the last command
+        root_index.save(options_.destination / "index");
     }
 }}}}
