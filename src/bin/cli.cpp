@@ -4,16 +4,19 @@
  * \brief Command line interface to BACS.SINGLE.PROBLEM.
  */
 
+#include "bacs/single/problem/driver.hpp"
+#include "bacs/single/problem/generator.hpp"
+
+#include "bunsan/system_error.hpp"
+
 #include "yandex/contest/detail/LogHelper.hpp"
 #include "yandex/contest/SystemError.hpp"
 #include "yandex/contest/TypeInfo.hpp"
 
-#include "bacs/single/problem/driver.hpp"
-#include "bacs/single/problem/generator.hpp"
-
 #include <iostream>
 
 #include <boost/program_options.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -22,12 +25,13 @@ int main(int argc, char *argv[])
     try
     {
         std::vector<std::string> problems;
-        std::string generator_type, problem_destination, problem_prefix;
+        std::string generator_type, problem_destination, problem_prefix, info_destination;
         boost::property_tree::ptree generator_config; // note: unitialized
         desc.add_options()
             ("generator,g", po::value<std::string>(&generator_type)->required(), "generator type")
             ("prefix,R", po::value<std::string>(&problem_prefix)->required(), "problems prefix")
             ("destination,d", po::value<std::string>(&problem_destination)->required(), "problems destination")
+            ("info,i", po::value<std::string>(&info_destination)->required(), "info destination")
             ("problem,p", po::value<std::vector<std::string>>(&problems)->composing(), "problems");
         po::positional_options_description pdesc;
         pdesc.add("problem", -1);
@@ -38,13 +42,27 @@ int main(int argc, char *argv[])
         {
             STREAM_INFO << "Processing \"" << problem << "\" problem...";
             using namespace bacs::single::problem;
+            namespace api = bacs::single::api;
             driver_ptr drv = driver::instance(problem);
             if (!drv)
             {
                 STREAM_ERROR << "Unable to initialize driver for \"" << problem << "\" problem.";
                 return 1;
             }
-            STREAM_DEBUG << drv->overview().DebugString();
+            const api::pb::problem::Problem info = drv->overview();
+            STREAM_DEBUG << info.DebugString();
+            {
+                boost::filesystem::ofstream fout(boost::filesystem::path(info_destination) / problem);
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+                if (!info.SerializeToOstream(&fout))
+                    BOOST_THROW_EXCEPTION(bunsan::error() << bunsan::error::message("Unable to serialize info."));
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
+                fout.close();
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
+            }
             generator_ptr gen = generator::instance(generator_type, generator_config);
             if (!gen)
             {
