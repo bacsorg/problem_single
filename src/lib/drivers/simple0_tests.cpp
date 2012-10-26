@@ -7,6 +7,9 @@
 
 #include <unordered_map>
 
+#include <boost/archive/text_oarchive.hpp>
+#include "yandex/contest/serialization/unordered_set.hpp"
+
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
 
@@ -62,7 +65,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     {
         boost::filesystem::create_directories(destination);
         bunsan::pm::depends index;
-        index.source.import.package.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
+        index.source.import.source.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
         // tests
         index.source.self.insert(std::make_pair("share/tests", "tests"));
         boost::filesystem::create_directory(destination / "tests");
@@ -73,17 +76,23 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         }
         // configuration for tests generator
         index.source.self.insert(std::make_pair("etc", "etc"));
-        boost::filesystem::create_directories(destination / "etc" / "tests" / "convert");
-        const auto touch =
-            [](const boost::filesystem::path &path)
+        boost::filesystem::create_directory(destination / "etc");
+        {
+            boost::filesystem::ofstream fout(destination / "etc/tests");
+            if (fout.bad())
+                BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
             {
-                boost::filesystem::ofstream fout(path);
-                fout.close();
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
-            };
-        for (const std::string &data_id: m_text_data_set)
-            touch(destination / "etc" / "tests" / "convert" / data_id);
+                boost::archive::text_oarchive oa(fout);
+                // FIXME I don't like that order should be checked by programmer.
+                // Should be moved into separate header.
+                oa << m_test_set << m_data_set << m_text_data_set;
+            }
+            if (fout.bad())
+                BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
+            fout.close();
+            if (fout.bad())
+                BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
+        }
         index.save(destination / "index");
         return true;
     }
