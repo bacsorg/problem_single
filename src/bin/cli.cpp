@@ -49,20 +49,6 @@ int main(int argc, char *argv[])
                 STREAM_ERROR << "Unable to initialize driver for \"" << problem << "\" problem.";
                 return 1;
             }
-            const api::pb::problem::Problem info = drv->overview();
-            STREAM_DEBUG << info.DebugString();
-            {
-                boost::filesystem::ofstream fout(info_destination / problem.filename());
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
-                if (!info.SerializeToOstream(&fout))
-                    BOOST_THROW_EXCEPTION(bunsan::error() << bunsan::error::message("Unable to serialize info."));
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
-                fout.close();
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
-            }
             generator_ptr gen = generator::instance(generator_type, generator_config);
             if (!gen)
             {
@@ -73,7 +59,20 @@ int main(int argc, char *argv[])
             opts.driver = drv;
             opts.destination = problem_destination / problem.filename();
             opts.root_package = bunsan::pm::entry(problem_prefix) / problem.filename().string();
-            gen->generate(opts);
+            const api::pb::problem::Problem info = gen->generate(opts);
+            STREAM_DEBUG << info.DebugString();
+            {
+                boost::filesystem::ofstream fout(info_destination / problem.filename());
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+                if (!info.SerializeToOstream(&fout))
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("write") << bunsan::error::message("Unable to serialize info."));
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
+                fout.close();
+                if (fout.bad())
+                    BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
+            }
         }
     }
     catch (po::error &e)

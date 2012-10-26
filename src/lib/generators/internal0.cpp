@@ -13,10 +13,12 @@ namespace bacs{namespace single{namespace problem{namespace generators
             return tmp;
         });
 
-    internal0::internal0(const boost::property_tree::ptree &config) {}
+    internal0::internal0(const boost::property_tree::ptree &/*config*/) {}
 
-    void internal0::generate(const options &options_)
+    api::pb::problem::Problem internal0::generate(const options &options_)
     {
+        api::pb::problem::Problem problem_info = options_.driver->overview();
+        problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
         boost::filesystem::remove_all(options_.destination);
         boost::filesystem::create_directories(options_.destination);
         bunsan::pm::depends root_index;
@@ -82,5 +84,6 @@ namespace bacs{namespace single{namespace problem{namespace generators
         }
         // the last command
         root_index.save(options_.destination / "index");
+        return problem_info;
     }
 }}}}

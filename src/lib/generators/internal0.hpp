@@ -10,7 +10,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
     public:
         internal0(const boost::property_tree::ptree &config);
 
-        void generate(const options &options_) override;
+        api::pb::problem::Problem generate(const options &options_) override;
 
     private:
 
