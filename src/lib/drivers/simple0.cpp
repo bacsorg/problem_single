@@ -121,7 +121,10 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         detail::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
         // restrictions
         detail::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
-        // system is set by BACS.ARCHIVE
+        // system
+        api::pb::problem::Info::System &system = *info.mutable_system();
+        system.set_package("unknown"); // is set by generator
+        system.set_hash("TODO"); // TODO implement hashing
     }
 
     void simple0::read_tests(api::pb::problem::Tests &tests__)
@@ -155,6 +158,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         api::pb::testing::SolutionTesting &testing = *profile.mutable_testing();
         testing.Clear();
         api::pb::testing::TestGroup &test_group = *testing.add_test_groups();
+        test_group.set_id("");
         api::pb::settings::TestGroupSettings &settings = *test_group.mutable_settings();
         {
             boost::optional<std::string> value;
