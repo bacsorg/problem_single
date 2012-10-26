@@ -14,24 +14,23 @@ message Task
      * If is not the same as worker's, task is rejected.
      */
     required bytes hash = 1;
-    repeated Callback callbacks = 2;
+    required Callbacks callbacks = 2;
     required Solution solution = 3;
     required testing.SolutionTesting testing = 4;
 }
 
+message Callbacks
+{
+    /// Accepts result (error is a result).
+    required Callback result = 1;
+    /// Accepts intermediate statuses (not guaranteed to be delivered).
+    optional Callback intermediate = 2;
+}
+
 message Callback
 {
-    /// What callback will be used for?
-    enum Target
-    {
-        /// Accepts result (error is a result).
-        RESULT = 0;
-        /// Accepts intermediate statuses (not guaranteed to be delivered).
-        INTERMEDIATE = 1;
-    }
-    required Target target = 1;
-    required string type = 2;
-    repeated string arguments = 3;
+    required string type = 1;
+    repeated string arguments = 2;
 }
 
 message Solution
