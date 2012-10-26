@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bacs/single/api/settings.pb.h"
+#include "bacs/single/api/pb/settings.pb.h"
 
 #include <boost/filesystem/path.hpp>
 

@@ -4,7 +4,7 @@
 
 #include "bunsan/factory_helper.hpp"
 
-#include "bacs/single/api/problem.pb.h"
+#include "bacs/single/api/pb/problem.pb.h"
 
 #include <boost/property_tree/ptree.hpp>
 
