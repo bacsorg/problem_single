@@ -25,14 +25,14 @@ int main(int argc, char *argv[])
     try
     {
         std::vector<std::string> problems;
-        std::string generator_type, problem_destination, problem_prefix, info_destination;
+        std::string generator_type, repository, problem_prefix, info_destination;
         boost::property_tree::ptree generator_config; // note: unitialized
         desc.add_options()
             ("generator,g", po::value<std::string>(&generator_type)->required(), "generator type")
             ("prefix,R", po::value<std::string>(&problem_prefix)->required(), "problems prefix")
-            ("destination,d", po::value<std::string>(&problem_destination)->required(), "problems destination")
+            ("repository,p", po::value<std::string>(&repository)->required(), "problems destination")
             ("info,i", po::value<std::string>(&info_destination)->required(), "info destination")
-            ("problem,p", po::value<std::vector<std::string>>(&problems)->composing(), "problems");
+            ("problem", po::value<std::vector<std::string>>(&problems)->composing(), "problems");
         po::positional_options_description pdesc;
         pdesc.add("problem", -1);
         po::variables_map vm;
@@ -40,10 +40,13 @@ int main(int argc, char *argv[])
         po::notify(vm);
         for (const boost::filesystem::path problem: problems)
         {
-            STREAM_INFO << "Processing \"" << problem << "\" problem...";
+            STREAM_INFO << "Processing " << problem.filename() << " problem at " << problem << "...";
+            const boost::filesystem::path qproblem = problem_prefix / problem.filename();
+            const boost::filesystem::path dproblem = repository / qproblem;
+            const boost::filesystem::path iproblem = info_destination / problem.filename();
             using namespace bacs::single::problem;
             namespace api = bacs::single::api;
-            driver_ptr drv = driver::instance(problem);
+            const driver_ptr drv = driver::instance(problem);
             if (!drv)
             {
                 STREAM_ERROR << "Unable to initialize driver for \"" << problem << "\" problem.";
@@ -57,12 +60,12 @@ int main(int argc, char *argv[])
             }
             generator::options opts;
             opts.driver = drv;
-            opts.destination = problem_destination / problem.filename();
-            opts.root_package = bunsan::pm::entry(problem_prefix) / problem.filename().string();
+            opts.destination = dproblem;
+            opts.root_package = qproblem.string();
             const api::pb::problem::Problem info = gen->generate(opts);
             STREAM_DEBUG << info.DebugString();
             {
-                boost::filesystem::ofstream fout(info_destination / problem.filename());
+                boost::filesystem::ofstream fout(iproblem);
                 if (fout.bad())
                     BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
                 if (!info.SerializeToOstream(&fout))
