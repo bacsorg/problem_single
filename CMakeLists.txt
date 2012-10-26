@@ -59,7 +59,7 @@ target_link_libraries(${PROJECT_NAME}_cli ${PROJECT_NAME} ${libraries})
 
 # Installation
 install(DIRECTORY include DESTINATION .)
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_cli
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib)
