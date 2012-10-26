@@ -7,8 +7,8 @@ namespace bacs{namespace single{namespace problem{namespace utilities
     public:
         explicit no(const boost::property_tree::ptree &config): utility(config) {}
 
-        bool make_package(const boost::filesystem::path &destination,
-                          const bunsan::pm::entry &package) override
+        bool make_package(const boost::filesystem::path &/*destination*/,
+                          const bunsan::pm::entry &/*package*/) override
         {
             return false;
         }
