@@ -1,0 +1,14 @@
+package bacs.single.api.pb.intermediate;
+
+message IntermediateResult
+{
+    enum State
+    {
+        INITIALIZED = 1;
+        BUILDING = 2;
+        TESTING = 3;
+    }
+    required State state = 1;
+    optional string test_group = 2;
+    optional string test_id = 3;
+}

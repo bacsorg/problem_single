@@ -34,6 +34,7 @@ PROTOBUF_GENERATE_CPP(proto_srcs proto_hdrs
     proto/problem.proto
     proto/testing.proto
     proto/settings.proto
+    proto/intermediate.proto
 )
 
 # Local
