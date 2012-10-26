@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         po::variables_map vm;
         po::store(po::command_line_parser(argc, argv).options(desc).positional(pdesc).run(), vm);
         po::notify(vm);
-        for (const std::string &problem: problems)
+        for (const boost::filesystem::path problem: problems)
         {
             STREAM_INFO << "Processing \"" << problem << "\" problem...";
             using namespace bacs::single::problem;
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
             const api::pb::problem::Problem info = drv->overview();
             STREAM_DEBUG << info.DebugString();
             {
-                boost::filesystem::ofstream fout(boost::filesystem::path(info_destination) / problem);
+                boost::filesystem::ofstream fout(info_destination / problem.filename());
                 if (fout.bad())
                     BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
                 if (!info.SerializeToOstream(&fout))
@@ -71,9 +71,8 @@ int main(int argc, char *argv[])
             }
             generator::options opts;
             opts.driver = drv;
-            opts.destination = problem_destination / boost::filesystem::path(problem).filename();
-            opts.root_package = bunsan::pm::entry(problem_prefix) /
-                                boost::filesystem::path(problem).filename().string();
+            opts.destination = problem_destination / problem.filename();
+            opts.root_package = bunsan::pm::entry(problem_prefix) / problem.filename().string();
             gen->generate(opts);
         }
     }
