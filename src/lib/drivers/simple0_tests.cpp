@@ -20,7 +20,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         {
             boost::property_tree::ptree config;
             config.put("build.builder", "[simple0 tests generator]");
-            config.put("call.wrapper", "test_id_iterate");
+            config.put("utility.call", "copy");
             return config;
         }();
 

@@ -37,7 +37,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
                 bunsan::pm::entry("bacs/system/tests/call") /
-                tests->section("call").get<std::string>("wrapper")));
+                tests->section("utility").get<std::string>("call")));
         }
         // checker package
         {
@@ -50,7 +50,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
                 bunsan::pm::entry("bacs/system/checker/call") /
-                checker->section("call").get<std::string>("wrapper")));
+                checker->section("utility").get<std::string>("call")));
         }
         // validator package
         {
@@ -65,7 +65,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
                 // calling conventions
                 root_index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/validator/call") /
-                    validator->section("call").get<std::string>("wrapper")));
+                    validator->section("utility").get<std::string>("call")));
             }
             else
             {
