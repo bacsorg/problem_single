@@ -4,26 +4,31 @@ import "resource.proto";
 
 message TestGroupSettings
 {
-    required ResourceLimits resource_limits = 1;
-    required Run run = 2;
-    repeated File files = 3;
-    required Execution execution = 4;
+    required Run run = 1;
+    required ProcessSettings process = 2;
 }
 
 message Run
 {
     enum Order
     {
-        NUMERIC = 0;
+        NUMERIC = 0;         ///< Non-numeric tests will be removed from test_set.
         LEXICOGRAPHICAL = 1;
     }
     enum Algorithm
     {
-        ALL = 0;
-        WHILE_NOT_FAIL = 1;
+        ALL = 0;             ///< Test group is OK in any case.
+        WHILE_NOT_FAIL = 1;  ///< Test group is OK only if every test is OK.
     }
     required Order order = 1;
     required Algorithm algorithm = 2;
+}
+
+message ProcessSettings
+{
+    required ResourceLimits resource_limits = 1;
+    repeated File files = 2;
+    required Execution execution = 3;
 }
 
 message Execution
