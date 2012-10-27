@@ -6,7 +6,7 @@ message Result
 {
     required SystemResult system = 1;
     optional BuildResult build = 2;
-    repeated TestGroupResult test_groups = 3;
+    optional SolutionTestingResult testing_result = 3;
 }
 
 message SystemResult
@@ -23,6 +23,11 @@ message BuildResult
 {
     required Execution execution = 1;
     required bytes output = 2;
+}
+
+message SolutionTestingResult
+{
+    repeated TestGroupResult test_groups = 1;
 }
 
 message Execution
