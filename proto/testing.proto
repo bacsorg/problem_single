@@ -18,8 +18,18 @@ message TestGroup
 message TestQuery
 {
     optional string id = 1;
-    optional string wildcard = 2;
+    optional WildcardQuery wildcard = 2;
     optional RegexQuery regex = 3;
+}
+
+message WildcardQuery
+{
+    enum RegexFlag
+    {
+        IGNORE_CASE = 0;
+    }
+    repeated RegexFlag flags = 1;
+    required string value = 2;
 }
 
 message RegexQuery
