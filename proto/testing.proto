@@ -24,20 +24,20 @@ message TestQuery
 
 message WildcardQuery
 {
-    enum RegexFlag
+    enum Flag
     {
         IGNORE_CASE = 0;
     }
-    repeated RegexFlag flags = 1;
+    repeated Flag flags = 1;
     required string value = 2;
 }
 
 message RegexQuery
 {
-    enum RegexFlag
+    enum Flag
     {
         IGNORE_CASE = 0;
     }
-    repeated RegexFlag flags = 1;
+    repeated Flag flags = 1;
     required string value = 2;
 }
