@@ -160,10 +160,11 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         api::pb::testing::TestGroup &test_group = *testing.add_test_groups();
         test_group.set_id("");
         api::pb::settings::TestGroupSettings &settings = *test_group.mutable_settings();
+        api::pb::settings::ProcessSettings &process = *settings.mutable_process();
         {
             boost::optional<std::string> value;
             // resource limits
-            api::pb::ResourceLimits &resource_limits = *settings.mutable_resource_limits();
+            api::pb::ResourceLimits &resource_limits = *process.mutable_resource_limits();
             if ((value = m_config.get_optional<std::string>("resource_limits.time")))
                 resource_limits.set_time_limit_millis(detail::parse_time_millis(value.get()));
             if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
@@ -178,8 +179,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             //run.set_order(); // depending on tests, is set in other location
             run.set_algorithm(api::pb::settings::Run::WHILE_NOT_FAIL);
             // files & execution
-            api::pb::settings::File *file = settings.add_files();
-            api::pb::settings::Execution &execution = *settings.mutable_execution();
+            api::pb::settings::File *file = process.add_files();
+            api::pb::settings::Execution &execution = *process.mutable_execution();
             file->set_id("stdin");
             file->set_init("in");
             file->add_permissions(api::pb::settings::File::READ);
@@ -193,7 +194,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
                 rd.set_stream(api::pb::settings::Execution::Redirection::STDIN);
                 rd.set_file_id("stdin");
             }
-            file = settings.add_files();
+            file = process.add_files();
             file->set_id("stdout");
             file->add_permissions(api::pb::settings::File::READ);
             file->add_permissions(api::pb::settings::File::WRITE);
