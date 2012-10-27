@@ -210,7 +210,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         }
         test_group.clear_test_set();
         api::pb::testing::TestQuery &test_query = *test_group.add_test_set();
-        test_query.set_wildcard("*"); // select all tests
+        test_query.mutable_wildcard()->set_value("*"); // select all tests
     }
 
     void simple0::read_utilities(api::pb::problem::Utilities &utilities)
