@@ -26,6 +26,6 @@ namespace bacs{namespace single{namespace problem
         virtual boost::property_tree::ptree section(const std::string &name) const;
 
     private:
-        boost::property_tree::ptree m_config;
+        const boost::property_tree::ptree m_config;
     BUNSAN_FACTORY_END(utility)
 }}}
