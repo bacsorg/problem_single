@@ -17,7 +17,8 @@ namespace bacs{namespace single{namespace problem
         static utility_ptr instance(const boost::filesystem::path &location);
 
     public:
-        explicit utility(const boost::property_tree::ptree &config);
+        utility(const boost::filesystem::path &location,
+                const boost::property_tree::ptree &config);
 
     public:
         virtual api::pb::problem::Utility info() const;
@@ -25,7 +26,13 @@ namespace bacs{namespace single{namespace problem
         /// One of sections in configuration.
         virtual boost::property_tree::ptree section(const std::string &name) const;
 
+        virtual boost::filesystem::path location() const;
+
+        virtual boost::filesystem::path target() const;
+
     private:
+        const boost::filesystem::path m_location;
+        const boost::filesystem::path m_target;
         const boost::property_tree::ptree m_config;
     BUNSAN_FACTORY_END(utility)
 }}}
