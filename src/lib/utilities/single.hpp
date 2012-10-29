@@ -17,7 +17,6 @@ namespace bacs{namespace single{namespace problem{namespace utilities
                           const bunsan::pm::entry &package) override;
 
     private:
-        const boost::filesystem::path m_location;
         const boost::filesystem::path m_source;
         const boost::optional<std::string> m_std;
         const std::vector<std::string> m_libs;
