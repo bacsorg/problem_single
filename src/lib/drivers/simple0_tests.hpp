@@ -23,7 +23,6 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         std::unordered_set<std::string> test_set() override;
 
     private:
-        const boost::filesystem::path m_location;
         std::unordered_set<std::string> m_data_set, m_test_set;
         const std::unordered_set<std::string> m_text_data_set;
     };

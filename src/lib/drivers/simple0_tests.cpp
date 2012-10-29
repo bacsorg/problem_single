@@ -26,13 +26,12 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     simple0_tests::simple0_tests(const boost::filesystem::path &location,
                                  const std::unordered_set<std::string> &text_data_set):
-        tests(config),
-        m_location(location),
+        tests(location, config),
         m_text_data_set(text_data_set)
     {
         const boost::filesystem::directory_iterator end;
         std::unordered_map<std::string, std::unordered_set<std::string>> test_files;
-        for (boost::filesystem::directory_iterator i(m_location); i != end; ++i)
+        for (boost::filesystem::directory_iterator i(location); i != end; ++i)
         {
             if (!boost::filesystem::is_regular_file(i->path()))
                 BOOST_THROW_EXCEPTION(test_format_error());
@@ -71,7 +70,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         boost::filesystem::create_directory(destination / "tests");
         {
             const boost::filesystem::directory_iterator end;
-            for (boost::filesystem::directory_iterator i(m_location); i != end; ++i)
+            for (boost::filesystem::directory_iterator i(location()); i != end; ++i)
                 boost::filesystem::copy_file(i->path(), destination / "tests" / i->path().filename());
         }
         // configuration for tests generator
