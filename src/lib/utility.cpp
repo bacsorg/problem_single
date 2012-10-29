@@ -10,8 +10,8 @@ namespace bacs{namespace single{namespace problem
     {
         boost::property_tree::ptree config;
         boost::property_tree::read_ini((location / "config.ini").string(), config);
-        // FIXME Is it OK to hardcode "single" here?
-        return instance(config.get<std::string>("build.builder", "single"), location, config);
+        // note: "no" is equivalent to empty section
+        return instance(config.get<std::string>("build.builder", "no"), location, config);
     }
 
     utility::utility(const boost::property_tree::ptree &config):
