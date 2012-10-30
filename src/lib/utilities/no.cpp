@@ -15,10 +15,10 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         }
 
     private:
-        static bool factory_reg_hook;
+        static const bool factory_reg_hook;
     };
 
-    bool no::factory_reg_hook = utility::register_new("no",
+    const bool no::factory_reg_hook = utility::register_new("no",
         [](const boost::filesystem::path &location,
            const boost::property_tree::ptree &config)
         {

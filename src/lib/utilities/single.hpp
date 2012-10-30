@@ -22,6 +22,6 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         const std::vector<std::string> m_libs;
 
     private:
-        static bool factory_reg_hook;
+        static const bool factory_reg_hook;
     };
 }}}}

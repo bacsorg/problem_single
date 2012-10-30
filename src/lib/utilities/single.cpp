@@ -12,7 +12,7 @@
 
 namespace bacs{namespace single{namespace problem{namespace utilities
 {
-    bool single::factory_reg_hook = utility::register_new("single",
+    const bool single::factory_reg_hook = utility::register_new("single",
         [](const boost::filesystem::path &location,
            const boost::property_tree::ptree &config)
         {

@@ -18,7 +18,7 @@
 
 namespace bacs{namespace single{namespace problem{namespace drivers
 {
-    bool simple0::factory_reg_hook = driver::register_new("simple0",
+    const bool simple0::factory_reg_hook = driver::register_new("simple0",
         [](const boost::filesystem::path &location)
         {
             driver_ptr tmp(new simple0(location));

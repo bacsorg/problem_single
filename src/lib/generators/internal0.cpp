@@ -6,7 +6,7 @@
 
 namespace bacs{namespace single{namespace problem{namespace generators
 {
-    bool internal0::factory_reg_hook = generator::register_new("internal0",
+    const bool internal0::factory_reg_hook = generator::register_new("internal0",
         [](const boost::property_tree::ptree &config)
         {
             generator_ptr tmp(new internal0(config));

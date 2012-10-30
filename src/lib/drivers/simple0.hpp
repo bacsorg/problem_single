@@ -36,6 +36,6 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         boost::property_tree::ptree m_config;
 
     private:
-        static bool factory_reg_hook;
+        static const bool factory_reg_hook;
     };
 }}}}
