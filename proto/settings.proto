@@ -2,6 +2,8 @@ package bacs.single.api.pb.settings;
 
 import "resource.proto";
 
+// should be moved into testing
+// this file declares process-related settings
 message TestGroupSettings
 {
     required Run run = 1;
@@ -45,7 +47,7 @@ message Execution
         required string file_id = 2;
     }
     repeated string arguments = 1;
-    optional Path current_path = 2;
+    optional Path current_path = 2;        // not supported (will be ignored)
     repeated Redirection redirections = 3;
 }
 
@@ -67,21 +69,24 @@ message File
         EXECUTE = 2;
     }
 
-    /*!
-     * \note: It may be more convenient to declare Offset class.
-     * Range is looped, i.e. {begin = 5, end = 2}
-     * for file of length 7 "0123456" will return "5601".
-     */
     message Range
     {
-        /// Offset: positive from the beginning, negative from the end (inclusive).
-        optional int64 begin = 1;
-        /// Offset: positive from the beginning, negative from the end (exclusive).
-        optional int64 end = 2;
+        enum Whence
+        {
+            BEGIN = 0;
+            END = 1;
+        };
+        /// Position from which offset will be calculated.
+        required Whence whence = 1;
+        /// Negative or positive offset from position specified by whence field.
+        required int64 offset = 2;
+        /// Size of chunk will be transmitted (if EOF reached size of chunk may be smaller).
+        required uint64 size = 3;
     }
+
     required string id = 1;
     repeated Permissions permissions = 2;
     optional /*DataId*/string init = 3;
-    optional Path path = 4;
+    optional Path path = 4; // note: arbitrary paths are not supported, path will be stripped to filename
     optional Range receive = 5;
 }
