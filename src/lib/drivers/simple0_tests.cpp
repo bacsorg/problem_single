@@ -2,16 +2,16 @@
 
 #include "simple0_tests.hpp"
 
-#include "bunsan/system_error.hpp"
+#include "bunsan/enable_error_info.hpp"
+#include "bunsan/filesystem/fstream.hpp"
 #include "bunsan/pm/depends.hpp"
 
 #include <unordered_map>
 
 #include <boost/archive/text_oarchive.hpp>
-#include "yandex/contest/serialization/unordered_set.hpp"
+#include "bunsan/serialization/unordered_set.hpp"
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
 
 namespace bacs{namespace single{namespace problem{namespace drivers
 {
@@ -64,6 +64,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     {
         boost::filesystem::create_directories(destination);
         bunsan::pm::depends index;
+        // TODO import it built
         index.source.import.source.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
         // tests
         index.source.self.insert(std::make_pair("share/tests", "tests"));
@@ -76,22 +77,18 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         // configuration for tests generator
         index.source.self.insert(std::make_pair("etc", "etc"));
         boost::filesystem::create_directory(destination / "etc");
+        BUNSAN_EXCEPTIONS_WRAP_BEGIN()
         {
-            boost::filesystem::ofstream fout(destination / "etc/tests");
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+            bunsan::filesystem::ofstream fout(destination / "etc/tests");
             {
                 boost::archive::text_oarchive oa(fout);
                 // FIXME I don't like that order should be checked by programmer.
                 // Should be moved into separate header.
                 oa << m_test_set << m_data_set << m_text_data_set;
             }
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
             fout.close();
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
         }
+        BUNSAN_EXCEPTIONS_WRAP_END()
         index.save(destination / "index");
         return true;
     }

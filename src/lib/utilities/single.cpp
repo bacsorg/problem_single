@@ -3,11 +3,11 @@
 #include "bacs/single/problem/detail/split.hpp"
 
 #include "bunsan/filesystem/operations.hpp"
-#include "bunsan/system_error.hpp"
+#include "bunsan/filesystem/fstream.hpp"
+#include "bunsan/enable_error_info.hpp"
 #include "bunsan/pm/depends.hpp"
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
 namespace bacs{namespace single{namespace problem{namespace utilities
@@ -60,10 +60,9 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         // modules: set binary name
         index.source.self.insert(std::make_pair("modules", "modules"));
         boost::filesystem::create_directory(destination / "modules");
+        BUNSAN_EXCEPTIONS_WRAP_BEGIN()
         {
-            boost::filesystem::ofstream fout(destination / "modules" / "utility.cmake");
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+            bunsan::filesystem::ofstream fout(destination / "modules" / "utility.cmake");
             fout << "set(target " << target().string() << ")\n";
             fout << "set(source " << m_source.string() << ")\n";
             fout << "set(libraries";
@@ -72,12 +71,9 @@ namespace bacs{namespace single{namespace problem{namespace utilities
             fout << ")\n";
             if (m_std)
                 fout << "set(std " << m_std << ")\n";
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
             fout.close();
-            if (fout.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
         }
+        BUNSAN_EXCEPTIONS_WRAP_END()
         // dependencies
         for (const std::string &lib: m_libs)
             index.source.import.package.insert(std::make_pair(".", "bacs/lib/" + lang + "/" + lib));

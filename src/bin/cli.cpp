@@ -7,16 +7,15 @@
 #include "bacs/single/problem/driver.hpp"
 #include "bacs/single/problem/generator.hpp"
 
-#include "bunsan/system_error.hpp"
+#include "bunsan/enable_error_info.hpp"
+#include "bunsan/filesystem/fstream.hpp"
+#include "bunsan/runtime/demangle.hpp"
 
 #include "yandex/contest/detail/LogHelper.hpp"
-#include "yandex/contest/SystemError.hpp"
-#include "yandex/contest/TypeInfo.hpp"
 
 #include <iostream>
 
 #include <boost/program_options.hpp>
-#include <boost/filesystem/fstream.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -64,18 +63,14 @@ int main(int argc, char *argv[])
             opts.root_package = qproblem.string();
             const api::pb::problem::Problem info = gen->generate(opts);
             STREAM_DEBUG << info.DebugString();
+            BUNSAN_EXCEPTIONS_WRAP_BEGIN()
             {
-                boost::filesystem::ofstream fout(iproblem);
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+                bunsan::filesystem::ofstream fout(iproblem);
                 if (!info.SerializeToOstream(&fout))
                     BOOST_THROW_EXCEPTION(bunsan::system_error("write") << bunsan::error::message("Unable to serialize info."));
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("write"));
                 fout.close();
-                if (fout.bad())
-                    BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
             }
+            BUNSAN_EXCEPTIONS_WRAP_END()
         }
     }
     catch (po::error &e)
@@ -86,7 +81,7 @@ int main(int argc, char *argv[])
     catch (std::exception &e)
     {
         std::cerr << "Program terminated due to exception of type \"" <<
-                     yandex::contest::typeinfo::name(e) << "\"." << std::endl;
+                     bunsan::runtime::type_name(e) << "\"." << std::endl;
         std::cerr << "what() returns the following message:" << std::endl <<
                      e.what() << std::endl;
         return 1;

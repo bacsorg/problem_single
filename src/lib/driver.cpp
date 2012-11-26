@@ -1,12 +1,12 @@
 #include "bacs/single/problem/driver.hpp"
 
-#include "bunsan/system_error.hpp"
+#include "bunsan/enable_error_info.hpp"
+#include "bunsan/filesystem/fstream.hpp"
 
 #include <iterator>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/filesystem/fstream.hpp>
 
 namespace bacs{namespace single{namespace problem
 {
@@ -15,18 +15,14 @@ namespace bacs{namespace single{namespace problem
     driver_ptr driver::instance(const boost::filesystem::path &location)
     {
         std::string format;
+        BUNSAN_EXCEPTIONS_WRAP_BEGIN()
         {
-            boost::filesystem::ifstream fin(location / "format");
-            if (fin.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("open"));
+            bunsan::filesystem::ifstream fin(location / "format");
             format.assign(std::istreambuf_iterator<char>(fin),
                           std::istreambuf_iterator<char>());
-            if (fin.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("read"));
             fin.close();
-            if (fin.bad())
-                BOOST_THROW_EXCEPTION(bunsan::system_error("close"));
         }
+        BUNSAN_EXCEPTIONS_WRAP_END()
         boost::algorithm::trim(format);
         return instance(format, location);
     }
