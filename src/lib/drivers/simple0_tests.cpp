@@ -4,7 +4,7 @@
 
 #include "bunsan/enable_error_info.hpp"
 #include "bunsan/filesystem/fstream.hpp"
-#include "bunsan/pm/depends.hpp"
+#include "bunsan/pm/index.hpp"
 
 #include <unordered_map>
 
@@ -63,7 +63,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
                                      const bunsan::pm::entry &/*package*/)
     {
         boost::filesystem::create_directories(destination);
-        bunsan::pm::depends index;
+        bunsan::pm::index index;
         // TODO import it built
         index.source.import.source.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
         // tests

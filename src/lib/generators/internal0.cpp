@@ -1,6 +1,6 @@
 #include "internal0.hpp"
 
-#include "bunsan/pm/depends.hpp"
+#include "bunsan/pm/index.hpp"
 
 #include <boost/filesystem/operations.hpp>
 
@@ -21,7 +21,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
         boost::filesystem::remove_all(options_.destination);
         boost::filesystem::create_directories(options_.destination);
-        bunsan::pm::depends root_index;
+        bunsan::pm::index root_index;
         // root package
         {
             boost::filesystem::create_directory(options_.destination);
@@ -59,7 +59,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             const boost::filesystem::path package_root = options_.destination / "validator";
             const bunsan::pm::entry package = options_.root_package / "validator";
             const utility_ptr validator = options_.driver->validator();
-            bunsan::pm::depends index;
+            bunsan::pm::index index;
             if (validator)
             {
                 if (validator->make_package(package_root, package))
@@ -79,7 +79,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             const boost::filesystem::path package_root = options_.destination / "statement";
             const bunsan::pm::entry package = options_.root_package / "statement";
             boost::filesystem::create_directory(package_root);
-            bunsan::pm::depends index;
+            bunsan::pm::index index;
             index.save(package_root / "index");
         }
         // the last command
