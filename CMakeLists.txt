@@ -12,7 +12,7 @@ bunsan_use(${PROTOBUF_LIBRARIES})
 
 bunsan_use_bunsan(common pm bacs_single_api)
 bunsan_use_boost(system filesystem serialization unit_test_framework program_options thread)
-bunsan_use(yandex_contest_common yandex_contest_system)
+bunsan_use(yandex_contest_common)
 
 bunsan_add_shared_library(${PROJECT_NAME}
     src/lib/buildable.cpp
