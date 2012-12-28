@@ -3,9 +3,9 @@
 #include "bacs/single/problem/utility.hpp"
 
 #include "bunsan/factory_helper.hpp"
+#include "bunsan/forward_constructor.hpp"
 
 #include <unordered_set>
-#include <utility>
 
 namespace bacs{namespace single{namespace problem
 {
@@ -15,8 +15,7 @@ namespace bacs{namespace single{namespace problem
     public:
         static tests_ptr instance(const boost::filesystem::path &location);
 
-        template <typename ... Args>
-        explicit tests(Args &&...args): utility(std::forward<Args>(args)...) {}
+        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(tests, utility)
 
     public:
         // create() will be provided by appropriate package
