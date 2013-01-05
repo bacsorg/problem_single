@@ -24,6 +24,17 @@ namespace bacs{namespace single{namespace problem
         }
         BUNSAN_EXCEPTIONS_WRAP_END()
         boost::algorithm::trim(format);
-        return instance(format, location);
+        constexpr char delim = '#';
+        const std::string::size_type delim_pos = format.find(delim);
+        if (format.find(delim, delim_pos + 1) == std::string::npos &&
+            delim_pos != std::string::npos &&
+            "bacs/single/problem" == format.substr(0, delim_pos))
+        {
+            return instance(format.substr(delim_pos + 1), location);
+        }
+        else
+        {
+            return driver_ptr();
+        }
     }
 }}}
