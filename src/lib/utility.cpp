@@ -16,6 +16,18 @@ namespace bacs{namespace single{namespace problem
         return instance(config.get<std::string>("build.builder", "no"), location, config);
     }
 
+    utility_ptr utility::instance_optional(const boost::filesystem::path &location)
+    {
+        try
+        {
+            return instance(location);
+        }
+        catch (unknown_utility_error &)
+        {
+            return utility_ptr();
+        }
+    }
+
     utility::utility(const boost::filesystem::path &location,
                      const boost::property_tree::ptree &config):
         m_location(location),

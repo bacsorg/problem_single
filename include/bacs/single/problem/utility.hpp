@@ -15,6 +15,7 @@ namespace bacs{namespace single{namespace problem
                                   const boost::property_tree::ptree &/*config*/)
     public:
         static utility_ptr instance(const boost::filesystem::path &location);
+        static utility_ptr instance_optional(const boost::filesystem::path &location);
 
     public:
         utility(const boost::filesystem::path &location,

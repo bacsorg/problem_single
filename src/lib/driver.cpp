@@ -34,7 +34,9 @@ namespace bacs{namespace single{namespace problem
         }
         else
         {
-            return driver_ptr();
+            // TODO I am not sure that this exception is OK here.
+            BOOST_THROW_EXCEPTION(unknown_driver_error() <<
+                                  unknown_driver_error::factory_type(format));
         }
     }
 }}}

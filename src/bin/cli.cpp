@@ -46,17 +46,7 @@ int main(int argc, char *argv[])
             using namespace bacs::single::problem;
             namespace api = bacs::single::api;
             const driver_ptr drv = driver::instance(problem);
-            if (!drv)
-            {
-                STREAM_ERROR << "Unable to initialize driver for \"" << problem << "\" problem.";
-                return 1;
-            }
-            generator_ptr gen = generator::instance(generator_type, generator_config);
-            if (!gen)
-            {
-                STREAM_ERROR << "Unable to initialize generator of \"" << generator_type << "\" type.";
-                return 1;
-            }
+            const generator_ptr gen = generator::instance(generator_type, generator_config);
             generator::options opts;
             opts.driver = drv;
             opts.destination = dproblem;

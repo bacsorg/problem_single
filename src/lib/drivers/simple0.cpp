@@ -78,7 +78,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     utility_ptr simple0::checker()
     {
-        const utility_ptr checker_ = utility::instance(m_location / "checker");
+        const utility_ptr checker_ = utility::instance_optional(m_location / "checker");
         if (!checker_)
             BOOST_THROW_EXCEPTION(checker_error() <<
                                   checker_error::message("Unable to initialize checker's driver."));
@@ -89,7 +89,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     {
         if (boost::filesystem::exists(m_location / "validator"))
         {
-            const utility_ptr validator_ = utility::instance(m_location / "validator");
+            const utility_ptr validator_ = utility::instance_optional(m_location / "validator");
             if (!validator_)
                 BOOST_THROW_EXCEPTION(validator_error() <<
                                       validator_error::message("Unable to initialize validator's driver."));
