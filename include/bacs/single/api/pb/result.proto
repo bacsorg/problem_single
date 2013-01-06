@@ -1,6 +1,6 @@
 package bacs.single.api.pb.result;
 
-import "resource.proto";
+import "bacs/single/api/pb/resource.proto";
 
 message Result
 {
