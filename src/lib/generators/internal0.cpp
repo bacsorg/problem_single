@@ -23,7 +23,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         bunsan::pm::index root_index;
         // root package
         {
-            boost::filesystem::create_directory(options_.destination);
+            // \note: package directory is already created, package does not contain sources
             // TODO: think about library import
             root_index.source.import.source.insert(std::make_pair(".", "bacs/system/single"));
         }
