@@ -1,8 +1,8 @@
 #include "internal0.hpp"
 
-#include "bunsan/pm/index.hpp"
+#include "bunsan/filesystem/operations.hpp"
 
-#include <boost/filesystem/operations.hpp>
+#include "bunsan/pm/index.hpp"
 
 namespace bacs{namespace single{namespace problem{namespace generators
 {
@@ -19,8 +19,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
     {
         api::pb::problem::Problem problem_info = options_.driver->overview();
         problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
-        boost::filesystem::remove_all(options_.destination);
-        boost::filesystem::create_directories(options_.destination);
+        bunsan::filesystem::reset_dir(options_.destination);
         bunsan::pm::index root_index;
         // root package
         {
