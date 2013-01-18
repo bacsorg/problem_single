@@ -63,8 +63,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     {
         boost::filesystem::create_directories(destination);
         bunsan::pm::index index;
-        // TODO import it built
-        index.source.import.source.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
+        // tests builder
+        index.source.import.package.insert(std::make_pair(".", "bacs/system/driver/simple0/tests"));
         // tests
         index.source.self.insert(std::make_pair("share/tests", "tests"));
         boost::filesystem::create_directory(destination / "tests");
