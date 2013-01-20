@@ -28,17 +28,17 @@ namespace bacs{namespace single{namespace problem
          *
          * \warning hash should be initialized later
          */
-        virtual api::pb::problem::Problem overview()=0;
+        virtual api::pb::problem::Problem overview() const=0;
 
         // utilities
-        virtual tests_ptr tests()=0;
+        virtual tests_ptr tests() const=0;
 
-        virtual utility_ptr checker()=0;
+        virtual utility_ptr checker() const=0;
 
         /// \return nullptr if not provided
-        virtual utility_ptr validator()=0;
+        virtual utility_ptr validator() const=0;
 
         /// \todo this is a stub
-        virtual void *statement()=0;
+        virtual void *statement() const=0;
     BUNSAN_FACTORY_END(driver)
 }}}

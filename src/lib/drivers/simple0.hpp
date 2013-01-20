@@ -14,26 +14,32 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     public:
         explicit simple0(const boost::filesystem::path &location);
 
-        api::pb::problem::Problem overview() override;
+        api::pb::problem::Problem overview() const override;
 
         // utilities
-        tests_ptr tests() override;
-        utility_ptr checker() override;
-        utility_ptr validator() override;
+        tests_ptr tests() const override;
+        utility_ptr checker() const override;
+        utility_ptr validator() const override;
 
         /// \todo this is a stub
-        void *statement() override { return nullptr; }
+        void *statement() const override { return nullptr; }
 
     private:
-        void read_info(api::pb::problem::Info &info);
-        void read_tests(api::pb::problem::Tests &tests);
-        void read_statement(api::pb::problem::Statement &statement);
-        void read_profiles(google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles);
-        void read_utilities(api::pb::problem::Utilities &utilities);
+        void read_info();
+        void read_tests();
+        void read_statement();
+        void read_profiles();
+        void read_checker();
+        void read_validator();
 
     private:
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
+        api::pb::problem::Problem m_overview;
+        tests_ptr m_tests;
+        utility_ptr m_checker;
+        utility_ptr m_validator;
+        // TODO statement
 
     private:
         static const bool factory_reg_hook;

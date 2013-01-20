@@ -29,82 +29,55 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         m_location(location)
     {
         boost::property_tree::read_ini((location / "config.ini").string(), m_config);
-    }
-
-    api::pb::problem::Problem simple0::overview()
-    {
-        api::pb::problem::Problem problem;
-        read_info(*problem.mutable_info());
-        read_tests(*problem.mutable_tests());
-        read_statement(*problem.mutable_statement());
-        read_profiles(*problem.mutable_profiles());
-        read_utilities(*problem.mutable_utilities());
-        BOOST_ASSERT(problem.profiles_size() == 1);
-        BOOST_ASSERT(problem.mutable_profiles(0)->mutable_testing()->test_groups_size() == 1);
+        // TODO
+        read_info();
+        read_tests();
+        read_statement();
+        read_profiles();
+        read_checker();
+        read_validator();
+        // depending on tests set test order may differ
+        // this code should be executed after profiles and tests initialization
+        BOOST_ASSERT(m_overview.profiles_size() == 1);
+        BOOST_ASSERT(m_overview.mutable_profiles(0)->mutable_testing()->test_groups_size() == 1);
+        // select tests order
         bool only_digits = true;
-        for (const std::string &id: problem.tests().test_set())
+        for (const std::string &id: m_overview.tests().test_set())
         {
             if (!(only_digits = only_digits && std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
                 break;
         }
-        problem.mutable_profiles(0)->mutable_testing()->mutable_test_groups(0)->
+        m_overview.mutable_profiles(0)->mutable_testing()->mutable_test_groups(0)->
             mutable_settings()->mutable_run()->set_order(
                 only_digits ? api::pb::settings::Run::NUMERIC : api::pb::settings::Run::LEXICOGRAPHICAL);
-        return problem;
+    }
+
+    api::pb::problem::Problem simple0::overview() const
+    {
+        return m_overview;
     }
 
     // utilities
-    tests_ptr simple0::tests()
+    tests_ptr simple0::tests() const
     {
-        const boost::optional<boost::property_tree::ptree &> tests_ =
-            m_config.get_child_optional("tests");
-        std::unordered_set<std::string> text_data_set = {"in", "out"};
-        if (tests_)
-            for (const auto kv: tests_.get())
-            {
-                const std::string data_type = kv.second.get_value<std::string>();
-                BOOST_ASSERT(kv.first == "in" || kv.first == "out");
-                if (data_type == "binary")
-                    text_data_set.erase(kv.first);
-                else if (data_type == "text")
-                    text_data_set.insert(kv.first);
-                else
-                    BOOST_THROW_EXCEPTION(test_data_format_error() <<
-                                          test_data_format_error::data_id(kv.first));
-            }
-        const tests_ptr tmp(new simple0_tests(m_location / "tests", text_data_set));
-        return tmp;
+        return m_tests;
     }
 
-    utility_ptr simple0::checker()
+    utility_ptr simple0::checker() const
     {
-        const utility_ptr checker_ = utility::instance_optional(m_location / "checker");
-        if (!checker_)
-            BOOST_THROW_EXCEPTION(checker_error() <<
-                                  checker_error::message("Unable to initialize checker's driver."));
-        return checker_;
+        return m_checker;
     }
 
-    utility_ptr simple0::validator()
+    utility_ptr simple0::validator() const
     {
-        if (boost::filesystem::exists(m_location / "validator"))
-        {
-            const utility_ptr validator_ = utility::instance_optional(m_location / "validator");
-            if (!validator_)
-                BOOST_THROW_EXCEPTION(validator_error() <<
-                                      validator_error::message("Unable to initialize validator's driver."));
-            return validator_;
-        }
-        else
-        {
-            return utility_ptr();
-        }
+        return m_validator;
     }
 
     //void *simple0::statement() { return nullptr; }
 
-    void simple0::read_info(api::pb::problem::Info &info)
+    void simple0::read_info()
     {
+        api::pb::problem::Info &info = *m_overview.mutable_info();
         info.Clear();
         const boost::property_tree::ptree m_info = m_config.get_child("info");
         // name
@@ -127,18 +100,35 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         system.set_hash("unknown"); // initialized later
     }
 
-    void simple0::read_tests(api::pb::problem::Tests &tests__)
+    void simple0::read_tests()
     {
-        const tests_ptr tests_ = tests();
-        BOOST_ASSERT(tests_);
-        tests__.Clear();
-        for (const std::string &data_id: tests_->data_set())
-            tests__.add_data_set(data_id);
-        for (const std::string &test_id: tests_->test_set())
-            tests__.add_test_set(test_id);
+        const boost::optional<boost::property_tree::ptree &> tests_ =
+            m_config.get_child_optional("tests");
+        std::unordered_set<std::string> text_data_set = {"in", "out"};
+        if (tests_)
+            for (const auto kv: tests_.get())
+            {
+                const std::string data_type = kv.second.get_value<std::string>();
+                BOOST_ASSERT(kv.first == "in" || kv.first == "out");
+                if (data_type == "binary")
+                    text_data_set.erase(kv.first);
+                else if (data_type == "text")
+                    text_data_set.insert(kv.first);
+                else
+                    BOOST_THROW_EXCEPTION(test_data_format_error() <<
+                                          test_data_format_error::data_id(kv.first));
+            }
+        m_tests.reset(new simple0_tests(m_location / "tests", text_data_set));
+        api::pb::problem::Tests &tests = *m_overview.mutable_tests();
+        tests.Clear();
+        for (const std::string &data_id: m_tests->data_set())
+            tests.add_data_set(data_id);
+        for (const std::string &test_id: m_tests->test_set())
+            tests.add_test_set(test_id);
+        *m_overview.mutable_utilities()->mutable_tests() = m_tests->info();
     }
 
-    void simple0::read_statement(api::pb::problem::Statement &statement)
+    void simple0::read_statement()
     {
         for (boost::filesystem::directory_iterator i(m_location / "statement"), end; i != end; ++i)
         {
@@ -150,8 +140,9 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         }
     }
 
-    void simple0::read_profiles(google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles)
+    void simple0::read_profiles()
     {
+        google::protobuf::RepeatedPtrField<api::pb::problem::Profile> &profiles = *m_overview.mutable_profiles();
         profiles.Clear();
         api::pb::problem::Profile &profile = *profiles.Add();
         api::pb::testing::SolutionTesting &testing = *profile.mutable_testing();
@@ -213,14 +204,24 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         test_query.mutable_wildcard()->set_value("*"); // select all tests
     }
 
-    void simple0::read_utilities(api::pb::problem::Utilities &utilities)
+    void simple0::read_checker()
     {
-        const utility_ptr tests_ = tests(), checker_ = checker(), validator_ = validator();
-        BOOST_ASSERT(tests_);
-        *utilities.mutable_tests() = tests_->info();
-        BOOST_ASSERT(checker_);
-        *utilities.mutable_checker() = checker_->info();
-        if (validator_)
-            *utilities.mutable_validator() = validator_->info();
+        m_checker = utility::instance_optional(m_location / "checker");
+        if (!m_checker)
+            BOOST_THROW_EXCEPTION(checker_error() <<
+                                  checker_error::message("Unable to initialize checker's driver."));
+        *m_overview.mutable_utilities()->mutable_checker() = m_checker->info();
+    }
+
+    void simple0::read_validator()
+    {
+        if (boost::filesystem::exists(m_location / "validator"))
+        {
+            m_validator = utility::instance_optional(m_location / "validator");
+            if (!m_validator)
+                BOOST_THROW_EXCEPTION(validator_error() <<
+                                      validator_error::message("Unable to initialize validator's driver."));
+            *m_overview.mutable_utilities()->mutable_validator() = m_validator->info();
+        }
     }
 }}}}
