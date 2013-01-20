@@ -18,7 +18,14 @@ namespace bacs{namespace single{namespace problem{namespace generators
     api::pb::problem::Problem internal0::generate(const options &options_)
     {
         api::pb::problem::Problem problem_info = options_.driver->overview();
+        // initialize package names
         problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
+        for (api::pb::problem::Statement::Version &v: *problem_info.mutable_statement()->mutable_versions())
+        {
+            const bunsan::pm::entry package = options_.root_package / v.package();
+            v.set_package(package.name());
+        }
+        // prepare sources
         bunsan::filesystem::reset_dir(options_.destination);
         bunsan::pm::index root_index;
         // root package
@@ -77,9 +84,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
         {
             const boost::filesystem::path package_root = options_.destination / "statement";
             const bunsan::pm::entry package = options_.root_package / "statement";
-            boost::filesystem::create_directory(package_root);
-            bunsan::pm::index index;
-            index.save(package_root / "index");
+            (void) options_.driver->statement()->make_package(package_root, package);
         }
         // the last command
         root_index.save(options_.destination / "index");
