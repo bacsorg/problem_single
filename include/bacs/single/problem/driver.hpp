@@ -2,6 +2,7 @@
 
 #include "bacs/single/problem/utility.hpp"
 #include "bacs/single/problem/tests.hpp"
+#include "bacs/single/problem/statement.hpp"
 
 #include "bacs/single/api/pb/problem.pb.h"
 
@@ -38,7 +39,6 @@ namespace bacs{namespace single{namespace problem
         /// \return nullptr if not provided
         virtual utility_ptr validator() const=0;
 
-        /// \todo this is a stub
-        virtual void *statement() const=0;
+        virtual statement_ptr statement() const=0;
     BUNSAN_FACTORY_END(driver)
 }}}

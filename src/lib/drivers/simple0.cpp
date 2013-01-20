@@ -73,7 +73,10 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         return m_validator;
     }
 
-    //void *simple0::statement() { return nullptr; }
+    statement_ptr simple0::statement() const
+    {
+        return m_statement;
+    }
 
     void simple0::read_info()
     {
@@ -130,13 +133,12 @@ namespace bacs{namespace single{namespace problem{namespace drivers
 
     void simple0::read_statement()
     {
-        for (boost::filesystem::directory_iterator i(m_location / "statement"), end; i != end; ++i)
+        m_statement = problem::statement::instance(m_location / "statement");
+        api::pb::problem::Statement &info = *m_overview.mutable_statement() = m_statement->info();
+        for (api::pb::problem::Statement::Version &v: *info.mutable_versions())
         {
-            if (i->path().filename().extension() == ".ini" &&
-                boost::filesystem::is_regular_file(i->path()))
-            {
-                // TODO
-            }
+            const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
+            v.set_package(package.name());
         }
     }
 

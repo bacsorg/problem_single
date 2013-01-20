@@ -21,8 +21,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         utility_ptr checker() const override;
         utility_ptr validator() const override;
 
-        /// \todo this is a stub
-        void *statement() const override { return nullptr; }
+        statement_ptr statement() const override;
 
     private:
         void read_info();
@@ -39,7 +38,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         tests_ptr m_tests;
         utility_ptr m_checker;
         utility_ptr m_validator;
-        // TODO statement
+        statement_ptr m_statement;
 
     private:
         static const bool factory_reg_hook;
