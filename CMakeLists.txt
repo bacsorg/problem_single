@@ -18,6 +18,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/lib/buildable.cpp
     src/lib/utility.cpp
     src/lib/tests.cpp
+    src/lib/statement.cpp
     src/lib/driver.cpp
     src/lib/generator.cpp
 
