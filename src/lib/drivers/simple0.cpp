@@ -123,8 +123,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         detail::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
         // system
         api::pb::problem::Info::System &system = *info.mutable_system();
-        system.set_package("unknown"); // is set by generator
-        system.set_hash("TODO"); // TODO implement hashing
+        system.set_package("unknown"); // initialized later
+        system.set_hash("unknown"); // initialized later
     }
 
     void simple0::read_tests(api::pb::problem::Tests &tests__)
