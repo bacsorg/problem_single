@@ -18,6 +18,16 @@ namespace bacs{namespace single{namespace problem
         static driver_ptr instance(const boost::filesystem::path &location);
 
     public:
+        /*!
+         * \warning package names are relative to problem root package,
+         * i.e. they should be prepended with root entry for problem,
+         * e.g. "tests" package should become "bacs/problem/1000/tests",
+         * where "bacs/problem/1000" corresponds problem
+         *
+         * \warning package name itself should be initialized later
+         *
+         * \warning hash should be initialized later
+         */
         virtual api::pb::problem::Problem overview()=0;
 
         // utilities
