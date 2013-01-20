@@ -15,6 +15,6 @@ namespace bacs{namespace single{namespace problem
     public:
         /// \return false if no package is needed
         virtual bool make_package(const boost::filesystem::path &destination,
-                                  const bunsan::pm::entry &package)=0;
+                                  const bunsan::pm::entry &package) const=0;
     };
 }}}

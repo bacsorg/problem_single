@@ -59,7 +59,7 @@ namespace bacs{namespace single{namespace problem{namespace drivers
     }
 
     bool simple0_tests::make_package(const boost::filesystem::path &destination,
-                                     const bunsan::pm::entry &/*package*/)
+                                     const bunsan::pm::entry &/*package*/) const
     {
         boost::filesystem::create_directories(destination);
         bunsan::pm::index index;

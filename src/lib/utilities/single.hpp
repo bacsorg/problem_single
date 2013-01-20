@@ -14,7 +14,7 @@ namespace bacs{namespace single{namespace problem{namespace utilities
                const boost::property_tree::ptree &config);
 
         bool make_package(const boost::filesystem::path &destination,
-                          const bunsan::pm::entry &package) override;
+                          const bunsan::pm::entry &package) const override;
 
     private:
         const boost::filesystem::path m_source;
