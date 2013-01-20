@@ -91,12 +91,12 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         return true;
     }
 
-    std::unordered_set<std::string> simple0_tests::data_set()
+    std::unordered_set<std::string> simple0_tests::data_set() const
     {
         return m_data_set;
     }
 
-    std::unordered_set<std::string> simple0_tests::test_set()
+    std::unordered_set<std::string> simple0_tests::test_set() const
     {
         return m_test_set;
     }

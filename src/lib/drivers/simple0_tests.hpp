@@ -19,8 +19,8 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         bool make_package(const boost::filesystem::path &destination,
                           const bunsan::pm::entry &package) const override;
 
-        std::unordered_set<std::string> data_set() override;
-        std::unordered_set<std::string> test_set() override;
+        std::unordered_set<std::string> data_set() const override;
+        std::unordered_set<std::string> test_set() const override;
 
     private:
         std::unordered_set<std::string> m_data_set, m_test_set;

@@ -19,8 +19,8 @@ namespace bacs{namespace single{namespace problem
 
     public:
         // create() will be provided by appropriate package
-        virtual std::unordered_set<std::string> data_set()=0;
-        virtual std::unordered_set<std::string> test_set()=0;
+        virtual std::unordered_set<std::string> data_set() const=0;
+        virtual std::unordered_set<std::string> test_set() const=0;
 
     BUNSAN_FACTORY_END(tests)
 }}}
