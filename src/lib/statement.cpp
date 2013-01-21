@@ -65,7 +65,9 @@ namespace bacs{namespace single{namespace problem
             for (const version_ptr &v: m_versions)
             {
                 const bunsan::pm::entry package = v->info().package();
-                v->make_package(versions_path / package.location(),
+                const boost::filesystem::path package_path = versions_path / package.location();
+                boost::filesystem::create_directories(package_path);
+                v->make_package(package_path,
                                 root_package / versions_subpackage / package,
                                 resources_package);
             }
