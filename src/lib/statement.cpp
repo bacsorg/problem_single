@@ -17,6 +17,8 @@ namespace bacs{namespace single{namespace problem
         return instance(config.get<std::string>("build.builder"), config_location.parent_path(), config);
     }
 
+    statement::version::~version() {}
+
     namespace
     {
         const bunsan::pm::entry versions_subpackage = "versions";
@@ -47,9 +49,9 @@ namespace bacs{namespace single{namespace problem
         const bunsan::pm::entry &root_package = package;
         bunsan::filesystem::reset_dir(destination);
         // resources
+        const bunsan::pm::entry resources_package = root_package / "resources";
         {
-            const boost::filesystem::path package_root = destination / "resources";
-            const bunsan::pm::entry package = root_package / "resources";
+            const boost::filesystem::path package_root = destination / resources_package.location().filename();
             boost::filesystem::create_directory(package_root);
             bunsan::pm::index index;
             index.source.self.insert(std::make_pair("src", "src"));
@@ -63,15 +65,12 @@ namespace bacs{namespace single{namespace problem
             for (const version_ptr &v: m_versions)
             {
                 const bunsan::pm::entry package = v->info().package();
-                (void) v->make_package(versions_path / package.location(), root_package / versions_subpackage / package);
+                v->make_package(versions_path / package.location(),
+                                root_package / versions_subpackage / package,
+                                resources_package);
             }
         }
         return true;
-    }
-
-    const std::vector<statement::version_ptr> &statement::versions() const
-    {
-        return m_versions;
     }
 
     const api::pb::problem::Statement &statement::info() const

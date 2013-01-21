@@ -14,16 +14,20 @@ namespace bacs{namespace single{namespace problem
     class statement: public buildable
     {
     public:
-        class version: public buildable
+        class version: private boost::noncopyable
         BUNSAN_FACTORY_BEGIN(version, const boost::filesystem::path &/*location*/,
                                       const boost::property_tree::ptree &/*config*/)
         public:
             /// \note config_location.parent_path() is location
             static version_ptr instance(const boost::filesystem::path &config_location);
 
-            BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(version, buildable)
-
         public:
+            virtual ~version();
+
+            virtual void make_package(const boost::filesystem::path &destination,
+                                      const bunsan::pm::entry &package,
+                                      const bunsan::pm::entry &resources_package) const=0;
+
             /// \warning package name is relative to statement version package
             virtual api::pb::problem::Statement::Version info() const=0;
 
@@ -40,8 +44,6 @@ namespace bacs{namespace single{namespace problem
     public:
         bool make_package(const boost::filesystem::path &destination,
                           const bunsan::pm::entry &package) const override;
-
-        const std::vector<version_ptr> &versions() const;
 
         /// \warning package names are relative to statement package
         const api::pb::problem::Statement &info() const;
