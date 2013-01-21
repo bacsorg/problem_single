@@ -41,7 +41,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             const utility_ptr tests = options_.driver->tests();
             BOOST_ASSERT(tests);
             if (tests->make_package(package_root, package))
-                root_index.package.insert(std::make_pair(".", package));
+                root_index.package.import.package.insert(std::make_pair(".", package));
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
                 bunsan::pm::entry("bacs/system/tests/call") /
@@ -54,7 +54,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             const utility_ptr checker = options_.driver->checker();
             BOOST_ASSERT(checker);
             if (checker->make_package(package_root, package))
-                root_index.package.insert(std::make_pair(".", package));
+                root_index.package.import.package.insert(std::make_pair(".", package));
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
                 bunsan::pm::entry("bacs/system/checker/call") /
@@ -69,7 +69,7 @@ namespace bacs{namespace single{namespace problem{namespace generators
             if (validator)
             {
                 if (validator->make_package(package_root, package))
-                    root_index.package.insert(std::make_pair(".", package));
+                    root_index.package.import.package.insert(std::make_pair(".", package));
                 // calling conventions
                 root_index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/validator/call") /
