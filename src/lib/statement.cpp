@@ -54,7 +54,7 @@ namespace bacs{namespace single{namespace problem
             const boost::filesystem::path package_root = destination / resources_package.location().filename();
             boost::filesystem::create_directory(package_root);
             bunsan::pm::index index;
-            index.source.self.insert(std::make_pair("src", "src"));
+            index.source.self.insert(std::make_pair(".", "src"));
             bunsan::filesystem::copy_tree(m_location, package_root / "src");
             index.save(package_root / "index");
         }
