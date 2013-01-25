@@ -25,7 +25,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/lib/detail/path.cpp
     src/lib/detail/resource.cpp
 
-    src/lib/utilities/no.cpp
+    src/lib/utilities/none.cpp
     src/lib/utilities/single.cpp
 
     src/lib/statement_versions/copy.cpp

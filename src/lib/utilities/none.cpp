@@ -2,11 +2,11 @@
 
 namespace bacs{namespace single{namespace problem{namespace utilities
 {
-    class no: public utility
+    class none: public utility
     {
     public:
-        no(const boost::filesystem::path &location,
-           const boost::property_tree::ptree &config): utility(location, config) {}
+        none(const boost::filesystem::path &location,
+             const boost::property_tree::ptree &config): utility(location, config) {}
 
         bool make_package(const boost::filesystem::path &/*destination*/,
                           const bunsan::pm::entry &/*package*/) const override
@@ -18,11 +18,11 @@ namespace bacs{namespace single{namespace problem{namespace utilities
         static const bool factory_reg_hook;
     };
 
-    const bool no::factory_reg_hook = utility::register_new("no",
+    const bool none::factory_reg_hook = utility::register_new("none",
         [](const boost::filesystem::path &location,
            const boost::property_tree::ptree &config)
         {
-            utility_ptr tmp(new no(location, config));
+            utility_ptr tmp(new none(location, config));
             return tmp;
         });
 }}}}
