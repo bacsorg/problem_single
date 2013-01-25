@@ -27,7 +27,6 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         api::pb::problem::Statement::Version info() const override;
 
     private:
-        const std::string m_lang;
         const boost::filesystem::path m_source;
 
     private:

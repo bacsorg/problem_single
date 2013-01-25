@@ -16,9 +16,22 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
             return tmp;
         });
 
+    namespace
+    {
+        std::string get_format(const boost::filesystem::path &source)
+        {
+            const std::string filename = source.string();
+            const std::size_t pos = filename.rfind('.');
+            if (pos == std::string::npos)
+                BOOST_THROW_EXCEPTION(invalid_source_name_error() <<
+                                      invalid_source_name_error::source_name(source));
+            return filename.substr(pos + 1);
+        }
+    }
+
     copy::copy(const boost::filesystem::path &/*location*/,
                const boost::property_tree::ptree &config):
-        m_lang(config.get<std::string>("info.lang")),
+        version(config.get<std::string>("info.lang"), get_format(config.get<std::string>("build.source"))),
         m_source(config.get<std::string>("build.source")) {}
 
 
@@ -40,17 +53,9 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
     api::pb::problem::Statement::Version copy::info() const
     {
         api::pb::problem::Statement::Version v;
-        {
-            const std::string format = m_source.string();
-            const std::size_t pos = format.rfind('.');
-            if (pos == std::string::npos)
-                BOOST_THROW_EXCEPTION(invalid_source_name_error() <<
-                                      invalid_source_name_error::source_name(m_source));
-            v.set_format(format.substr(pos + 1));
-        }
-        v.set_lang(m_lang);
-        const bunsan::pm::entry package = bunsan::pm::entry(v.format()) / v.lang();
-        v.set_package(package.name());
+        v.set_lang(lang());
+        v.set_format(format());
+        v.set_package(subpackage().name());
         return v;
     }
 }}}}

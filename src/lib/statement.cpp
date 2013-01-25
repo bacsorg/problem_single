@@ -1,4 +1,5 @@
 #include "bacs/single/problem/statement.hpp"
+#include "bacs/single/problem/error.hpp"
 
 #include "bunsan/filesystem/operations.hpp"
 
@@ -17,7 +18,33 @@ namespace bacs{namespace single{namespace problem
         return instance(config.get<std::string>("build.builder"), config_location.parent_path(), config);
     }
 
+    statement::version::version(const std::string &lang_, const std::string &format_):
+        m_lang(lang_), m_format(format_)
+    {
+        if (!bunsan::pm::entry::is_allowed_subpath(m_lang))
+            BOOST_THROW_EXCEPTION(invalid_statement_lang_error() <<
+                                  invalid_statement_lang_error::lang(m_lang));
+        if (!bunsan::pm::entry::is_allowed_subpath(m_format))
+            BOOST_THROW_EXCEPTION(invalid_statement_format_error() <<
+                                  invalid_statement_format_error::format(m_format));
+    }
+
     statement::version::~version() {}
+
+    std::string statement::version::lang() const
+    {
+        return m_lang;
+    }
+
+    std::string statement::version::format() const
+    {
+        return m_format;
+    }
+
+    bunsan::pm::entry statement::version::subpackage() const
+    {
+        return bunsan::pm::entry(lang()) / format();
+    }
 
     namespace
     {

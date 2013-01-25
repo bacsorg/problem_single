@@ -22,6 +22,8 @@ namespace bacs{namespace single{namespace problem
             static version_ptr instance(const boost::filesystem::path &config_location);
 
         public:
+            version(const std::string &lang_, const std::string &format_);
+
             virtual ~version();
 
             virtual void make_package(const boost::filesystem::path &destination,
@@ -30,6 +32,17 @@ namespace bacs{namespace single{namespace problem
 
             /// \warning package name is relative to statement version package
             virtual api::pb::problem::Statement::Version info() const=0;
+
+        public:
+            virtual std::string lang() const;
+            virtual std::string format() const;
+
+            /// relative unique entry name for this statement version
+            virtual bunsan::pm::entry subpackage() const;
+
+        private:
+            std::string m_lang;
+            std::string m_format;
 
         BUNSAN_FACTORY_END(version)
 
