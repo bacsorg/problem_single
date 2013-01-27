@@ -1,0 +1,24 @@
+/*!
+\page problem_page Problem
+
+\section problem_driver_sec Driver
+
+BACS support different problem formats.
+Each problem is a directory tree.
+
+In the root directory "format" file is provided.
+It's content is a problem format name.
+
+Problem is read by bacs::single::problem::driver instance
+which "understand" particular format. Driver's implementations
+are placed in bacs::single::problem::drivers namespace.
+
+\section problem_generator_sec Generator
+
+Problem is converter into internal format via bacs::single::problem::generator instance
+which uses problem's driver to read problem data and create appropriate representation.
+Generator's implementations are placed in bacs::single::problem::generators namespace.
+
+*/
+
+// vim:syntax=doxygen
