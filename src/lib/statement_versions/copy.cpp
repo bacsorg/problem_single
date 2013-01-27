@@ -2,6 +2,7 @@
 
 #include "bunsan/pm/index.hpp"
 
+#include "bunsan/config/cast.hpp"
 #include "bunsan/filesystem/operations.hpp"
 
 #include <boost/property_tree/ini_parser.hpp>
@@ -44,9 +45,12 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         index.package.import.source.insert(std::make_pair("data", resources_package));
         index.package.self.insert(std::make_pair(".", "src"));
         boost::filesystem::create_directory(destination / "src");
-        boost::property_tree::ptree statement_index;
-        statement_index.put("data.index", m_source.string());
-        boost::property_tree::write_ini((destination / "src" / "config.ini").string(), statement_index);
+        manifest statement_manifest;
+        statement_manifest.version.lang = lang();
+        statement_manifest.version.format = format();
+        statement_manifest.data.index = m_source;
+        boost::property_tree::write_ini((destination / "src" / "manifest.ini").string(),
+                                        bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
         index.save(destination / "index");
     }
 

@@ -9,6 +9,10 @@
 
 #include <unordered_set>
 
+#include <boost/filesystem/path.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
+
 namespace bacs{namespace single{namespace problem
 {
     class statement: public buildable
@@ -17,6 +21,41 @@ namespace bacs{namespace single{namespace problem
         class version: private boost::noncopyable
         BUNSAN_FACTORY_BEGIN(version, const boost::filesystem::path &/*location*/,
                                       const boost::property_tree::ptree &/*config*/)
+        public:
+            struct manifest
+            {
+                template <typename Archive>
+                void serialize(Archive &ar, const unsigned int)
+                {
+                    ar & BOOST_SERIALIZATION_NVP(version);
+                    ar & BOOST_SERIALIZATION_NVP(data);
+                }
+
+                struct
+                {
+                    template <typename Archive>
+                    void serialize(Archive &ar, const unsigned int)
+                    {
+                        ar & BOOST_SERIALIZATION_NVP(lang);
+                        ar & BOOST_SERIALIZATION_NVP(format);
+                    }
+
+                    std::string lang;
+                    std::string format;
+                } version;
+
+                struct
+                {
+                    template <typename Archive>
+                    void serialize(Archive &ar, const unsigned int)
+                    {
+                        ar & BOOST_SERIALIZATION_NVP(index);
+                    }
+
+                    boost::filesystem::path index;
+                } data;
+            };
+
         public:
             /// \note config_location.parent_path() is location
             static version_ptr instance(const boost::filesystem::path &config_location);
