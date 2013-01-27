@@ -1,0 +1,39 @@
+/*!
+\page utility_page Utility
+
+\section utility_introduction_sec Introduction
+
+Utilities are the entities which performs various service operations.
+
+Utility implementation are placed in bacs::single::problem::utilities namespace.
+
+\section utility_buildable_sec Buildable
+
+Each utility is \ref buildable_page.
+If utility does not need to be build (for example it is a script)
+we can treat copy operation as build.
+
+Configuration file is named *config.ini*.
+
+\subsection utility_target_ssec Target
+
+Utility is a executable file.
+<b>[build]</b> section may define <b>target</b> option that will be interpreted
+as binary name. If no such option is present it will fallback to directory name
+(where *config.ini* is located).
+
+\section utility_calling_conventions_sec Calling conventions
+
+Implementation may use different wrapper to implement different calling conventions.
+For instance binary executable may be wrapped for functional call.
+
+<b>[utility]</b> section has <b>call</b> option that will be used to determine calling convention.
+
+\section utility_utilities_list_sec Utilities list
+
+- \ref checker_page
+- \ref validator_page
+
+*/
+
+// vim:syntax=doxygen

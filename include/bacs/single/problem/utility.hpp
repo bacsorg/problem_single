@@ -10,6 +10,7 @@
 
 namespace bacs{namespace single{namespace problem
 {
+    /// \see \ref utility_page
     class utility: public buildable
     BUNSAN_FACTORY_BEGIN(utility, const boost::filesystem::path &/*location*/,
                                   const boost::property_tree::ptree &/*config*/)
