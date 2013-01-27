@@ -9,6 +9,7 @@
 
 namespace bacs{namespace single{namespace problem{namespace drivers
 {
+    /// \ref format_simple0_page implementation
     class simple0: public driver
     {
     public:
