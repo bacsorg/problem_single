@@ -1,0 +1,52 @@
+/*!
+\page buildable_page Buildable
+
+\section buildable_introduction_sec Introduction
+
+For convenient standard interface for everything that may require building
+such interface is introduced. Buildable specification is abstract, you may
+not find directory tree here, only \ref buildable_configuration_file_ssec format and general concepts.
+
+<!--\section buildable_definition_sec Definition
+TODO-->
+
+\section buildable_specifications_sec Specifications
+
+\subsection buildable_configuration_file_ssec Configuration file
+
+Configuration file has \ref ini_page.
+<b>[build]</b> section is used for \ref buildable_page options specifications.
+User may introduce arbitrary sections except <b>[build]</b> for additional
+configuration (not used by \ref buildable_page).
+
+<b>[build]</b> section contains *builder* option that specifies one of supported implementation supported builders.
+Implementation may provide default *builder* value.
+
+\subsubsection buildable_examples_ssec Examples
+
+\paragraph buildable_cmake_par Specifies cmake builder
+
+\code{.ini}
+[build]
+builder = cmake
+\endcode
+
+\paragraph buildable_single_par Specifies single-source builder
+
+\code{.ini}
+[build]
+builder = single
+source = main.cpp
+\endcode
+
+\paragraph buildable_cmake_non_std_par Specifies cmake builder with non-standard config location
+
+\code{.ini}
+[build]
+builder = cmake
+source = src/CMakeLists.txt
+\endcode
+
+*/
+
+// vim:syntax=doxygen

@@ -7,6 +7,11 @@
 
 namespace bacs{namespace single{namespace problem
 {
+    /*!
+     * \brief Something that may be build by bunsan::pm.
+     *
+     * \see \ref buildable_page
+     */
     class buildable: private boost::noncopyable
     {
     public:
