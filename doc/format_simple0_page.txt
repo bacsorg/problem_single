@@ -31,6 +31,7 @@ Problem in "simple0" is a folder with the following entries:
 \subsection format_simple0_configuration_file_ssec Configuration file
 
 \subsubsection format_simple0_specifications_sssec Specifications
+- It has \ref ini_page
 - It has "utf8" encoding
 - It is divied into several sections
     - **info** section has the following options
