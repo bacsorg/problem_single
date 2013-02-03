@@ -8,10 +8,9 @@
 #include "bacs/single/problem/generator.hpp"
 
 #include "bunsan/enable_error_info.hpp"
+#include "bunsan/logging/legacy.hpp"
 #include "bunsan/filesystem/fstream.hpp"
 #include "bunsan/runtime/demangle.hpp"
-
-#include "yandex/contest/detail/LogHelper.hpp"
 
 #include <iostream>
 
@@ -39,7 +38,7 @@ int main(int argc, char *argv[])
         po::notify(vm);
         for (const boost::filesystem::path problem: problems)
         {
-            STREAM_INFO << "Processing " << problem.filename() << " problem at " << problem << "...";
+            SLOG("Processing " << problem.filename() << " problem at " << problem << "...");
             const boost::filesystem::path qproblem = problem_prefix / problem.filename();
             const boost::filesystem::path dproblem = repository / qproblem;
             const boost::filesystem::path iproblem = info_destination / problem.filename();
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
             opts.destination = dproblem;
             opts.root_package = qproblem.string();
             const api::pb::problem::Problem info = gen->generate(opts);
-            STREAM_DEBUG << info.DebugString();
+            SLOG(info.DebugString());
             BUNSAN_EXCEPTIONS_WRAP_BEGIN()
             {
                 bunsan::filesystem::ofstream fout(iproblem);
