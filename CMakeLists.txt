@@ -28,6 +28,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/lib/utilities/single.cpp
 
     src/lib/statement_versions/copy.cpp
+    src/lib/statement_versions/pdflatex.cpp
 
     src/lib/drivers/simple0.cpp
     src/lib/drivers/simple0_tests.cpp
