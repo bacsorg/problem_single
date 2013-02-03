@@ -35,7 +35,6 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         version(config.get<std::string>("info.lang"), get_format(config.get<std::string>("build.source"))),
         m_source(config.get<std::string>("build.source")) {}
 
-
     void copy::make_package(const boost::filesystem::path &destination,
                             const bunsan::pm::entry &/*package*/,
                             const bunsan::pm::entry &resources_package) const
@@ -43,13 +42,13 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         bunsan::filesystem::reset_dir(destination);
         bunsan::pm::index index;
         index.package.import.source.insert(std::make_pair("data", resources_package));
-        index.package.self.insert(std::make_pair(".", "src"));
-        boost::filesystem::create_directory(destination / "src");
+        index.package.self.insert(std::make_pair(".", "pkg"));
+        boost::filesystem::create_directory(destination / "pkg");
         manifest statement_manifest;
         statement_manifest.version.lang = lang();
         statement_manifest.version.format = format();
         statement_manifest.data.index = m_source;
-        boost::property_tree::write_ini((destination / "src" / "manifest.ini").string(),
+        boost::property_tree::write_ini((destination / "pkg" / "manifest.ini").string(),
                                         bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
         index.save(destination / "index");
     }
