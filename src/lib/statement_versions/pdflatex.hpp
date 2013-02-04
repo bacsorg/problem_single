@@ -20,6 +20,7 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         api::pb::problem::Statement::Version info() const override;
 
     private:
+        const boost::filesystem::path m_root;
         const boost::filesystem::path m_source;
         const boost::filesystem::path m_target;
 

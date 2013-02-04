@@ -21,6 +21,14 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
 
     namespace
     {
+        boost::filesystem::path get_root(const boost::filesystem::path &source)
+        {
+            return source.parent_path();
+        }
+        boost::filesystem::path get_source(const boost::filesystem::path &source)
+        {
+            return source.filename();
+        }
         boost::filesystem::path get_target(const boost::filesystem::path &source)
         {
             return source.stem().string() + ".pdf";
@@ -30,8 +38,9 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
     pdflatex::pdflatex(const boost::filesystem::path &/*location*/,
                        const boost::property_tree::ptree &config):
         version(config.get<std::string>("info.lang"), "pdf"),
-        m_source(config.get<std::string>("build.source")),
-        m_target(get_target(m_source)) {}
+        m_root(get_root(config.get<std::string>("build.source"))),
+        m_source(get_source(config.get<std::string>("build.source"))),
+        m_target(get_target(config.get<std::string>("build.source"))) {}
 
     void pdflatex::make_package(const boost::filesystem::path &destination,
                                 const bunsan::pm::entry &/*package*/,
@@ -47,6 +56,7 @@ namespace bacs{namespace single{namespace problem{namespace statement_versions
         BUNSAN_EXCEPTIONS_WRAP_BEGIN()
         {
             bunsan::filesystem::ofstream fout(destination / "src" / "source.cmake");
+            fout << "set(root " << m_root << ")\n";
             fout << "set(source " << m_source << ")\n";
             fout << "set(target " << m_target << ")\n";
             fout.close();
