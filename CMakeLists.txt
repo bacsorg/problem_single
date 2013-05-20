@@ -32,7 +32,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/lib/generators/internal0.cpp
 )
-list(APPEND libraries ${PROJECT_NAME})
+bunsan_use(${PROJECT_NAME})
 
 bunsan_add_executable(${PROJECT_NAME}_cli
     src/bin/cli.cpp
