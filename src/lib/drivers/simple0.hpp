@@ -15,7 +15,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     public:
         explicit simple0(const boost::filesystem::path &location);
 
-        pb::problem::Problem overview() const override;
+        Problem overview() const override;
 
         // utilities
         tests_ptr tests() const override;
@@ -35,7 +35,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     private:
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
-        pb::problem::Problem m_overview;
+        Problem m_overview;
         tests_ptr m_tests;
         utility_ptr m_checker;
         utility_ptr m_validator;

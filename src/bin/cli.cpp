@@ -42,15 +42,15 @@ int main(int argc, char *argv[])
             const boost::filesystem::path qproblem = problem_prefix / problem.filename();
             const boost::filesystem::path dproblem = repository / qproblem;
             const boost::filesystem::path iproblem = info_destination / problem.filename();
+            using namespace bacs::problem;
             using namespace bacs::problem::single;
-            namespace api = bacs::single::api;
             const driver_ptr drv = driver::instance(problem);
             const generator_ptr gen = generator::instance(generator_type, generator_config);
             generator::options opts;
             opts.driver = drv;
             opts.destination = dproblem;
             opts.root_package = qproblem.string();
-            const pb::problem::Problem info = gen->generate(opts);
+            const Problem info = gen->generate(opts);
             SLOG(info.DebugString());
             BUNSAN_EXCEPTIONS_WRAP_BEGIN()
             {

@@ -2,7 +2,7 @@
 
 namespace bacs{namespace problem{namespace single{namespace detail
 {
-    void to_pb_path(const boost::filesystem::path &path, pb::settings::Path &pb_path)
+    void to_pb_path(const boost::filesystem::path &path, settings::Path &pb_path)
     {
         pb_path.Clear();
         if (path.has_root_directory())
