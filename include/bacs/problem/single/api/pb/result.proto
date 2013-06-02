@@ -1,0 +1,81 @@
+package bacs.problem.single.api.pb.result;
+
+import "bacs/problem/single/api/pb/resource.proto";
+
+message Result
+{
+    required SystemResult system = 1;
+    optional BuildResult build = 2;
+    optional SolutionTestingResult testing_result = 3;
+}
+
+message SystemResult
+{
+    enum Status
+    {
+        OK = 0;
+        INVALID_HASH = 1;
+    }
+    required Status status = 1;
+}
+
+message BuildResult
+{
+    required Execution execution = 1;
+    required bytes output = 2;
+}
+
+message SolutionTestingResult
+{
+    repeated TestGroupResult test_groups = 1;
+}
+
+message Execution
+{
+    enum Status
+    {
+        OK = 0;
+        ABNORMAL_EXIT = 1;
+        MEMORY_LIMIT_EXCEEDED = 2;
+        TIME_LIMIT_EXCEEDED = 3;
+        OUTPUT_LIMIT_EXCEEDED = 4;
+        REAL_TIME_LIMIT_EXCEEDED = 5;
+        FAILED = 6;
+    }
+    required Status status = 1;
+    optional int32 exit_status = 2;
+    optional int32 term_sig = 3;
+    required ResourceUsage resource_usage = 4;
+    optional bytes full = 5;
+}
+
+message TestGroupResult
+{
+    required string id = 1;
+    repeated TestResult tests = 2;
+}
+
+message TestResult
+{
+    message Checking
+    {
+        enum Status
+        {
+            OK = 0;
+            WRONG_ANSWER = 1;
+            PRESENTATION_ERROR = 2;
+            FAIL_TEST = 3;
+        }
+        required Status status = 1;
+        required bytes output = 2;
+    }
+    message File
+    {
+        required string id = 1;
+        required bytes data = 2;
+    }
+    required string id = 1;
+    required Execution execution = 2;
+    optional Checking checking = 3;
+    repeated File files = 4;
+}

@@ -1,0 +1,58 @@
+package bacs.problem.single.api.pb.task;
+
+import "bacs/problem/single/api/pb/resource.proto";
+import "bacs/problem/single/api/pb/testing.proto";
+
+/*!
+ * \brief Task for testing system
+ */
+message Task
+{
+    /*!
+     * \brief Problem hash.
+     *
+     * If is not the same as worker's, task is rejected.
+     */
+    required bytes hash = 1;
+    required Callbacks callbacks = 2;
+    required Solution solution = 3;
+    required testing.SolutionTesting testing = 4;
+}
+
+message Callbacks
+{
+    /// Accepts result (error is a result).
+    required Callback result = 1;
+    /// Accepts intermediate statuses (not guaranteed to be delivered).
+    optional Callback intermediate = 2;
+}
+
+message Callback
+{
+    required string type = 1;
+    repeated string arguments = 2;
+}
+
+message Solution
+{
+    required bytes source = 1;
+    required Build build = 2;
+}
+
+message Build
+{
+    /// Constraints for build system
+    optional ResourceLimits resource_limits = 1;
+    required Builder builder = 2;
+}
+
+/*!
+ * One of implemented build systems.
+ * For simple cases it may be compiler name with options,
+ * e.g. {type = "gcc", arguments = ["-O2"]}.
+ */
+message Builder
+{
+    required string type = 1;
+    repeated string arguments = 2;
+}
