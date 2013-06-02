@@ -1,4 +1,4 @@
-#include "bacs/single/problem/driver.hpp"
+#include "bacs/problem/single/driver.hpp"
 
 #include "bunsan/enable_error_info.hpp"
 #include "bunsan/filesystem/fstream.hpp"
@@ -8,7 +8,7 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/path.hpp>
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     BUNSAN_FACTORY_DEFINE(driver)
 
@@ -28,7 +28,7 @@ namespace bacs{namespace single{namespace problem
         const std::string::size_type delim_pos = format.find(delim);
         if (format.find(delim, delim_pos + 1) == std::string::npos &&
             delim_pos != std::string::npos &&
-            "bacs/single/problem" == format.substr(0, delim_pos))
+            "bacs/problem/single" == format.substr(0, delim_pos))
         {
             return instance(format.substr(delim_pos + 1), location);
         }

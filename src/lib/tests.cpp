@@ -1,8 +1,8 @@
-#include "bacs/single/problem/tests.hpp"
+#include "bacs/problem/single/tests.hpp"
 
 #include <boost/property_tree/ini_parser.hpp>
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     BUNSAN_FACTORY_DEFINE(tests)
 

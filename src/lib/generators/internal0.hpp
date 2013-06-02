@@ -1,9 +1,9 @@
-#include "bacs/single/problem/generator.hpp"
+#include "bacs/problem/single/generator.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace bacs{namespace single{namespace problem{namespace generators
+namespace bacs{namespace problem{namespace single{namespace generators
 {
     class internal0: public generator
     {

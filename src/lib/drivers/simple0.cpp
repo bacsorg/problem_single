@@ -1,11 +1,12 @@
 #include "simple0.hpp"
 #include "simple0_tests.hpp"
 
-#include "bacs/single/problem/error.hpp"
+#include "bacs/problem/single/error.hpp"
 
-#include "bacs/single/problem/detail/split.hpp"
-#include "bacs/single/problem/detail/resource.hpp"
-#include "bacs/single/problem/detail/path.hpp"
+#include "bacs/problem/single/detail/path.hpp"
+
+#include "bacs/problem/split.hpp"
+#include "bacs/problem/resource/parse.hpp"
 
 #include <algorithm>
 #include <unordered_set>
@@ -16,7 +17,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/assert.hpp>
 
-namespace bacs{namespace single{namespace problem{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers
 {
     const bool simple0::factory_reg_hook = driver::register_new("simple0",
         [](const boost::filesystem::path &location)
@@ -88,15 +89,15 @@ namespace bacs{namespace single{namespace problem{namespace drivers
         name.set_lang("C");
         name.set_value(m_info.get<std::string>("name"));
         // authors
-        detail::parse_repeated(*info.mutable_authors(), m_info, "authors");
+        split::parse_repeated(*info.mutable_authors(), m_info, "authors");
         // source
         boost::optional<std::string> value;
         if ((value = m_info.get_optional<std::string>("source")))
             info.set_source(value.get());
         // maintainers
-        detail::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
+        split::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
         // restrictions
-        detail::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
+        split::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
         // system
         api::pb::problem::Info::System &system = *info.mutable_system();
         system.set_package("unknown"); // initialized later
@@ -158,14 +159,14 @@ namespace bacs{namespace single{namespace problem{namespace drivers
             // resource limits
             api::pb::ResourceLimits &resource_limits = *process.mutable_resource_limits();
             if ((value = m_config.get_optional<std::string>("resource_limits.time")))
-                resource_limits.set_time_limit_millis(detail::parse_time_millis(value.get()));
+                resource_limits.set_time_limit_millis(resource::parse::time_millis(value.get()));
             if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
-                resource_limits.set_memory_limit_bytes(detail::parse_memory_bytes(value.get()));
+                resource_limits.set_memory_limit_bytes(resource::parse::memory_bytes(value.get()));
             if ((value = m_config.get_optional<std::string>("resource_limits.output")))
-                resource_limits.set_output_limit_bytes(detail::parse_memory_bytes(value.get()));
+                resource_limits.set_output_limit_bytes(resource::parse::memory_bytes(value.get()));
             // number of processes is not supported here
             if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
-                resource_limits.set_real_time_limit_millis(detail::parse_time_millis(value.get()));
+                resource_limits.set_real_time_limit_millis(resource::parse::time_millis(value.get()));
             // run
             api::pb::settings::Run &run = *settings.mutable_run();
             //run.set_order(); // depending on tests, is set in other location

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "bacs/single/problem/tests.hpp"
-#include "bacs/single/problem/error.hpp"
+#include "bacs/problem/single/tests.hpp"
+#include "bacs/problem/single/error.hpp"
 
-namespace bacs{namespace single{namespace problem{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers
 {
     struct test_no_in_data_error: virtual test_data_format_error {};
     struct test_no_out_data_error: virtual test_data_format_error {};

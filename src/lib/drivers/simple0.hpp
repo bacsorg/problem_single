@@ -1,5 +1,5 @@
-#include "bacs/single/problem/driver.hpp"
-#include "bacs/single/problem/error.hpp"
+#include "bacs/problem/single/driver.hpp"
+#include "bacs/problem/single/error.hpp"
 
 #include <string>
 #include <vector>
@@ -7,7 +7,7 @@
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace bacs{namespace single{namespace problem{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers
 {
     /// \ref format_simple0_page implementation
     class simple0: public driver

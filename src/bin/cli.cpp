@@ -1,11 +1,11 @@
 /*!
  * \file
  *
- * \brief Command line interface to BACS.SINGLE.PROBLEM.
+ * \brief Command line interface to BACS.PROBLEM.SINGLE.
  */
 
-#include "bacs/single/problem/driver.hpp"
-#include "bacs/single/problem/generator.hpp"
+#include "bacs/problem/single/driver.hpp"
+#include "bacs/problem/single/generator.hpp"
 
 #include "bunsan/enable_error_info.hpp"
 #include "bunsan/logging/legacy.hpp"
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             const boost::filesystem::path qproblem = problem_prefix / problem.filename();
             const boost::filesystem::path dproblem = repository / qproblem;
             const boost::filesystem::path iproblem = info_destination / problem.filename();
-            using namespace bacs::single::problem;
+            using namespace bacs::problem::single;
             namespace api = bacs::single::api;
             const driver_ptr drv = driver::instance(problem);
             const generator_ptr gen = generator::instance(generator_type, generator_config);

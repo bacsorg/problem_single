@@ -1,4 +1,4 @@
-project(bunsan_bacs_single_problem)
+project(bunsan_bacs_problem_single)
 
 include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 

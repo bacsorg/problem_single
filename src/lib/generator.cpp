@@ -1,3 +1,3 @@
-#include "bacs/single/problem/generator.hpp"
+#include "bacs/problem/single/generator.hpp"
 
-BUNSAN_FACTORY_DEFINE(bacs::single::problem::generator)
+BUNSAN_FACTORY_DEFINE(bacs::problem::single::generator)

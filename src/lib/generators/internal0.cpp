@@ -4,7 +4,7 @@
 
 #include "bunsan/pm/index.hpp"
 
-namespace bacs{namespace single{namespace problem{namespace generators
+namespace bacs{namespace problem{namespace single{namespace generators
 {
     const bool internal0::factory_reg_hook = generator::register_new("internal0",
         [](const boost::property_tree::ptree &config)

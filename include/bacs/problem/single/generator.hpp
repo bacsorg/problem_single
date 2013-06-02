@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bacs/single/problem/driver.hpp"
+#include "bacs/problem/single/driver.hpp"
 
 #include "bunsan/factory_helper.hpp"
 #include "bunsan/pm/entry.hpp"
@@ -9,7 +9,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     class generator: private boost::noncopyable
     BUNSAN_FACTORY_BEGIN(generator, const boost::property_tree::ptree &/*config*/)

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "bacs/single/problem/utility.hpp"
+#include "bacs/problem/utility.hpp"
 
 #include "bunsan/factory_helper.hpp"
 #include "bunsan/forward_constructor.hpp"
 
 #include <unordered_set>
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     class tests: public utility
     BUNSAN_FACTORY_BEGIN(tests, const boost::filesystem::path &/*location*/,

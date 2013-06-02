@@ -1,17 +1,18 @@
 #pragma once
 
-#include "bacs/single/problem/utility.hpp"
-#include "bacs/single/problem/tests.hpp"
-#include "bacs/single/problem/statement.hpp"
+#include "bacs/problem/single/tests.hpp"
 
-#include "bacs/single/api/pb/problem.pb.h"
+#include "bacs/problem/single/api/pb/problem.pb.h"
+
+#include "bacs/problem/statement.hpp"
+#include "bacs/problem/utility.hpp"
 
 #include "bunsan/factory_helper.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <boost/filesystem/path.hpp>
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     class driver: private boost::noncopyable
     BUNSAN_FACTORY_BEGIN(driver, const boost::filesystem::path &/*location*/)

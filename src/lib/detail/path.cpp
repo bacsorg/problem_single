@@ -1,6 +1,6 @@
-#include "bacs/single/problem/detail/path.hpp"
+#include "bacs/problem/single/detail/path.hpp"
 
-namespace bacs{namespace single{namespace problem{namespace detail
+namespace bacs{namespace problem{namespace single{namespace detail
 {
     void to_pb_path(const boost::filesystem::path &path, api::pb::settings::Path &pb_path)
     {

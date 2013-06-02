@@ -13,7 +13,7 @@
 
 #include <boost/filesystem/operations.hpp>
 
-namespace bacs{namespace single{namespace problem{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers
 {
     static const boost::property_tree::ptree config =
         []()

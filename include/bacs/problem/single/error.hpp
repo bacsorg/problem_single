@@ -2,7 +2,7 @@
 
 #include "bacs/problem/error.hpp"
 
-namespace bacs{namespace single{namespace problem
+namespace bacs{namespace problem{namespace single
 {
     struct error: virtual bacs::problem::error {};
     struct invalid_id_error: virtual error {};
