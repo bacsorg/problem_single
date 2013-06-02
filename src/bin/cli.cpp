@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
             opts.driver = drv;
             opts.destination = dproblem;
             opts.root_package = qproblem.string();
-            const api::pb::problem::Problem info = gen->generate(opts);
+            const pb::problem::Problem info = gen->generate(opts);
             SLOG(info.DebugString());
             BUNSAN_EXCEPTIONS_WRAP_BEGIN()
             {

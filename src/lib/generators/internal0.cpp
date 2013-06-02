@@ -15,12 +15,12 @@ namespace bacs{namespace problem{namespace single{namespace generators
 
     internal0::internal0(const boost::property_tree::ptree &/*config*/) {}
 
-    api::pb::problem::Problem internal0::generate(const options &options_)
+    pb::problem::Problem internal0::generate(const options &options_)
     {
-        api::pb::problem::Problem problem_info = options_.driver->overview();
+        pb::problem::Problem problem_info = options_.driver->overview();
         // initialize package names
         problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
-        for (api::pb::problem::Statement::Version &v: *problem_info.mutable_statement()->mutable_versions())
+        for (pb::problem::Statement::Version &v: *problem_info.mutable_statement()->mutable_versions())
         {
             const bunsan::pm::entry package = options_.root_package / v.package();
             v.set_package(package.name());

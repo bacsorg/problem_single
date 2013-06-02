@@ -1,4 +1,4 @@
-package bacs.problem.single.api.pb.intermediate;
+package bacs.problem.single.pb.intermediate;
 
 enum State
 {

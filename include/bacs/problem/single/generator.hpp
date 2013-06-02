@@ -25,6 +25,6 @@ namespace bacs{namespace problem{namespace single
         };
 
     public:
-        virtual api::pb::problem::Problem generate(const options &options_)=0;
+        virtual pb::problem::Problem generate(const options &options_)=0;
     BUNSAN_FACTORY_END(generator)
 }}}

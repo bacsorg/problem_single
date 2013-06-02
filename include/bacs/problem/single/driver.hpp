@@ -2,7 +2,7 @@
 
 #include "bacs/problem/single/tests.hpp"
 
-#include "bacs/problem/single/api/pb/problem.pb.h"
+#include "bacs/problem/single/pb/problem.pb.h"
 
 #include "bacs/problem/statement.hpp"
 #include "bacs/problem/utility.hpp"
@@ -30,7 +30,7 @@ namespace bacs{namespace problem{namespace single
          *
          * \warning hash should be initialized later
          */
-        virtual api::pb::problem::Problem overview() const=0;
+        virtual pb::problem::Problem overview() const=0;
 
         // utilities
         virtual tests_ptr tests() const=0;
