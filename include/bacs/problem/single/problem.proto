@@ -2,33 +2,14 @@ package bacs.problem.single.problem;
 
 import "bacs/problem/single/testing.proto";
 
-message Problem
-{
-    required Info info = 1;
-    required Tests tests = 2;
-    required Statement statement = 3;
-    repeated Profile profiles = 4;
-    required Utilities utilities = 5;
-}
+import "bacs/problem/problem.proto";
 
-message Info
+message Problem_
 {
-    message Name
+    extend Problem
     {
-        required string lang = 1;
-        required string value = 2;
+        required Tests tests = 1024;
     }
-    message System
-    {
-        required bytes hash = 1;
-        required string package = 2;
-    }
-    repeated Name names = 1;
-    repeated string authors = 2;
-    optional string source = 3;
-    repeated string maintainers = 4;
-    repeated string restrictions = 5;
-    required System system = 6;
 }
 
 message Tests
@@ -37,31 +18,20 @@ message Tests
     repeated string test_set = 2;
 }
 
-message Statement
+message Profile_
 {
-    message Version
+    extend Profile
     {
-        required string lang = 1;
-        required string format = 2;
-        required string package = 3;
+        required testing.SolutionTesting testing = 1024;
     }
-    repeated Version versions = 1;
 }
 
-message Profile
+message Utilities_
 {
-    optional string description = 1;
-    required testing.SolutionTesting testing = 2;
-}
-
-message Utilities
-{
-    required Utility tests = 1;
-    required Utility checker = 2;
-    optional Utility validator = 3;
-}
-
-message Utility
-{
-    required string builder = 1;
+    extend Utilities
+    {
+        required Utility tests = 1024;
+        required Utility checker = 1025;
+        optional Utility validator = 1026;
+    }
 }
