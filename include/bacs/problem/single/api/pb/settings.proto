@@ -1,6 +1,6 @@
-package bacs.single.api.pb.settings;
+package bacs.problem.single.api.pb.settings;
 
-import "bacs/single/api/pb/resource.proto";
+import "bacs/problem/single/api/pb/resource.proto";
 
 // should be moved into testing
 // this file declares process-related settings

@@ -1,6 +1,6 @@
-package bacs.single.api.pb.problem;
+package bacs.problem.single.api.pb.problem;
 
-import "bacs/single/api/pb/testing.proto";
+import "bacs/problem/single/api/pb/testing.proto";
 
 message Problem
 {

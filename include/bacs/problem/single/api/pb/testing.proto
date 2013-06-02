@@ -1,6 +1,6 @@
-package bacs.single.api.pb.testing;
+package bacs.problem.single.api.pb.testing;
 
-import "bacs/single/api/pb/settings.proto";
+import "bacs/problem/single/api/pb/settings.proto";
 
 message SolutionTesting
 {

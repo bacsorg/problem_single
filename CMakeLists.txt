@@ -1,4 +1,4 @@
-project(bunsan_bacs_single_api)
+project(bunsan_bacs_problem_single_api)
 
 include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 
@@ -10,13 +10,13 @@ bunsan_use_boost(system filesystem serialization unit_test_framework program_opt
 bunsan_use_protobuf()
 
 bunsan_protobuf_generate_cpp(SOURCES proto_srcs HEADERS proto_hdrs INSTALL include PROTOS
-    bacs/single/api/pb/task.proto
-    bacs/single/api/pb/result.proto
-    bacs/single/api/pb/resource.proto
-    bacs/single/api/pb/problem.proto
-    bacs/single/api/pb/testing.proto
-    bacs/single/api/pb/settings.proto
-    bacs/single/api/pb/intermediate.proto
+    bacs/problem/single/api/pb/task.proto
+    bacs/problem/single/api/pb/result.proto
+    bacs/problem/single/api/pb/resource.proto
+    bacs/problem/single/api/pb/problem.proto
+    bacs/problem/single/api/pb/testing.proto
+    bacs/problem/single/api/pb/settings.proto
+    bacs/problem/single/api/pb/intermediate.proto
 )
 
 bunsan_add_shared_library(${PROJECT_NAME}
