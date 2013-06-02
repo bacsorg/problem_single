@@ -11,13 +11,13 @@ bunsan_use_boost(system filesystem serialization unit_test_framework program_opt
 bunsan_use_protobuf()
 
 bunsan_protobuf_generate_cpp(SOURCES proto_srcs HEADERS proto_hdrs INSTALL include PROTOS
-    bacs/problem/single/pb/task.proto
-    bacs/problem/single/pb/result.proto
-    bacs/problem/single/pb/resource.proto
-    bacs/problem/single/pb/problem.proto
-    bacs/problem/single/pb/testing.proto
-    bacs/problem/single/pb/settings.proto
-    bacs/problem/single/pb/intermediate.proto
+    bacs/problem/single/task.proto
+    bacs/problem/single/result.proto
+    bacs/problem/single/resource.proto
+    bacs/problem/single/problem.proto
+    bacs/problem/single/testing.proto
+    bacs/problem/single/settings.proto
+    bacs/problem/single/intermediate.proto
 )
 
 bunsan_add_shared_library(${PROJECT_NAME}

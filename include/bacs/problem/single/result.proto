@@ -1,6 +1,6 @@
-package bacs.problem.single.pb.result;
+package bacs.problem.single.result;
 
-import "bacs/problem/single/pb/resource.proto";
+import "bacs/problem/single/resource.proto";
 
 message Result
 {

@@ -1,7 +1,7 @@
-package bacs.problem.single.pb.task;
+package bacs.problem.single.task;
 
-import "bacs/problem/single/pb/resource.proto";
-import "bacs/problem/single/pb/testing.proto";
+import "bacs/problem/single/resource.proto";
+import "bacs/problem/single/testing.proto";
 
 /*!
  * \brief Task for testing system
