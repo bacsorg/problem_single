@@ -1,10 +1,10 @@
 #pragma once
 
-#include "bunsan/error.hpp"
+#include "bacs/problem/error.hpp"
 
 namespace bacs{namespace single{namespace problem
 {
-    struct error: virtual bunsan::error {};
+    struct error: virtual bacs::problem::error {};
     struct invalid_id_error: virtual error {};
     struct driver_error: virtual error {};
     struct utility_error: virtual driver_error {};
@@ -14,17 +14,6 @@ namespace bacs{namespace single{namespace problem
     struct invalid_test_id_error: virtual invalid_id_error, virtual test_error {};
     struct invalid_data_id_error: virtual invalid_id_error, virtual test_error {};
     struct test_format_error: virtual error {};
-    struct statement_error: virtual error {};
-
-    struct invalid_statement_lang_error: virtual invalid_id_error, virtual statement_error
-    {
-        typedef boost::error_info<struct tag_lang, std::string> lang;
-    };
-
-    struct invalid_statement_format_error: virtual invalid_id_error, virtual statement_error
-    {
-        typedef boost::error_info<struct tag_format, std::string> format;
-    };
 
     struct test_data_format_error: virtual test_format_error
     {

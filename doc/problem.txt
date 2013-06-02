@@ -1,23 +1,28 @@
 /*!
 \page problem_page Problem
 
+\section problem_single_sec "Single" problem
+Problem type implemented here is "single".
+Solutions for such problems run independently,
+i.e. raw result of solution does not depend on other solutions.
+Solution is executed multiple times using tests.
+
 \section problem_driver_sec Driver
 
-BACS support different problem formats.
-Each problem is a directory tree.
+For this problem type different formats are supported.
+Format is "$type#$driver".
 
-In the root directory "format" file is provided.
-It's content is a problem format name.
-
-Problem is read by bacs::single::problem::driver instance
-which "understand" particular format. Driver's implementations
-are placed in bacs::single::problem::drivers namespace.
+Problem is read by bacs::problem::single::driver instance
+which "understand" particular format.
+Drivers are implemented via plugins.
 
 \section problem_generator_sec Generator
 
-Problem is converter into internal format via bacs::single::problem::generator instance
+Problem is converter into internal representation via bacs::problem::single::generator instance
 which uses problem's driver to read problem data and create appropriate representation.
-Generator's implementations are placed in bacs::single::problem::generators namespace.
+Generator's implementations are placed in bacs::problem::generators namespace.
+
+TODO how is generator related to problem type
 
 */
 
