@@ -33,6 +33,8 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/drivers/simple0_tests.cpp
 
     src/generators/internal0.cpp
+
+    src/importer.cpp
 )
 
 bunsan_install_headers()
