@@ -23,16 +23,16 @@ bunsan_protobuf_generate_cpp(SOURCES proto_srcs HEADERS proto_hdrs INSTALL inclu
 bunsan_add_shared_library(${PROJECT_NAME}
     ${proto_srcs}
 
-    src/lib/tests.cpp
-    src/lib/driver.cpp
-    src/lib/generator.cpp
+    src/tests.cpp
+    src/driver.cpp
+    src/generator.cpp
 
-    src/lib/detail/path.cpp
+    src/detail/path.cpp
 
-    src/lib/drivers/simple0.cpp
-    src/lib/drivers/simple0_tests.cpp
+    src/drivers/simple0.cpp
+    src/drivers/simple0_tests.cpp
 
-    src/lib/generators/internal0.cpp
+    src/generators/internal0.cpp
 )
 
 bunsan_install_headers()
