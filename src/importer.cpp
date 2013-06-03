@@ -13,7 +13,9 @@ namespace bacs{namespace problem{namespace single
         });
 
     importer::importer(const boost::property_tree::ptree &config):
-        m_generator(generator::instance(config.get<std::string>("type"), config.get_child("config"))) {}
+        m_generator(generator::instance(
+            config.get<std::string>("generator.type"),
+            config.get_child("generator.config", boost::property_tree::ptree()))) {}
 
     bacs::problem::Problem importer::convert(const options &options_)
     {
