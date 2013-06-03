@@ -34,13 +34,8 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/lib/generators/internal0.cpp
 )
-bunsan_use(${PROJECT_NAME})
-
-bunsan_add_executable(${PROJECT_NAME}_cli
-    src/bin/cli.cpp
-)
 
 bunsan_install_headers()
-bunsan_install_targets(${PROJECT_NAME} ${PROJECT_NAME}_cli)
+bunsan_install_targets(${PROJECT_NAME})
 
 bunsan_include_tests()
