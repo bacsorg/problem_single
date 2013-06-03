@@ -98,8 +98,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             info.set_source(value.get());
         // maintainers
         split::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
-        // restrictions
-        split::parse_repeated(*info.mutable_restrictions(), m_info, "restrictions");
         // system
         Info::System &system = *info.mutable_system();
         system.set_package("unknown"); // initialized later
