@@ -44,7 +44,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 root_index.package.import.package.insert(std::make_pair(".", package));
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
-                bunsan::pm::entry("bacs/system/tests/call") /
+                bunsan::pm::entry("bacs/system/single/tests/call") /
                 tests->section("utility").get<std::string>("call")));
         }
         // checker package
@@ -57,7 +57,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 root_index.package.import.package.insert(std::make_pair(".", package));
             // calling conventions
             root_index.source.import.source.insert(std::make_pair(".",
-                bunsan::pm::entry("bacs/system/checker/call") /
+                bunsan::pm::entry("bacs/system/single/checker/call") /
                 checker->section("utility").get<std::string>("call")));
         }
         // validator package
@@ -72,12 +72,12 @@ namespace bacs{namespace problem{namespace single{namespace generators
                     root_index.package.import.package.insert(std::make_pair(".", package));
                 // calling conventions
                 root_index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/validator/call") /
+                    bunsan::pm::entry("bacs/system/single/validator/call") /
                     validator->section("utility").get<std::string>("call")));
             }
             else
             {
-                root_index.source.import.source.insert(std::make_pair(".", "bacs/system/validator/std/ok"));
+                root_index.source.import.source.insert(std::make_pair(".", "bacs/system/single/validator/std/ok"));
             }
         }
         // statement package
