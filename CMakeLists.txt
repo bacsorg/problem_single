@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 include(BunsanCommon)
 
 bunsan_use_bunsan(common pm bacs_problem)
-bunsan_use_boost(system filesystem serialization unit_test_framework program_options thread)
+bunsan_use_boost(system filesystem serialization program_options thread)
 bunsan_use_protobuf()
 
 bunsan_protobuf_generate_cpp(SOURCES proto_srcs HEADERS proto_hdrs INSTALL include PROTOS
