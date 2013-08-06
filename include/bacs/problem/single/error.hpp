@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bacs/problem/error.hpp"
+#include <bacs/problem/error.hpp>
 
 namespace bacs{namespace problem{namespace single
 {

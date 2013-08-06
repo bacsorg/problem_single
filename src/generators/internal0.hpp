@@ -1,4 +1,4 @@
-#include "bacs/problem/single/generator.hpp"
+#include <bacs/problem/single/generator.hpp>
 
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>

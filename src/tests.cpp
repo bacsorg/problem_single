@@ -1,4 +1,4 @@
-#include "bacs/problem/single/tests.hpp"
+#include <bacs/problem/single/tests.hpp>
 
 #include <boost/property_tree/ini_parser.hpp>
 

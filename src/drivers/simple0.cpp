@@ -1,14 +1,14 @@
 #include "simple0.hpp"
 #include "simple0_tests.hpp"
 
-#include "bacs/problem/single/error.hpp"
+#include <bacs/problem/single/error.hpp>
 
-#include "bacs/problem/single/detail/path.hpp"
+#include <bacs/problem/single/detail/path.hpp>
 
-#include "bacs/problem/single/problem.pb.h"
+#include <bacs/problem/single/problem.pb.h>
 
-#include "bacs/problem/split.hpp"
-#include "bacs/problem/resource/parse.hpp"
+#include <bacs/problem/split.hpp>
+#include <bacs/problem/resource/parse.hpp>
 
 #include <algorithm>
 #include <unordered_set>
