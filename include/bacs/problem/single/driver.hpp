@@ -3,14 +3,13 @@
 #include <bacs/problem/single/tests.hpp>
 
 #include <bacs/problem/problem.pb.h>
-
 #include <bacs/problem/statement.hpp>
 #include <bacs/problem/utility.hpp>
 
 #include <bunsan/factory_helper.hpp>
 
-#include <boost/noncopyable.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/noncopyable.hpp>
 
 namespace bacs{namespace problem{namespace single
 {

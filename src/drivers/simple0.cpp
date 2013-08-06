@@ -1,23 +1,22 @@
 #include "simple0.hpp"
+
 #include "simple0_tests.hpp"
 
-#include <bacs/problem/single/error.hpp>
-
 #include <bacs/problem/single/detail/path.hpp>
-
+#include <bacs/problem/single/error.hpp>
 #include <bacs/problem/single/problem.pb.h>
 
 #include <bacs/problem/split.hpp>
 #include <bacs/problem/resource/parse.hpp>
 
-#include <algorithm>
-#include <unordered_set>
-#include <unordered_map>
-
-#include <boost/filesystem/operations.hpp>
-#include <boost/property_tree/ini_parser.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/assert.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
+#include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace bacs{namespace problem{namespace single{namespace drivers
 {

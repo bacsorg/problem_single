@@ -3,10 +3,10 @@
 #include <bunsan/enable_error_info.hpp>
 #include <bunsan/filesystem/fstream.hpp>
 
-#include <iterator>
-
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/path.hpp>
+
+#include <iterator>
 
 namespace bacs{namespace problem{namespace single
 {

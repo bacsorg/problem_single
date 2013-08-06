@@ -1,11 +1,11 @@
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
 
-#include <string>
-#include <vector>
-
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
+
+#include <string>
+#include <vector>
 
 namespace bacs{namespace problem{namespace single{namespace drivers
 {
