@@ -28,6 +28,7 @@ bunsan_add_shared_library(${PROJECT_NAME}
     src/generator.cpp
 
     src/detail/path.cpp
+    src/detail/list_tests.cpp
 
     src/drivers/simple0.cpp
     src/drivers/simple0_tests.cpp
