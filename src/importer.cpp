@@ -18,14 +18,14 @@ namespace bacs{namespace problem{namespace single
             config.get<std::string>("generator.type"),
             config.get_child("generator.config", boost::property_tree::ptree()))) {}
 
-    bacs::problem::Problem importer::convert(const options &options_)
+    Problem importer::convert(const options &options_)
     {
         const generator::options goptions = {
             .driver = driver::instance(options_.problem_dir),
             .destination = options_.destination,
             .root_package = options_.root_package,
         };
-        bacs::problem::Problem problem_info = m_generator->generate(goptions);
+        Problem problem_info = m_generator->generate(goptions);
         problem_info.mutable_info()->mutable_system()->set_hash(options_.hash.data(), options_.hash.size());
         problem_info.mutable_info()->mutable_system()->set_problem_type(problem_type);
         return problem_info;

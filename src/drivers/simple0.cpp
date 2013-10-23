@@ -41,15 +41,15 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         // depending on tests set test order may differ
         // this code should be executed after profiles and tests initialization
         BOOST_ASSERT(m_overview.profiles_size() == 1);
-        BOOST_ASSERT(m_overview.profiles(0).GetExtension(problem::Profile_::testing).test_groups_size() == 1);
+        BOOST_ASSERT(m_overview.profiles(0).GetExtension(Profile_::testing).test_groups_size() == 1);
         // select tests order
         bool only_digits = true;
-        for (const std::string &id: m_overview.GetExtension(problem::Problem_::tests).test_set())
+        for (const std::string &id: m_overview.GetExtension(Problem_::tests).test_set())
         {
             if (!(only_digits = only_digits && std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
                 break;
         }
-        m_overview.mutable_profiles(0)->MutableExtension(problem::Profile_::testing)->mutable_test_groups(0)->
+        m_overview.mutable_profiles(0)->MutableExtension(Profile_::testing)->mutable_test_groups(0)->
             mutable_settings()->mutable_run()->set_order(
                 only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL);
     }
@@ -122,13 +122,13 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                                           test_data_format_error::data_id(kv.first));
             }
         m_tests.reset(new simple0_tests(m_location / "tests", text_data_set));
-        problem::Tests &tests = *m_overview.MutableExtension(problem::Problem_::tests);
+        Tests &tests = *m_overview.MutableExtension(Problem_::tests);
         tests.Clear();
         for (const std::string &data_id: m_tests->data_set())
             tests.add_data_set(data_id);
         for (const std::string &test_id: m_tests->test_set())
             tests.add_test_set(test_id);
-        *m_overview.mutable_utilities()->MutableExtension(problem::Utilities_::tests) = m_tests->info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
     }
 
     void simple0::read_statement()
@@ -147,7 +147,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profiles();
         profiles.Clear();
         Profile &profile = *profiles.Add();
-        testing::SolutionTesting &testing = *profile.MutableExtension(problem::Profile_::testing);
+        testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
         testing.Clear();
         testing::TestGroup &test_group = *testing.add_test_groups();
         test_group.set_id("");
@@ -212,7 +212,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         if (!m_checker)
             BOOST_THROW_EXCEPTION(checker_error() <<
                                   checker_error::message("Unable to initialize checker's driver."));
-        *m_overview.mutable_utilities()->MutableExtension(problem::Utilities_::checker) = m_checker->info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) = m_checker->info();
     }
 
     void simple0::read_validator()
@@ -223,7 +223,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             if (!m_validator)
                 BOOST_THROW_EXCEPTION(validator_error() <<
                                       validator_error::message("Unable to initialize validator's driver."));
-            *m_overview.mutable_utilities()->MutableExtension(problem::Utilities_::validator) = m_validator->info();
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) = m_validator->info();
         }
     }
 }}}}

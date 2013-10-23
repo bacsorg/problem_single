@@ -11,7 +11,7 @@ namespace bacs{namespace problem{namespace single
     public:
         explicit importer(const boost::property_tree::ptree &config);
 
-        bacs::problem::Problem convert(const options &options_) override;
+        Problem convert(const options &options_) override;
 
     private:
         const generator_ptr m_generator;

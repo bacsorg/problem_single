@@ -1,4 +1,4 @@
-package bacs.problem.single.problem;
+package bacs.problem.single;
 
 import "bacs/problem/single/testing.proto";
 

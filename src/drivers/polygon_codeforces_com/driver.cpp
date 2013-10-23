@@ -109,7 +109,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profiles();
         profiles.Clear();
         Profile &profile = *profiles.Add();
-        testing::SolutionTesting &testing = *profile.MutableExtension(problem::Profile_::testing);
+        testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
         testing.Clear();
         const boost::property_tree::ptree judging = m_config.get_child("problem.judging");
         for (const boost::property_tree::ptree::value_type &testset: judging)
@@ -227,7 +227,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             m_checker = get_utility(*checker, m_location, "checker", "in_out_hint");
         else
             m_checker = get_utility_default(m_location, "checker", "std/strict/out_stdout");
-        *m_overview.mutable_utilities()->MutableExtension(problem::Utilities_::checker) = m_checker->info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) = m_checker->info();
     }
 
     void driver::read_validator()
@@ -239,7 +239,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         if (validator)
         {
             m_validator = get_utility(*validator, m_location, "validator", "");
-            *m_overview.mutable_utilities()->MutableExtension(problem::Utilities_::validator) = m_validator->info();
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) = m_validator->info();
         }
     }
 }}}}}
