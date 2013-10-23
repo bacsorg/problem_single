@@ -44,11 +44,32 @@ bunsan_add_library(${PROJECT_NAME}
     src/drivers/polygon_codeforces_com/tests.cpp
 
     src/generators/internal0.cpp
+    src/generators/legacy0.cpp
 
     src/importer.cpp
 )
 bunsan_use_target(${PROJECT_NAME} ${PROJECT_NAME}_pb)
 bunsan_use_bunsan_package(${PROJECT_NAME} bacs_problem bacs_problem)
+find_path(mysql_include_dir
+    NAMES mysql.h
+    PATHS
+        /usr/include
+        /usr/include/mysql
+        /usr/local/include
+        /usr/local/include/mysql
+)
+find_path(mysql_link_dir
+    NAMES libmysqlclient.so
+    PATHS
+        /usr/lib
+        /usr/lib/mysql
+        /usr/local/lib
+        /usr/local/lib/mysql
+)
+message(STATUS "mysql.h was found in ${mysql_include_dir}")
+message(STATUS "libmysqlclient.so was found in ${mysql_include_dir}")
+target_include_directories(${PROJECT_NAME} PRIVATE ${mysql_include_dir})
+target_link_libraries(${PROJECT_NAME} PRIVATE mysqlclient)
 
 bunsan_install_headers()
 bunsan_install_targets(${PROJECT_NAME})
