@@ -1,3 +1,5 @@
+#include "simple0_tests.hpp"
+
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
 
@@ -36,7 +38,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
         Problem m_overview;
-        tests_ptr m_tests;
+        tests::shared_ptr<simple0_tests> m_tests;
         utility_ptr m_checker;
         utility_ptr m_validator;
         statement_ptr m_statement;

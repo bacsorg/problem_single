@@ -1,7 +1,6 @@
 #include "driver.hpp"
 
 #include "statement.hpp"
-#include "tests.hpp"
 
 #include <bacs/problem/single/detail/path.hpp>
 #include <bacs/problem/single/problem.pb.h>
@@ -104,8 +103,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_profiles()
     {
-        std::unique_ptr<polygon_codeforces_com::tests> tests(
-            new polygon_codeforces_com::tests(m_location));
+        m_tests.reset(new polygon_codeforces_com::tests(m_location));
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profiles();
         profiles.Clear();
         Profile &profile = *profiles.Add();
@@ -179,14 +177,13 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 const std::string test_id = test.second.get<std::string>("<xmlattr>.from-file");
                 testing::TestQuery &test_query = *test_group.add_test_set();
                 test_query.set_id(test_id);
-                tests->add_test(
+                m_tests->add_test(
                     test_id,
                     str(boost::format(in_test_format) % test_id),
                     str(boost::format(out_test_format) % test_id)
                 );
             }
         }
-        m_tests.reset(tests.release());
     }
 
     namespace

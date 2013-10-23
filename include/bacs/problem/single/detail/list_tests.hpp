@@ -3,6 +3,8 @@
 #include <bacs/problem/single/error.hpp>
 #include <bacs/problem/single/tests.hpp>
 
+#include <bunsan/stream_enum.hpp>
+
 #include <unordered_map>
 
 namespace bacs{namespace problem{namespace single{namespace detail
@@ -17,13 +19,21 @@ namespace bacs{namespace problem{namespace single{namespace detail
     public:
         typedef std::unordered_map<std::string, boost::filesystem::path> test_data;
 
+        BUNSAN_INCLASS_STREAM_ENUM_CLASS(test_data_type,
+        (
+            text,
+            binary
+        ))
+
     public:
-        explicit list_tests(const boost::filesystem::path &location);
+        list_tests(const boost::filesystem::path &location,
+                   const test_data_type default_data_type);
+
         void add_test(const std::string &test_id,
                       const test_data &data);
 
-        /// \note By default all data is treated like text
-        void text_data(const std::string &data_id, const bool value=true);
+        test_data_type data_type(const std::string &data_id) const;
+        void set_data_type(const std::string &data_id, const test_data_type type);
 
         std::unordered_set<std::string> data_set() const override;
         std::unordered_set<std::string> test_set() const override;
@@ -33,9 +43,11 @@ namespace bacs{namespace problem{namespace single{namespace detail
 
     protected:
         list_tests(const boost::filesystem::path &location,
+                   const test_data_type default_data_type,
                    const std::string &builder_name);
 
     private:
+        const test_data_type m_default_data_type;
         std::unordered_map<std::string, test_data> m_tests;
         std::unordered_set<std::string> m_text_data_set;
     };

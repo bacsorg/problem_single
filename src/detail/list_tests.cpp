@@ -34,52 +34,68 @@ namespace bacs{namespace problem{namespace single{namespace detail
     }
 
     list_tests::list_tests(const boost::filesystem::path &location,
+                           const test_data_type default_data_type,
                            const std::string &builder_name):
-        tests(location, get_config(builder_name)) {}
+        tests(location, get_config(builder_name)),
+        m_default_data_type(default_data_type) {}
 
-    list_tests::list_tests(const boost::filesystem::path &location):
-        list_tests(location, "[list_tests tests generator]") {}
+    list_tests::list_tests(const boost::filesystem::path &location,
+                           const test_data_type default_data_type):
+        list_tests(location, default_data_type, "[list_tests tests generator]") {}
 
     void list_tests::add_test(const std::string &test_id,
                               const test_data &data)
     {
-        if (!m_tests.empty())
+        if (m_tests.empty())
+        {
+            m_tests[test_id] = data;
+            for (const auto &id_file: data)
+                set_data_type(id_file.first, m_default_data_type);
+        }
+        else
         {
             const auto &test = *m_tests.begin();
             if (map_keys(data) != map_keys(test.second))
                 BOOST_THROW_EXCEPTION(inconsistent_test_data_set_error());
-        }
-        const auto iter = m_tests.find(test_id);
-        if (iter == m_tests.end())
-        {
-            m_tests[test_id] = data;
-            for (const auto &id_file: data)
-                text_data(id_file.first);
-        }
-        else
-        {
-            if (iter->second != data)
-                BOOST_THROW_EXCEPTION(inconsistent_test_data_error() <<
-                                      inconsistent_test_data_error::message(
-                                          "Tests with the same id "
-                                          "have different data files."));
+            const auto iter = m_tests.find(test_id);
+            if (iter == m_tests.end())
+            {
+                m_tests[test_id] = data;
+            }
+            else
+            {
+                if (iter->second != data)
+                    BOOST_THROW_EXCEPTION(inconsistent_test_data_error() <<
+                                          inconsistent_test_data_error::message(
+                                              "Tests with the same id "
+                                              "have different data files."));
+            }
         }
     }
 
-    void list_tests::text_data(const std::string &data_id, const bool value)
+    list_tests::test_data_type list_tests::data_type(const std::string &data_id) const
+    {
+        return m_text_data_set.find(data_id) == m_text_data_set.end() ?
+                   test_data_type::binary : test_data_type::text;
+    }
+
+    void list_tests::set_data_type(const std::string &data_id, const test_data_type type)
     {
         if (m_tests.empty())
             BOOST_THROW_EXCEPTION(test_empty_set_error());
-        if (value)
+        if (m_tests.begin()->second.find(data_id) == m_tests.begin()->second.end())
+            BOOST_THROW_EXCEPTION(test_unknown_data_error() <<
+                                  test_unknown_data_error::data_id(data_id));
+        switch (type)
         {
-            if (m_tests.begin()->second.find(data_id) == m_tests.begin()->second.end())
-                BOOST_THROW_EXCEPTION(test_unknown_data_error() <<
-                                      test_unknown_data_error::data_id(data_id));
-            m_text_data_set.insert(data_id);
-        }
-        else
-        {
+        case test_data_type::binary:
             m_text_data_set.erase(data_id);
+            break;
+        case test_data_type::text:
+            m_text_data_set.insert(data_id);
+            break;
+        default:
+            BOOST_ASSERT(false);
         }
     }
 

@@ -1,7 +1,5 @@
 #include "simple0.hpp"
 
-#include "simple0_tests.hpp"
-
 #include <bacs/problem/single/detail/path.hpp>
 #include <bacs/problem/single/error.hpp>
 #include <bacs/problem/single/problem.pb.h>
@@ -12,6 +10,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
 #include <algorithm>
@@ -105,23 +104,19 @@ namespace bacs{namespace problem{namespace single{namespace drivers
 
     void simple0::read_tests()
     {
+        m_tests.reset(new simple0_tests(m_location / "tests"));
         const boost::optional<boost::property_tree::ptree &> tests_ =
             m_config.get_child_optional("tests");
-        std::unordered_set<std::string> text_data_set = {"in", "out"};
         if (tests_)
+        {
             for (const auto kv: tests_.get())
             {
                 const std::string data_type = kv.second.get_value<std::string>();
-                BOOST_ASSERT(kv.first == "in" || kv.first == "out");
-                if (data_type == "binary")
-                    text_data_set.erase(kv.first);
-                else if (data_type == "text")
-                    text_data_set.insert(kv.first);
-                else
-                    BOOST_THROW_EXCEPTION(test_data_format_error() <<
-                                          test_data_format_error::data_id(kv.first));
+                m_tests->set_data_type(
+                    kv.first,
+                    boost::lexical_cast<simple0_tests::test_data_type>(data_type));
             }
-        m_tests.reset(new simple0_tests(m_location / "tests", text_data_set));
+        }
         *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
     }

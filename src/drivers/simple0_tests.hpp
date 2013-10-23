@@ -13,7 +13,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     class simple0_tests: public detail::list_tests
     {
     public:
-        simple0_tests(const boost::filesystem::path &location,
-                      const std::unordered_set<std::string> &text_data_set);
+        explicit simple0_tests(const boost::filesystem::path &location);
     };
 }}}}

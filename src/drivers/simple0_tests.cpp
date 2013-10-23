@@ -12,9 +12,11 @@
 
 namespace bacs{namespace problem{namespace single{namespace drivers
 {
-    simple0_tests::simple0_tests(const boost::filesystem::path &location,
-                                 const std::unordered_set<std::string> &text_data_set):
-        list_tests(location, "[simple0 tests generator]")
+    simple0_tests::simple0_tests(const boost::filesystem::path &location):
+        list_tests(
+            location,
+            list_tests::test_data_type::text,
+            "[simple0 tests generator]")
     {
         std::unordered_map<std::string, std::unordered_set<std::string>> test_files;
         for (boost::filesystem::directory_iterator i(location), end; i != end; ++i)
@@ -48,7 +50,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         if (data_set_.size() != 2)
             // TODO send at least first unknown data_id
             BOOST_THROW_EXCEPTION(test_unknown_data_error());
-        for (const std::string &data_id: text_data_set)
-            text_data(data_id);
     }
 }}}}
