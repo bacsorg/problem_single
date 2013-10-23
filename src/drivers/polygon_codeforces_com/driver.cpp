@@ -27,9 +27,9 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         boost::property_tree::read_xml((m_location / "problem.xml").string(), m_config);
         boost::property_tree::read_ini((m_location / "config.ini").string(), m_override_config);
         read_info();
-        read_tests();
         read_statement();
         read_profiles();
+        read_tests(); // should be called after read_profiles()
         read_checker();
         read_validator();
     }
@@ -90,8 +90,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_tests()
     {
+        BOOST_ASSERT_MSG(m_tests, "Initialized by driver::read_profiles()");
         // note: binary tests are not supported for now
-        // note: initialized by read_profiles()
+        *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
     }
 
     void driver::read_statement()
