@@ -7,6 +7,7 @@
 #include <bacs/problem/split.hpp>
 
 #include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -148,7 +149,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 file->set_id("stdin");
                 file->set_init("in");
                 file->add_permissions(settings::File::READ);
-                if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")))
+                if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")) && !value->empty())
                 {
                     detail::to_pb_path(value.get(), *file->mutable_path());
                 }
@@ -162,7 +163,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 file->set_id("stdout");
                 file->add_permissions(settings::File::READ);
                 file->add_permissions(settings::File::WRITE);
-                if ((value = judging.get_optional<std::string>("<xmlattr>.output-file")))
+                if ((value = judging.get_optional<std::string>("<xmlattr>.output-file")) && !value->empty())
                 {
                     detail::to_pb_path(value.get(), *file->mutable_path());
                 }
@@ -178,18 +179,21 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             const std::string out_test_format =
                 testset.second.get<std::string>("output-path-pattern", "tests/%02d.a");
             test_group.clear_test_set();
-            for (const boost::property_tree::ptree::value_type &test: testset.second.get_child("tests"))
             {
-                if (test.first == "<xmlattr>")
-                    continue;
-                const std::string test_id = test.second.get<std::string>("<xmlattr>.from-file");
-                testing::TestQuery &test_query = *test_group.add_test_set();
-                test_query.set_id(test_id);
-                m_tests->add_test(
-                    test_id,
-                    str(boost::format(in_test_format) % test_id),
-                    str(boost::format(out_test_format) % test_id)
-                );
+                std::size_t test_id_ = 0;
+                for (const boost::property_tree::ptree::value_type &test: testset.second.get_child("tests"))
+                {
+                    if (test.first == "<xmlattr>")
+                        continue;
+                    const std::string test_id = boost::lexical_cast<std::string>(++test_id_);
+                    testing::TestQuery &test_query = *test_group.add_test_set();
+                    test_query.set_id(test_id);
+                    m_tests->add_test(
+                        test_id,
+                        str(boost::format(in_test_format) % test_id),
+                        str(boost::format(out_test_format) % test_id)
+                    );
+                }
             }
         }
     }
