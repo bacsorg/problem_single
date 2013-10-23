@@ -99,6 +99,12 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         m_statement.reset(new polygon_codeforces_com::statement(
             m_location / "statements",
             m_config.get_child("problem.statements")));
+        Statement &info = *m_overview.mutable_statement() = m_statement->info();
+        for (Statement::Version &v: *info.mutable_versions())
+        {
+            const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
+            v.set_package(package.name());
+        }
     }
 
     void driver::read_profiles()
