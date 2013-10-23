@@ -180,7 +180,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             test_group.clear_test_set();
             for (const boost::property_tree::ptree::value_type &test: testset.second.get_child("tests"))
             {
-                if (testset.first == "<xmlattr>")
+                if (test.first == "<xmlattr>")
                     continue;
                 const std::string test_id = test.second.get<std::string>("<xmlattr>.from-file");
                 testing::TestQuery &test_query = *test_group.add_test_set();
