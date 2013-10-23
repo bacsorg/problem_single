@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bacs/problem/single/problem.pb.h>
 #include <bacs/problem/utility.hpp>
 
 #include <bunsan/factory_helper.hpp>
@@ -21,6 +22,8 @@ namespace bacs{namespace problem{namespace single
         // create() will be provided by appropriate package
         virtual std::unordered_set<std::string> data_set() const=0;
         virtual std::unordered_set<std::string> test_set() const=0;
+
+        Tests test_set_info() const;
 
     BUNSAN_FACTORY_END(tests)
 }}}

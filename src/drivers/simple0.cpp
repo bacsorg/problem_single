@@ -122,12 +122,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                                           test_data_format_error::data_id(kv.first));
             }
         m_tests.reset(new simple0_tests(m_location / "tests", text_data_set));
-        Tests &tests = *m_overview.MutableExtension(Problem_::tests);
-        tests.Clear();
-        for (const std::string &data_id: m_tests->data_set())
-            tests.add_data_set(data_id);
-        for (const std::string &test_id: m_tests->test_set())
-            tests.add_test_set(test_id);
+        *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
     }
 
