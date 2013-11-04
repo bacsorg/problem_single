@@ -1,6 +1,5 @@
 #include <bacs/problem/single/driver.hpp>
 
-#include <bunsan/enable_error_info.hpp>
 #include <bunsan/filesystem/fstream.hpp>
 
 #include <boost/algorithm/string/trim.hpp>
@@ -15,14 +14,14 @@ namespace bacs{namespace problem{namespace single
     driver_ptr driver::instance(const boost::filesystem::path &location)
     {
         std::string format;
-        BUNSAN_EXCEPTIONS_WRAP_BEGIN()
+        bunsan::filesystem::ifstream fin(location / "format");
+        BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fin)
         {
-            bunsan::filesystem::ifstream fin(location / "format");
             format.assign(std::istreambuf_iterator<char>(fin),
                           std::istreambuf_iterator<char>());
-            fin.close();
         }
-        BUNSAN_EXCEPTIONS_WRAP_END()
+        BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fin)
+        fin.close();
         boost::algorithm::trim(format);
         constexpr char delim = '#';
         const std::string::size_type delim_pos = format.find(delim);
