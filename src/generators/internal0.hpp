@@ -13,8 +13,6 @@ namespace bacs{namespace problem{namespace single{namespace generators
         Problem generate(const options &options_) override;
 
     private:
-
-    private:
         static const bool factory_reg_hook;
     };
 }}}}
