@@ -63,17 +63,28 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         const bunsan::pm::entry &/*package*/,
         const bunsan::pm::entry &resources_package) const
     {
-        bunsan::filesystem::reset_dir(destination);
-        bunsan::pm::index index;
-        index.package.import.source.insert(std::make_pair("data", resources_package));
-        index.package.self.insert(std::make_pair(".", "pkg"));
-        boost::filesystem::create_directory(destination / "pkg");
-        manifest statement_manifest;
-        statement_manifest.version.lang = lang();
-        statement_manifest.version.format = format();
-        statement_manifest.data.index = m_source;
-        boost::property_tree::write_ini((destination / "pkg" / manifest_path).string(),
-                                        bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
-        index.save(destination / "index");
+        try
+        {
+            bunsan::filesystem::reset_dir(destination);
+            bunsan::pm::index index;
+            index.package.import.source.insert(std::make_pair("data", resources_package));
+            index.package.self.insert(std::make_pair(".", "pkg"));
+            boost::filesystem::create_directory(destination / "pkg");
+            manifest statement_manifest;
+            statement_manifest.version.lang = lang();
+            statement_manifest.version.format = format();
+            statement_manifest.data.index = m_source;
+            boost::property_tree::write_ini((destination / "pkg" / manifest_path).string(),
+                                            bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
+            index.save(destination / "index");
+        }
+        catch (std::exception &)
+        {
+            BOOST_THROW_EXCEPTION(statement_version_make_package_error() <<
+                                  statement_version_make_package_error::destination(destination) <<
+                                  //statement_version_make_package_error::package(package) <<
+                                  statement_version_make_package_error::resources_package(resources_package) <<
+                                  bunsan::enable_nested_current());
+        }
     }
 }}}}}

@@ -9,10 +9,10 @@
 
 namespace bacs{namespace problem{namespace single{namespace detail
 {
-    struct inconsistent_test_data_error: virtual test_error {};
+    struct inconsistent_test_data_error: virtual tests_error {};
     struct inconsistent_test_data_set_error: virtual inconsistent_test_data_error {};
-    struct test_empty_set_error: virtual test_error {};
-    struct test_unknown_data_error: virtual test_error {};
+    struct test_empty_set_error: virtual tests_error {};
+    struct test_unknown_data_error: virtual tests_error {};
 
     class list_tests: public tests
     {

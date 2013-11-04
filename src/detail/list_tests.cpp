@@ -114,35 +114,45 @@ namespace bacs{namespace problem{namespace single{namespace detail
     bool list_tests::make_package(const boost::filesystem::path &destination,
                                   const bunsan::pm::entry &/*package*/) const
     {
-        boost::filesystem::create_directories(destination);
-        bunsan::pm::index index;
-        // tests builder
-        index.source.import.package.insert(std::make_pair(".", "bacs/system/single/list_tests"));
-        // tests
-        index.source.self.insert(std::make_pair("share/tests", "tests"));
-        boost::filesystem::create_directory(destination / "tests");
-        for (const auto &id_data: m_tests)
-            for (const auto &id_path: id_data.second)
-                boost::filesystem::copy_file(location() / id_path.second, destination / "tests" / (id_data.first + "." + id_path.first));
-        // configuration for tests generator
-        index.source.self.insert(std::make_pair("etc", "etc"));
-        boost::filesystem::create_directory(destination / "etc");
-        bunsan::filesystem::ofstream fout(destination / "etc/tests");
-        BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
+        try
         {
+            boost::filesystem::create_directories(destination);
+            bunsan::pm::index index;
+            // tests builder
+            index.source.import.package.insert(std::make_pair(".", "bacs/system/single/list_tests"));
+            // tests
+            index.source.self.insert(std::make_pair("share/tests", "tests"));
+            boost::filesystem::create_directory(destination / "tests");
+            for (const auto &id_data: m_tests)
+                for (const auto &id_path: id_data.second)
+                    boost::filesystem::copy_file(location() / id_path.second, destination / "tests" / (id_data.first + "." + id_path.first));
+            // configuration for tests generator
+            index.source.self.insert(std::make_pair("etc", "etc"));
+            boost::filesystem::create_directory(destination / "etc");
+            bunsan::filesystem::ofstream fout(destination / "etc/tests");
+            BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
             {
-                // note: test_set_ and data_set_ are not altered, but boost::oarchive interface
-                // does not support const references in operator<<()
-                std::unordered_set<std::string> test_set_ = test_set(), data_set_ = data_set();
-                boost::archive::text_oarchive oa(fout);
-                // FIXME I don't like that order should be checked by programmer.
-                // Should be moved into separate header.
-                oa << test_set_ << data_set_ << m_text_data_set;
+                {
+                    // note: test_set_ and data_set_ are not altered, but boost::oarchive interface
+                    // does not support const references in operator<<()
+                    std::unordered_set<std::string> test_set_ = test_set(), data_set_ = data_set();
+                    boost::archive::text_oarchive oa(fout);
+                    // FIXME I don't like that order should be checked by programmer.
+                    // Should be moved into separate header.
+                    oa << test_set_ << data_set_ << m_text_data_set;
+                }
             }
+            BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fout)
+            fout.close();
+            index.save(destination / "index");
+            return true;
         }
-        BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fout)
-        fout.close();
-        index.save(destination / "index");
-        return true;
+        catch (std::exception &)
+        {
+            BOOST_THROW_EXCEPTION(tests_make_package_error() <<
+                                  tests_make_package_error::destination(destination) <<
+                                  //tests_make_package_error::package(package) <<
+                                  bunsan::enable_nested_current());
+        }
     }
 }}}}

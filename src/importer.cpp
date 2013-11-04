@@ -20,14 +20,23 @@ namespace bacs{namespace problem{namespace single
 
     Problem importer::convert(const options &options_)
     {
-        const generator::options goptions = {
-            .driver = driver::instance(options_.problem_dir),
-            .destination = options_.destination,
-            .root_package = options_.root_package,
-        };
-        Problem problem_info = m_generator->generate(goptions);
-        problem_info.mutable_info()->mutable_system()->set_hash(options_.hash.data(), options_.hash.size());
-        problem_info.mutable_info()->mutable_system()->set_problem_type(problem_type);
-        return problem_info;
+        try
+        {
+            const generator::options goptions = {
+                .driver = driver::instance(options_.problem_dir),
+                .destination = options_.destination,
+                .root_package = options_.root_package,
+            };
+            Problem problem_info = m_generator->generate(goptions);
+            problem_info.mutable_info()->mutable_system()->set_hash(options_.hash.data(), options_.hash.size());
+            problem_info.mutable_info()->mutable_system()->set_problem_type(problem_type);
+            return problem_info;
+        }
+        catch (std::exception &)
+        {
+            BOOST_THROW_EXCEPTION(importer_convert_error() <<
+                                  importer_convert_error::options(options_) <<
+                                  bunsan::enable_nested_current());
+        }
     }
 }}}
