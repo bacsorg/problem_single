@@ -45,9 +45,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         const auto data_set_ = data_set();
         if (data_set_.find("in") == data_set_.end())
             BOOST_THROW_EXCEPTION(test_no_in_data_error());
-        if (data_set_.find("out") == data_set_.end())
-            BOOST_THROW_EXCEPTION(test_no_out_data_error());
-        if (data_set_.size() != 2)
+        // note out is optional
+        const std::size_t expected_size =
+            data_set_.find("out") == data_set_.end() ? 1 : 2;
+        if (data_set_.size() != expected_size)
             // TODO send at least first unknown data_id
             BOOST_THROW_EXCEPTION(test_unknown_data_error());
     }
