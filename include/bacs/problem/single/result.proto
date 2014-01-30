@@ -65,6 +65,7 @@ message TestResult
             WRONG_ANSWER = 1;
             PRESENTATION_ERROR = 2;
             FAIL_TEST = 3;
+            FAILED = 4;
         }
         required Status status = 1;
         required bytes output = 2;
