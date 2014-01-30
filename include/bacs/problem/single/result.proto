@@ -68,6 +68,7 @@ message TestResult
         }
         required Status status = 1;
         required bytes output = 2;
+        optional Execution execution = 3;
     }
     message File
     {
