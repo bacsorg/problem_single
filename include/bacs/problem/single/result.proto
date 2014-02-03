@@ -55,29 +55,50 @@ message TestGroupResult
     repeated TestResult tests = 2;
 }
 
+message Judge
+{
+    enum Status
+    {
+        OK = 0;
+        WRONG_ANSWER = 1;
+        PRESENTATION_ERROR = 2;
+        QUERIES_LIMIT_EXCEEDED = 3;
+        INCORRECT_REQUEST = 4;
+        INSUFFICIENT_DATA = 5;
+
+        // special verdicts
+        CUSTOM_FAILURE = 500;
+
+        // system failure verdicts
+        FAIL_TEST = 999;
+        FAILED = 1000;
+    }
+    required Status status = 1;
+    optional bytes message = 2;
+
+    message Utility
+    {
+        required Execution execution = 1;
+        optional bytes output = 2;
+    }
+    message Utilities
+    {
+        optional Utility interactor = 1;
+        optional Utility checker = 2;
+    }
+    optional Utilities utilities = 3;
+}
+
+message File
+{
+    required string id = 1;
+    required bytes data = 2;
+}
+
 message TestResult
 {
-    message Checking
-    {
-        enum Status
-        {
-            OK = 0;
-            WRONG_ANSWER = 1;
-            PRESENTATION_ERROR = 2;
-            FAIL_TEST = 3;
-            FAILED = 4;
-        }
-        required Status status = 1;
-        required bytes output = 2;
-        optional Execution execution = 3;
-    }
-    message File
-    {
-        required string id = 1;
-        required bytes data = 2;
-    }
     required string id = 1;
     required Execution execution = 2;
-    optional Checking checking = 3;
+    optional Judge judge = 3;
     repeated File files = 4;
 }
