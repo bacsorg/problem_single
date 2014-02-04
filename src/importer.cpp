@@ -28,7 +28,9 @@ namespace bacs{namespace problem{namespace single
                 .root_package = options_.root_package,
             };
             Problem problem_info = m_generator->generate(goptions);
-            problem_info.mutable_info()->mutable_system()->set_hash(options_.hash.data(), options_.hash.size());
+            problem_info.mutable_info()->mutable_system()->set_hash(
+                options_.hash.data(),
+                options_.hash.size());
             problem_info.mutable_info()->mutable_system()->set_problem_type(problem_type);
             return problem_info;
         }

@@ -20,7 +20,8 @@ namespace bacs{namespace problem{namespace single{namespace generators
         {
             Problem problem_info = options_.driver->overview();
             // initialize package names
-            problem_info.mutable_info()->mutable_system()->set_package(options_.root_package.name());
+            problem_info.mutable_info()->mutable_system()->set_package(
+                options_.root_package.name());
             for (Statement::Version &v: *problem_info.mutable_statement()->mutable_versions())
             {
                 const bunsan::pm::entry package = options_.root_package / v.package();
@@ -31,9 +32,11 @@ namespace bacs{namespace problem{namespace single{namespace generators
             bunsan::pm::index root_index;
             // root package
             {
-                // \note: package directory is already created, package does not contain sources
+                // \note: package directory is already created,
+                // package does not contain sources
                 // TODO: think about library import
-                root_index.source.import.source.insert(std::make_pair(".", "bacs/system/single"));
+                root_index.source.import.source.insert(
+                    std::make_pair(".", "bacs/system/single"));
             }
             // tests package
             {
@@ -63,14 +66,16 @@ namespace bacs{namespace problem{namespace single{namespace generators
             }
             // validator package
             {
-                const boost::filesystem::path package_root = options_.destination / "validator";
+                const boost::filesystem::path package_root =
+                    options_.destination / "validator";
                 const bunsan::pm::entry package = options_.root_package / "validator";
                 const utility_ptr validator = options_.driver->validator();
                 bunsan::pm::index index;
                 if (validator)
                 {
                     if (validator->make_package(package_root, package))
-                        root_index.package.import.package.insert(std::make_pair(".", package));
+                        root_index.package.import.package.insert(
+                            std::make_pair(".", package));
                     // calling conventions
                     root_index.source.import.source.insert(std::make_pair(".",
                         bunsan::pm::entry("bacs/system/single/validator/call") /
@@ -78,12 +83,14 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 }
                 else
                 {
-                    root_index.source.import.source.insert(std::make_pair(".", "bacs/system/single/validator/std/ok"));
+                    root_index.source.import.source.insert(
+                        std::make_pair(".", "bacs/system/single/validator/std/ok"));
                 }
             }
             // statement package
             {
-                const boost::filesystem::path package_root = options_.destination / "statement";
+                const boost::filesystem::path package_root =
+                    options_.destination / "statement";
                 const bunsan::pm::entry package = options_.root_package / "statement";
                 (void) options_.driver->statement()->make_package(package_root, package);
             }

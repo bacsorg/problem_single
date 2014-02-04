@@ -43,5 +43,6 @@ namespace bacs{namespace problem{namespace single
 
 namespace boost
 {
-    std::string to_string(const bacs::problem::single::generator_generate_error::options &options);
+    std::string to_string(
+        const bacs::problem::single::generator_generate_error::options &options);
 }

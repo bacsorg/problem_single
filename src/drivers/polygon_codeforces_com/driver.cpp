@@ -14,7 +14,8 @@
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace polygon_codeforces_com
 {
-    const bool driver::factory_reg_hook = single::driver::register_new("polygon.codeforces.com",
+    const bool driver::factory_reg_hook =
+        single::driver::register_new("polygon.codeforces.com",
         [](const boost::filesystem::path &location)
         {
             driver_ptr tmp(new driver(location));
@@ -149,7 +150,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 file->set_id("stdin");
                 file->set_init("in");
                 file->add_permissions(settings::File::READ);
-                if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")) && !value->empty())
+                if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")) &&
+                    !value->empty())
                 {
                     detail::to_pb_path(value.get(), *file->mutable_path());
                 }
@@ -163,7 +165,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 file->set_id("stdout");
                 file->add_permissions(settings::File::READ);
                 file->add_permissions(settings::File::WRITE);
-                if ((value = judging.get_optional<std::string>("<xmlattr>.output-file")) && !value->empty())
+                if ((value = judging.get_optional<std::string>("<xmlattr>.output-file")) &&
+                    !value->empty())
                 {
                     detail::to_pb_path(value.get(), *file->mutable_path());
                 }
@@ -181,7 +184,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             test_group.clear_test_set();
             {
                 std::size_t test_id_ = 0;
-                for (const boost::property_tree::ptree::value_type &test: testset.second.get_child("tests"))
+                for (const boost::property_tree::ptree::value_type &test:
+                     testset.second.get_child("tests"))
                 {
                     if (test.first == "<xmlattr>")
                         continue;
@@ -206,7 +210,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             const std::string &target,
             const std::string &call)
         {
-            const boost::filesystem::path path = config.get<std::string>("source.<xmlattr>.path");
+            const boost::filesystem::path path =
+                config.get<std::string>("source.<xmlattr>.path");
             boost::property_tree::ptree cfg;
             cfg.put("build.builder", "single");
             cfg.put("build.target", target);
@@ -236,7 +241,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             m_checker = get_utility(*checker, m_location, "checker", "in_out_hint");
         else
             m_checker = get_utility_default(m_location, "checker", "std/strict/out_stdout");
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) = m_checker->info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
+            m_checker->info();
     }
 
     void driver::read_validator()
@@ -248,7 +254,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         if (validator)
         {
             m_validator = get_utility(*validator, m_location, "validator", "");
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) = m_validator->info();
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) =
+                m_validator->info();
         }
     }
 }}}}}

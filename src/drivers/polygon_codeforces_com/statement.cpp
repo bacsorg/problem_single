@@ -75,16 +75,18 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             statement_manifest.version.format = format();
             statement_manifest.data.index = m_source;
             boost::property_tree::write_ini((destination / "pkg" / manifest_path).string(),
-                                            bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
+                                            bunsan::config::save<boost::property_tree::ptree>(
+                                                statement_manifest));
             index.save(destination / "index");
         }
         catch (std::exception &)
         {
-            BOOST_THROW_EXCEPTION(statement_version_make_package_error() <<
-                                  statement_version_make_package_error::destination(destination) <<
-                                  //statement_version_make_package_error::package(package) <<
-                                  statement_version_make_package_error::resources_package(resources_package) <<
-                                  bunsan::enable_nested_current());
+            BOOST_THROW_EXCEPTION(
+                statement_version_make_package_error() <<
+                statement_version_make_package_error::destination(destination) <<
+                //statement_version_make_package_error::package(package) <<
+                statement_version_make_package_error::resources_package(resources_package) <<
+                bunsan::enable_nested_current());
         }
     }
 }}}}}

@@ -6,7 +6,8 @@ BUNSAN_FACTORY_DEFINE(bacs::problem::single::generator)
 
 namespace boost
 {
-    std::string to_string(const bacs::problem::single::generator_generate_error::options &options)
+    std::string to_string(
+        const bacs::problem::single::generator_generate_error::options &options)
     {
         std::ostringstream sout;
         sout << "[" << bunsan::error::info_name(options) << "] = { ";

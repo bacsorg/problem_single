@@ -40,16 +40,18 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         // depending on tests set test order may differ
         // this code should be executed after profiles and tests initialization
         BOOST_ASSERT(m_overview.profiles_size() == 1);
-        BOOST_ASSERT(m_overview.profiles(0).GetExtension(Profile_::testing).test_groups_size() == 1);
+        BOOST_ASSERT(
+            m_overview.profiles(0).GetExtension(Profile_::testing).test_groups_size() == 1);
         // select tests order
         bool only_digits = true;
         for (const std::string &id: m_overview.GetExtension(Problem_::tests).test_set())
         {
-            if (!(only_digits = only_digits && std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
+            if (!(only_digits = only_digits &&
+                  std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
                 break;
         }
-        m_overview.mutable_profiles(0)->MutableExtension(Profile_::testing)->mutable_test_groups(0)->
-            mutable_settings()->mutable_run()->set_order(
+        m_overview.mutable_profiles(0)->MutableExtension(Profile_::testing)->
+            mutable_test_groups(0)->mutable_settings()->mutable_run()->set_order(
                 only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL);
     }
 
@@ -148,14 +150,18 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             // resource limits
             ResourceLimits &resource_limits = *process.mutable_resource_limits();
             if ((value = m_config.get_optional<std::string>("resource_limits.time")))
-                resource_limits.set_time_limit_millis(resource::parse::time_millis(value.get()));
+                resource_limits.set_time_limit_millis(
+                    resource::parse::time_millis(value.get()));
             if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
-                resource_limits.set_memory_limit_bytes(resource::parse::memory_bytes(value.get()));
+                resource_limits.set_memory_limit_bytes(
+                    resource::parse::memory_bytes(value.get()));
             if ((value = m_config.get_optional<std::string>("resource_limits.output")))
-                resource_limits.set_output_limit_bytes(resource::parse::memory_bytes(value.get()));
+                resource_limits.set_output_limit_bytes(
+                    resource::parse::memory_bytes(value.get()));
             // number of processes is not supported here
             if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
-                resource_limits.set_real_time_limit_millis(resource::parse::time_millis(value.get()));
+                resource_limits.set_real_time_limit_millis(
+                    resource::parse::time_millis(value.get()));
             // run
             settings::Run &run = *settings.mutable_run();
             //run.set_order(); // depending on tests, is set in other location
@@ -200,9 +206,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     {
         m_checker = utility::instance_optional(m_location / "checker");
         if (!m_checker)
-            BOOST_THROW_EXCEPTION(checker_error() <<
-                                  checker_error::message("Unable to initialize checker's driver."));
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) = m_checker->info();
+            BOOST_THROW_EXCEPTION(
+                checker_error() <<
+                checker_error::message("Unable to initialize checker's driver."));
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
+            m_checker->info();
     }
 
     void simple0::read_validator()
@@ -211,9 +219,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         {
             m_validator = utility::instance_optional(m_location / "validator");
             if (!m_validator)
-                BOOST_THROW_EXCEPTION(validator_error() <<
-                                      validator_error::message("Unable to initialize validator's driver."));
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) = m_validator->info();
+                BOOST_THROW_EXCEPTION(
+                    validator_error() <<
+                    validator_error::message("Unable to initialize validator's driver."));
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) =
+                m_validator->info();
         }
     }
 }}}}
