@@ -74,7 +74,7 @@ message Judge
         FAILED = 1000;
     }
     required Status status = 1;
-    optional bytes message = 2;
+    optional string message = 2;
 
     message Utility
     {
