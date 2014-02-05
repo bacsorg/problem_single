@@ -64,29 +64,6 @@ namespace bacs{namespace problem{namespace single{namespace generators
                     bunsan::pm::entry("bacs/system/single/checker/call") /
                     checker->section("utility").get<std::string>("call")));
             }
-            // validator package
-            {
-                const boost::filesystem::path package_root =
-                    options_.destination / "validator";
-                const bunsan::pm::entry package = options_.root_package / "validator";
-                const utility_ptr validator = options_.driver->validator();
-                bunsan::pm::index index;
-                if (validator)
-                {
-                    if (validator->make_package(package_root, package))
-                        root_index.package.import.package.insert(
-                            std::make_pair(".", package));
-                    // calling conventions
-                    root_index.source.import.source.insert(std::make_pair(".",
-                        bunsan::pm::entry("bacs/system/single/validator/call") /
-                        validator->section("utility").get<std::string>("call")));
-                }
-                else
-                {
-                    root_index.source.import.source.insert(
-                        std::make_pair(".", "bacs/system/single/validator/std/ok"));
-                }
-            }
             // statement package
             {
                 const boost::filesystem::path package_root =

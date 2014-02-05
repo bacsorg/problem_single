@@ -8,7 +8,6 @@ Problem in "simple0" is a folder with the following entries:
 
 - *config.ini* -- \ref format_simple0_configuration_file_ssec
 - *checker/* -- directory with \ref checker_page
-- *validator/* -- directory with \ref validator_page
 - *statement/* -- directory with \ref statement_page
 - *tests/* -- directory with tests
     - Each test is set of files which names has "test_id.data_id" format

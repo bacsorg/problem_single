@@ -32,6 +32,5 @@ message Utilities_
     {
         required Utility tests = 1024;
         required Utility checker = 1025;
-        optional Utility validator = 1026;
     }
 }

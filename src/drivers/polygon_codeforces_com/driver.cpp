@@ -33,7 +33,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         read_profiles();
         read_tests(); // should be called after read_profiles()
         read_checker();
-        read_validator();
     }
 
     Problem driver::overview() const
@@ -50,11 +49,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     utility_ptr driver::checker() const
     {
         return m_checker;
-    }
-
-    utility_ptr driver::validator() const
-    {
-        return m_validator;
     }
 
     statement_ptr driver::statement() const
@@ -243,19 +237,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             m_checker = get_utility_default(m_location, "checker", "std/strict/out_stdout");
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
             m_checker->info();
-    }
-
-    void driver::read_validator()
-    {
-        // TODO not supported
-        return;
-        const boost::optional<boost::property_tree::ptree &> validator =
-            m_config.get_child_optional("problem.assets.validator");
-        if (validator)
-        {
-            m_validator = get_utility(*validator, m_location, "validator", "");
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) =
-                m_validator->info();
-        }
     }
 }}}}}

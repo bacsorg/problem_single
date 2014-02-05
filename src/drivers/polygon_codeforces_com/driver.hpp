@@ -24,7 +24,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         // utilities
         tests_ptr tests() const override;
         utility_ptr checker() const override;
-        utility_ptr validator() const override;
 
         statement_ptr statement() const override;
 
@@ -34,7 +33,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         void read_statement();
         void read_profiles();
         void read_checker();
-        void read_validator();
 
     private:
         const boost::filesystem::path m_location;
@@ -43,7 +41,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         Problem m_overview;
         single::tests::shared_ptr<polygon_codeforces_com::tests> m_tests;
         utility_ptr m_checker;
-        utility_ptr m_validator;
         statement_ptr m_statement;
 
     private:

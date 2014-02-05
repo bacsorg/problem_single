@@ -13,5 +13,4 @@ namespace bacs{namespace problem{namespace single
     struct utility_error: virtual buildable_error {};
     struct statement_error: virtual buildable_error {};
     struct checker_error: virtual utility_error {};
-    struct validator_error: virtual utility_error {};
 }}}

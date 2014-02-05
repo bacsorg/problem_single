@@ -36,7 +36,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         read_statement();
         read_profiles();
         read_checker();
-        read_validator();
         // depending on tests set test order may differ
         // this code should be executed after profiles and tests initialization
         BOOST_ASSERT(m_overview.profiles_size() == 1);
@@ -69,11 +68,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     utility_ptr simple0::checker() const
     {
         return m_checker;
-    }
-
-    utility_ptr simple0::validator() const
-    {
-        return m_validator;
     }
 
     statement_ptr simple0::statement() const
@@ -211,19 +205,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                 checker_error::message("Unable to initialize checker's driver."));
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
             m_checker->info();
-    }
-
-    void simple0::read_validator()
-    {
-        if (boost::filesystem::exists(m_location / "validator"))
-        {
-            m_validator = utility::instance_optional(m_location / "validator");
-            if (!m_validator)
-                BOOST_THROW_EXCEPTION(
-                    validator_error() <<
-                    validator_error::message("Unable to initialize validator's driver."));
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::validator) =
-                m_validator->info();
-        }
     }
 }}}}
