@@ -22,6 +22,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         // utilities
         tests_ptr tests() const override;
         utility_ptr checker() const override;
+        utility_ptr interactor() const override;
 
         statement_ptr statement() const override;
 
@@ -31,6 +32,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         void read_statement();
         void read_profiles();
         void read_checker();
+        void read_interactor();
 
     private:
         const boost::filesystem::path m_location;
@@ -38,6 +40,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         Problem m_overview;
         tests::shared_ptr<simple0_tests> m_tests;
         utility_ptr m_checker;
+        utility_ptr m_interactor;
         statement_ptr m_statement;
 
     private:

@@ -36,6 +36,8 @@ namespace bacs{namespace problem{namespace single
 
         virtual utility_ptr checker() const=0;
 
+        virtual utility_ptr interactor() const=0;
+
         virtual statement_ptr statement() const=0;
     BUNSAN_FACTORY_END(driver)
 }}}

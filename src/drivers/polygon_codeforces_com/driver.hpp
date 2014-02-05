@@ -24,6 +24,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         // utilities
         tests_ptr tests() const override;
         utility_ptr checker() const override;
+        utility_ptr interactor() const override;
 
         statement_ptr statement() const override;
 

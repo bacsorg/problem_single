@@ -70,6 +70,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         return m_checker;
     }
 
+    utility_ptr simple0::interactor() const
+    {
+        return m_interactor;
+    }
+
     statement_ptr simple0::statement() const
     {
         return m_statement;
@@ -205,5 +210,19 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                 checker_error::message("Unable to initialize checker's driver."));
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
             m_checker->info();
+    }
+
+    void simple0::read_interactor()
+    {
+        if (boost::filesystem::exists(m_location / "interactor"))
+        {
+            m_interactor = utility::instance_optional(m_location / "interactor");
+            if (!m_interactor)
+                BOOST_THROW_EXCEPTION(
+                    interactor_error() <<
+                    interactor_error::message("Unable to initialize interactor's driver."));
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::interactor) =
+                m_interactor->info();
+        }
     }
 }}}}

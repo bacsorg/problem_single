@@ -51,6 +51,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         return m_checker;
     }
 
+    utility_ptr driver::interactor() const
+    {
+        return utility_ptr(); // not supported
+    }
+
     statement_ptr driver::statement() const
     {
         return m_statement;

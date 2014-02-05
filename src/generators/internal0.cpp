@@ -64,6 +64,26 @@ namespace bacs{namespace problem{namespace single{namespace generators
                     bunsan::pm::entry("bacs/system/single/checker/call") /
                     checker->section("utility").get<std::string>("call")));
             }
+            // interactor package
+            {
+                const boost::filesystem::path package_root = options_.destination / "interactor";
+                const bunsan::pm::entry package = options_.root_package / "interactor";
+                const utility_ptr interactor = options_.driver->interactor();
+                if (interactor)
+                {
+                    if (interactor->make_package(package_root, package))
+                        root_index.package.import.package.insert(std::make_pair(".", package));
+                    // calling conventions
+                    root_index.source.import.source.insert(std::make_pair(".",
+                        bunsan::pm::entry("bacs/system/single/tester/call") /
+                        interactor->section("utility").get<std::string>("call")));
+                }
+                else
+                {
+                    root_index.source.import.source.insert(std::make_pair(".",
+                        bunsan::pm::entry("bacs/system/single/tester/call/std/standalone")));
+                }
+            }
             // statement package
             {
                 const boost::filesystem::path package_root =
