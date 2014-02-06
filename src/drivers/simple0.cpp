@@ -36,6 +36,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         read_statement();
         read_profiles();
         read_checker();
+        read_interactor();
         // depending on tests set test order may differ
         // this code should be executed after profiles and tests initialization
         BOOST_ASSERT(m_overview.profiles_size() == 1);
