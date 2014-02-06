@@ -81,10 +81,16 @@ message Judge
         required Execution execution = 1;
         optional bytes output = 2;
     }
+    message AuxiliaryUtility
+    {
+        required string name = 1;
+        required Utility utility = 2;
+    }
     message Utilities
     {
         optional Utility interactor = 1;
         optional Utility checker = 2;
+        repeated AuxiliaryUtility auxiliary = 1000;
     }
     optional Utilities utilities = 3;
 }
