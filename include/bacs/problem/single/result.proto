@@ -40,7 +40,8 @@ message Execution
         TIME_LIMIT_EXCEEDED = 3;
         OUTPUT_LIMIT_EXCEEDED = 4;
         REAL_TIME_LIMIT_EXCEEDED = 5;
-        FAILED = 6;
+        TERMINATED_BY_SYSTEM = 6;
+        FAILED = 7;
     }
     required Status status = 1;
     optional int32 exit_status = 2;
