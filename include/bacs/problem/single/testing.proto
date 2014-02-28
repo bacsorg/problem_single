@@ -7,11 +7,26 @@ message SolutionTesting
     repeated TestGroup test_group = 1;
 }
 
+message Dependency
+{
+    enum Requirement
+    {
+        ALL_OK = 0;
+        ALL_FAIL = 1;
+        AT_LEAST_ONE_OK = 2;
+        AT_MOST_ONE_FAIL = 3;
+        AT_LEAST_HALF_OK = 4;
+    }
+    required string test_group = 1;
+    required Requirement requirement = 2 [default=ALL_OK];
+}
+
 message TestGroup
 {
     required string id = 1;
     required settings.TestGroupSettings settings = 2;
     repeated TestQuery test_set = 3;
+    repeated Dependency dependency = 4;
 }
 
 // TODO: specify behavior on no/multiple options
