@@ -104,8 +104,14 @@ message File
 
 message TestResult
 {
+    enum Status
+    {
+        OK = 0;
+        FAILED = 1;
+    }
     required string id = 1;
-    required Execution execution = 2;
-    optional Judge judge = 3;
-    repeated File file = 4;
+    required Status status = 2;
+    required Execution execution = 3;
+    optional Judge judge = 4;
+    repeated File file = 5;
 }
