@@ -4,7 +4,7 @@ import "bacs/problem/single/settings.proto";
 
 message SolutionTesting
 {
-    repeated TestGroup test_groups = 1;
+    repeated TestGroup test_group = 1;
 }
 
 message TestGroup
@@ -28,7 +28,7 @@ message WildcardQuery
     {
         IGNORE_CASE = 0;
     }
-    repeated Flag flags = 1;
+    repeated Flag flag = 1;
     required string value = 2;
 }
 
@@ -38,6 +38,6 @@ message RegexQuery
     {
         IGNORE_CASE = 0;
     }
-    repeated Flag flags = 1;
+    repeated Flag flag = 1;
     required string value = 2;
 }

@@ -39,9 +39,9 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         read_interactor();
         // depending on tests set test order may differ
         // this code should be executed after profiles and tests initialization
-        BOOST_ASSERT(m_overview.profiles_size() == 1);
+        BOOST_ASSERT(m_overview.profile_size() == 1);
         BOOST_ASSERT(
-            m_overview.profiles(0).GetExtension(Profile_::testing).test_groups_size() == 1);
+            m_overview.profile(0).GetExtension(Profile_::testing).test_group_size() == 1);
         // select tests order
         bool only_digits = true;
         for (const std::string &id: m_overview.GetExtension(Problem_::tests).test_set())
@@ -50,8 +50,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                   std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
                 break;
         }
-        m_overview.mutable_profiles(0)->MutableExtension(Profile_::testing)->
-            mutable_test_groups(0)->mutable_settings()->mutable_run()->set_order(
+        m_overview.mutable_profile(0)->MutableExtension(Profile_::testing)->
+            mutable_test_group(0)->mutable_settings()->mutable_run()->set_order(
                 only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL);
     }
 
@@ -87,17 +87,17 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         info.Clear();
         const boost::property_tree::ptree m_info = m_config.get_child("info");
         // name
-        Info::Name &name = *info.add_names();
+        Info::Name &name = *info.add_name();
         name.set_lang("C");
         name.set_value(m_info.get<std::string>("name"));
         // authors
-        split::parse_repeated(*info.mutable_authors(), m_info, "authors");
+        split::parse_repeated(*info.mutable_author(), m_info, "authors");
         // source
         boost::optional<std::string> value;
         if ((value = m_info.get_optional<std::string>("source")))
             info.set_source(value.get());
         // maintainers
-        split::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
+        split::parse_repeated(*info.mutable_maintainer(), m_info, "maintainers");
         // system
         Info::System &system = *info.mutable_system();
         system.set_package("unknown"); // initialized later
@@ -127,7 +127,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     {
         m_statement = statement::instance(m_location / "statement");
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
-        for (Statement::Version &v: *info.mutable_versions())
+        for (Statement::Version &v: *info.mutable_version())
         {
             const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
             v.set_package(package.name());
@@ -136,12 +136,12 @@ namespace bacs{namespace problem{namespace single{namespace drivers
 
     void simple0::read_profiles()
     {
-        google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profiles();
+        google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
         testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
         testing.Clear();
-        testing::TestGroup &test_group = *testing.add_test_groups();
+        testing::TestGroup &test_group = *testing.add_test_group();
         test_group.set_id("");
         settings::TestGroupSettings &settings = *test_group.mutable_settings();
         settings::ProcessSettings &process = *settings.mutable_process();
@@ -167,32 +167,32 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             //run.set_order(); // depending on tests, is set in other location
             run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
             // files & execution
-            settings::File *file = process.add_files();
+            settings::File *file = process.add_file();
             settings::Execution &execution = *process.mutable_execution();
             file->set_id("stdin");
             file->set_init("in");
-            file->add_permissions(settings::File::READ);
+            file->add_permission(settings::File::READ);
             if ((value = m_config.get_optional<std::string>("files.stdin")))
             {
                 detail::to_pb_path(value.get(), *file->mutable_path());
             }
             else
             {
-                settings::Execution::Redirection &rd = *execution.add_redirections();
+                settings::Execution::Redirection &rd = *execution.add_redirection();
                 rd.set_stream(settings::Execution::Redirection::STDIN);
                 rd.set_file_id("stdin");
             }
-            file = process.add_files();
+            file = process.add_file();
             file->set_id("stdout");
-            file->add_permissions(settings::File::READ);
-            file->add_permissions(settings::File::WRITE);
+            file->add_permission(settings::File::READ);
+            file->add_permission(settings::File::WRITE);
             if ((value = m_config.get_optional<std::string>("files.stdout")))
             {
                 detail::to_pb_path(value.get(), *file->mutable_path());
             }
             else
             {
-                settings::Execution::Redirection &rd = *execution.add_redirections();
+                settings::Execution::Redirection &rd = *execution.add_redirection();
                 rd.set_stream(settings::Execution::Redirection::STDOUT);
                 rd.set_file_id("stdout");
             }

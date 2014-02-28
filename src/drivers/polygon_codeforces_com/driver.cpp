@@ -70,19 +70,19 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         {
             if (name_value.first == "<xmlattr>")
                 continue;
-            Info::Name &name = *info.add_names();
+            Info::Name &name = *info.add_name();
             name.set_lang(name_value.second.get<std::string>("<xmlattr>.language", "C"));
             name.set_value(name_value.second.get<std::string>("<xmlattr>.value", "UNNAMED"));
         }
         const boost::property_tree::ptree m_info = m_override_config.get_child("info");
         // authors
-        split::parse_repeated(*info.mutable_authors(), m_info, "authors");
+        split::parse_repeated(*info.mutable_author(), m_info, "authors");
         // source
         boost::optional<std::string> value;
         if ((value = m_info.get_optional<std::string>("source")))
             info.set_source(value.get());
         // maintainers
-        split::parse_repeated(*info.mutable_maintainers(), m_info, "maintainers");
+        split::parse_repeated(*info.mutable_maintainer(), m_info, "maintainers");
         // system
         Info::System &system = *info.mutable_system();
         system.set_package("unknown"); // initialized later
@@ -103,7 +103,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             m_location / "statements",
             m_config.get_child("problem.statements")));
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
-        for (Statement::Version &v: *info.mutable_versions())
+        for (Statement::Version &v: *info.mutable_version())
         {
             const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
             v.set_package(package.name());
@@ -113,7 +113,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     void driver::read_profiles()
     {
         m_tests.reset(new polygon_codeforces_com::tests(m_location));
-        google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profiles();
+        google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
         testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
@@ -123,7 +123,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         {
             if (testset.first == "<xmlattr>")
                 continue;
-            testing::TestGroup &test_group = *testing.add_test_groups();
+            testing::TestGroup &test_group = *testing.add_test_group();
             test_group.set_id(testset.second.get<std::string>("<xmlattr>.name", ""));
             settings::TestGroupSettings &settings = *test_group.mutable_settings();
             settings::ProcessSettings &process = *settings.mutable_process();
@@ -144,11 +144,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 run.set_order(settings::Run::NUMERIC);
                 run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
                 // files & execution
-                settings::File *file = process.add_files();
+                settings::File *file = process.add_file();
                 settings::Execution &execution = *process.mutable_execution();
                 file->set_id("stdin");
                 file->set_init("in");
-                file->add_permissions(settings::File::READ);
+                file->add_permission(settings::File::READ);
                 if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")) &&
                     !value->empty())
                 {
@@ -156,14 +156,14 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 }
                 else
                 {
-                    settings::Execution::Redirection &rd = *execution.add_redirections();
+                    settings::Execution::Redirection &rd = *execution.add_redirection();
                     rd.set_stream(settings::Execution::Redirection::STDIN);
                     rd.set_file_id("stdin");
                 }
-                file = process.add_files();
+                file = process.add_file();
                 file->set_id("stdout");
-                file->add_permissions(settings::File::READ);
-                file->add_permissions(settings::File::WRITE);
+                file->add_permission(settings::File::READ);
+                file->add_permission(settings::File::WRITE);
                 if ((value = judging.get_optional<std::string>("<xmlattr>.output-file")) &&
                     !value->empty())
                 {
@@ -171,7 +171,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 }
                 else
                 {
-                    settings::Execution::Redirection &rd = *execution.add_redirections();
+                    settings::Execution::Redirection &rd = *execution.add_redirection();
                     rd.set_stream(settings::Execution::Redirection::STDOUT);
                     rd.set_file_id("stdout");
                 }

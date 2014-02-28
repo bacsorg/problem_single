@@ -29,7 +29,7 @@ message Run
 message ProcessSettings
 {
     required ResourceLimits resource_limits = 1;
-    repeated File files = 2;
+    repeated File file = 2;
     required Execution execution = 3;
 }
 
@@ -46,9 +46,9 @@ message Execution
         required Stream stream = 1;
         required string file_id = 2;
     }
-    repeated string arguments = 1;
+    repeated string argument = 1;
     optional Path current_path = 2;        // not supported (will be ignored)
-    repeated Redirection redirections = 3;
+    repeated Redirection redirection = 3;
 }
 
 /// Filesystem path.
@@ -57,7 +57,7 @@ message Path
     /// If specified, path is absolute, otherwise -- relative.
     optional string root = 1;
     /// Path elements, will be concatenated using OS-specific delimiter.
-    repeated string elements = 2;
+    repeated string element = 2;
 }
 
 message File
@@ -85,7 +85,7 @@ message File
     }
 
     required string id = 1;
-    repeated Permissions permissions = 2;
+    repeated Permissions permission = 2;
     optional /*DataId*/string init = 3;
     optional Path path = 4; // note: arbitrary paths are not supported, path will be stripped to filename
     optional Range receive = 5;

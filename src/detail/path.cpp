@@ -8,6 +8,6 @@ namespace bacs{namespace problem{namespace single{namespace detail
         if (path.has_root_directory())
             *pb_path.mutable_root() = path.root_directory().string();
         for (const boost::filesystem::path &r: path.relative_path())
-            *pb_path.add_elements() = r.string();
+            *pb_path.add_element() = r.string();
     }
 }}}}

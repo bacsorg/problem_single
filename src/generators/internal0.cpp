@@ -22,7 +22,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
             // initialize package names
             problem_info.mutable_info()->mutable_system()->set_package(
                 options_.root_package.name());
-            for (Statement::Version &v: *problem_info.mutable_statement()->mutable_versions())
+            for (Statement::Version &v: *problem_info.mutable_statement()->mutable_version())
             {
                 const bunsan::pm::entry package = options_.root_package / v.package();
                 v.set_package(package.name());

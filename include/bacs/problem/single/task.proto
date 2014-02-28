@@ -30,7 +30,7 @@ message Callbacks
 message Callback
 {
     required string type = 1;
-    repeated string arguments = 2;
+    repeated string argument = 2;
 }
 
 message Solution
@@ -54,5 +54,5 @@ message Build
 message Builder
 {
     required string type = 1;
-    repeated string arguments = 2;
+    repeated string argument = 2;
 }

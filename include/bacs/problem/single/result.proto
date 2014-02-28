@@ -27,7 +27,7 @@ message BuildResult
 
 message SolutionTestingResult
 {
-    repeated TestGroupResult test_groups = 1;
+    repeated TestGroupResult test_group = 1;
 }
 
 message Execution
@@ -52,7 +52,7 @@ message Execution
 message TestGroupResult
 {
     required string id = 1;
-    repeated TestResult tests = 2;
+    repeated TestResult test = 2;
 }
 
 message Judge
@@ -106,5 +106,5 @@ message TestResult
     required string id = 1;
     required Execution execution = 2;
     optional Judge judge = 3;
-    repeated File files = 4;
+    repeated File file = 4;
 }
