@@ -108,10 +108,11 @@ message TestResult
     {
         OK = 0;
         FAILED = 1;
+        SKIPPED = 2;
     }
     required string id = 1;
     required Status status = 2;
-    required Execution execution = 3;
+    optional Execution execution = 3;
     optional Judge judge = 4;
     repeated File file = 5;
 }
