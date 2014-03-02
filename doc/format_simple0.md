@@ -12,7 +12,7 @@ Problem in "simple0" is a folder with the following entries:
 - *tests/* -- directory with tests
     - Each test is set of files which names has "test_id.data_id" format
     - Data set of test is set of data_ids
-    - Data set must be equal to ``{'in', 'out'}``.
+    - Data set must be equal to ``{'in'}`` or ``{'in', 'out'}``.
     - Data sets are equal among different tests
     - Each test file is considered to be either *text* or *binary*
         - File is considered to be *binary* if it is specified in section "[tests]" from config.ini
