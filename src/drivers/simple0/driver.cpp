@@ -1,4 +1,4 @@
-#include "simple0.hpp"
+#include "driver.hpp"
 
 #include <bacs/problem/single/detail/path.hpp>
 #include <bacs/problem/single/error.hpp>
@@ -17,16 +17,17 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace bacs{namespace problem{namespace single{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers{
+    namespace simple0
 {
-    const bool simple0::factory_reg_hook = driver::register_new("simple0",
+    const bool driver::factory_reg_hook = driver::register_new("simple0",
         [](const boost::filesystem::path &location)
         {
-            driver_ptr tmp(new simple0(location));
+            driver_ptr tmp(new driver(location));
             return tmp;
         });
 
-    simple0::simple0(const boost::filesystem::path &location):
+    driver::driver(const boost::filesystem::path &location):
         m_location(location)
     {
         boost::property_tree::read_ini((location / "config.ini").string(), m_config);
@@ -55,33 +56,33 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                 only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL);
     }
 
-    Problem simple0::overview() const
+    Problem driver::overview() const
     {
         return m_overview;
     }
 
     // utilities
-    tests_ptr simple0::tests() const
+    tests_ptr driver::tests() const
     {
         return m_tests;
     }
 
-    utility_ptr simple0::checker() const
+    utility_ptr driver::checker() const
     {
         return m_checker;
     }
 
-    utility_ptr simple0::interactor() const
+    utility_ptr driver::interactor() const
     {
         return m_interactor;
     }
 
-    statement_ptr simple0::statement() const
+    statement_ptr driver::statement() const
     {
         return m_statement;
     }
 
-    void simple0::read_info()
+    void driver::read_info()
     {
         Info &info = *m_overview.mutable_info();
         info.Clear();
@@ -104,9 +105,9 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         system.set_hash("unknown"); // initialized later
     }
 
-    void simple0::read_tests()
+    void driver::read_tests()
     {
-        m_tests.reset(new simple0_tests(m_location / "tests"));
+        m_tests.reset(new simple0::tests(m_location / "tests"));
         const boost::optional<boost::property_tree::ptree &> tests_ =
             m_config.get_child_optional("tests");
         if (tests_)
@@ -116,14 +117,14 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                 const std::string data_type = kv.second.get_value<std::string>();
                 m_tests->set_data_type(
                     kv.first,
-                    boost::lexical_cast<simple0_tests::test_data_type>(data_type));
+                    boost::lexical_cast<tests::test_data_type>(data_type));
             }
         }
         *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
     }
 
-    void simple0::read_statement()
+    void driver::read_statement()
     {
         m_statement = statement::instance(m_location / "statement");
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
@@ -134,7 +135,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         }
     }
 
-    void simple0::read_profiles()
+    void driver::read_profiles()
     {
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
         profiles.Clear();
@@ -202,7 +203,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         test_query.mutable_wildcard()->set_value("*"); // select all tests
     }
 
-    void simple0::read_checker()
+    void driver::read_checker()
     {
         m_checker = utility::instance_optional(m_location / "checker");
         if (!m_checker)
@@ -213,7 +214,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             m_checker->info();
     }
 
-    void simple0::read_interactor()
+    void driver::read_interactor()
     {
         if (boost::filesystem::exists(m_location / "interactor"))
         {
@@ -226,4 +227,4 @@ namespace bacs{namespace problem{namespace single{namespace drivers
                 m_interactor->info();
         }
     }
-}}}}
+}}}}}

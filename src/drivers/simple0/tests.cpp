@@ -1,4 +1,4 @@
-#include "simple0_tests.hpp"
+#include "tests.hpp"
 
 #include <bunsan/enable_error_info.hpp>
 #include <bunsan/filesystem/fstream.hpp>
@@ -10,9 +10,10 @@
 
 #include <unordered_map>
 
-namespace bacs{namespace problem{namespace single{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers{
+    namespace simple0
 {
-    simple0_tests::simple0_tests(const boost::filesystem::path &location):
+    tests::tests(const boost::filesystem::path &location):
         list_tests(
             location,
             list_tests::test_data_type::text,
@@ -52,4 +53,4 @@ namespace bacs{namespace problem{namespace single{namespace drivers
             // TODO send at least first unknown data_id
             BOOST_THROW_EXCEPTION(test_unknown_data_error());
     }
-}}}}
+}}}}}

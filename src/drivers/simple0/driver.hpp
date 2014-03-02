@@ -1,4 +1,4 @@
-#include "simple0_tests.hpp"
+#include "tests.hpp"
 
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
@@ -9,13 +9,14 @@
 #include <string>
 #include <vector>
 
-namespace bacs{namespace problem{namespace single{namespace drivers
+namespace bacs{namespace problem{namespace single{namespace drivers{
+    namespace simple0
 {
     /// \ref format_simple0_page implementation
-    class simple0: public driver
+    class driver: public single::driver
     {
     public:
-        explicit simple0(const boost::filesystem::path &location);
+        explicit driver(const boost::filesystem::path &location);
 
         Problem overview() const override;
 
@@ -38,7 +39,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
         Problem m_overview;
-        tests::shared_ptr<simple0_tests> m_tests;
+        tests::shared_ptr<simple0::tests> m_tests;
         utility_ptr m_checker;
         utility_ptr m_interactor;
         statement_ptr m_statement;
@@ -46,4 +47,4 @@ namespace bacs{namespace problem{namespace single{namespace drivers
     private:
         static const bool factory_reg_hook;
     };
-}}}}
+}}}}}
