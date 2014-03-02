@@ -1,5 +1,5 @@
-/*!
-\page format_simple0_page "simple0" format
+"simple0" format {#format_simple0_page}
+================
 
 \section format_simple0_specifications_sec Specifications
 
@@ -163,7 +163,3 @@ time = 1
 stdin = input.txt
 stdout = output.txt
 \endcode
-
-*/
-
-// vim:syntax=doxygen

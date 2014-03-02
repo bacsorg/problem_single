@@ -1,5 +1,5 @@
-/*!
-\page problem_page Problem
+Problem {#problem_page}
+=======
 
 \section problem_single_sec "Single" problem
 Problem type implemented here is "single".
@@ -23,7 +23,3 @@ which uses problem's driver to read problem data and create appropriate represen
 Generator's implementations are placed in bacs::problem::generators namespace.
 
 TODO how is generator related to problem type
-
-*/
-
-// vim:syntax=doxygen
