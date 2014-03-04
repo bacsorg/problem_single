@@ -120,8 +120,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                     boost::lexical_cast<tests::test_data_type>(data_type));
             }
         }
-        *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
+        *m_overview.MutableExtension(Problem_::tests) =
+            m_tests->test_set_info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) =
+            m_tests->info();
     }
 
     void driver::read_statement()
@@ -137,7 +139,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_profiles()
     {
-        google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
+        google::protobuf::RepeatedPtrField<Profile> &profiles =
+            *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
         testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
@@ -149,7 +152,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         {
             boost::optional<std::string> value;
             // resource limits
-            ResourceLimits &resource_limits = *process.mutable_resource_limits();
+            bacs::process::ResourceLimits &resource_limits =
+                *process.mutable_resource_limits();
             if ((value = m_config.get_optional<std::string>("resource_limits.time")))
                 resource_limits.set_time_limit_millis(
                     resource::parse::time_millis(value.get()));

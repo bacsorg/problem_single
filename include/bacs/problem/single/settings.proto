@@ -1,6 +1,6 @@
 package bacs.problem.single.settings;
 
-import "bacs/problem/single/resource.proto";
+import "bacs/process.proto";
 
 // should be moved into testing
 // this file declares process-related settings
@@ -28,7 +28,7 @@ message Run
 
 message ProcessSettings
 {
-    required ResourceLimits resource_limits = 1;
+    required process.ResourceLimits resource_limits = 1;
     repeated File file = 2;
     required Execution execution = 3;
 }

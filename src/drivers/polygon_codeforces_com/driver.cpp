@@ -26,8 +26,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         const boost::filesystem::path &location):
             m_location(location)
     {
-        boost::property_tree::read_xml((m_location / "problem.xml").string(), m_config);
-        boost::property_tree::read_ini((m_location / "config.ini").string(), m_override_config);
+        boost::property_tree::read_xml(
+            (m_location / "problem.xml").string(), m_config);
+        boost::property_tree::read_ini(
+            (m_location / "config.ini").string(), m_override_config);
         read_info();
         read_statement();
         read_profiles();
@@ -71,8 +73,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             if (name_value.first == "<xmlattr>")
                 continue;
             Info::Name &name = *info.add_name();
-            name.set_lang(name_value.second.get<std::string>("<xmlattr>.language", "C"));
-            name.set_value(name_value.second.get<std::string>("<xmlattr>.value", "UNNAMED"));
+            name.set_lang(name_value.second.get<std::string>(
+                "<xmlattr>.language", "C"));
+            name.set_value(name_value.second.get<std::string>(
+                "<xmlattr>.value", "UNNAMED"));
         }
         const boost::property_tree::ptree m_info = m_override_config.get_child("info");
         // authors
@@ -93,8 +97,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     {
         BOOST_ASSERT_MSG(m_tests, "Initialized by driver::read_profiles()");
         // note: binary tests are not supported for now
-        *m_overview.MutableExtension(Problem_::tests) = m_tests->test_set_info();
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) = m_tests->info();
+        *m_overview.MutableExtension(Problem_::tests) =
+            m_tests->test_set_info();
+        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) =
+            m_tests->info();
     }
 
     void driver::read_statement()
@@ -105,7 +111,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
         for (Statement::Version &v: *info.mutable_version())
         {
-            const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
+            const bunsan::pm::entry package =
+                bunsan::pm::entry("statement") / v.package();
             v.set_package(package.name());
         }
     }
@@ -129,7 +136,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             settings::ProcessSettings &process = *settings.mutable_process();
             { // resource limits
                 boost::optional<std::int64_t> value;
-                ResourceLimits &resource_limits = *process.mutable_resource_limits();
+                bacs::process::ResourceLimits &resource_limits =
+                    *process.mutable_resource_limits();
                 if ((value = testset.second.get_optional<std::int64_t>("time-limit")))
                     resource_limits.set_time_limit_millis(*value);
                 if ((value = testset.second.get_optional<std::int64_t>("memory-limit")))

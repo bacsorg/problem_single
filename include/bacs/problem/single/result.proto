@@ -1,11 +1,11 @@
 package bacs.problem.single.result;
 
-import "bacs/problem/single/resource.proto";
+import "bacs/process.proto";
 
 message Result
 {
     required SystemResult system = 1;
-    optional BuildResult build = 2;
+    optional process.BuildResult build = 2;
     optional SolutionTestingResult testing_result = 3;
 }
 
@@ -19,35 +19,9 @@ message SystemResult
     required Status status = 1;
 }
 
-message BuildResult
-{
-    required Execution execution = 1;
-    required bytes output = 2;
-}
-
 message SolutionTestingResult
 {
     repeated TestGroupResult test_group = 1;
-}
-
-message Execution
-{
-    enum Status
-    {
-        OK = 0;
-        ABNORMAL_EXIT = 1;
-        MEMORY_LIMIT_EXCEEDED = 2;
-        TIME_LIMIT_EXCEEDED = 3;
-        OUTPUT_LIMIT_EXCEEDED = 4;
-        REAL_TIME_LIMIT_EXCEEDED = 5;
-        TERMINATED_BY_SYSTEM = 6;
-        FAILED = 7;
-    }
-    required Status status = 1;
-    optional int32 exit_status = 2;
-    optional int32 term_sig = 3;
-    required ResourceUsage resource_usage = 4;
-    optional bytes full = 5;
 }
 
 message TestGroupResult
@@ -79,7 +53,7 @@ message Judge
 
     message Utility
     {
-        required Execution execution = 1;
+        required process.ExecutionResult execution = 1;
         optional bytes output = 2;
     }
     message AuxiliaryUtility
@@ -112,7 +86,7 @@ message TestResult
     }
     required string id = 1;
     required Status status = 2;
-    optional Execution execution = 3;
+    optional process.ExecutionResult execution = 3;
     optional Judge judge = 4;
     repeated File file = 5;
 }
