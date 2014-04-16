@@ -40,6 +40,9 @@ message Judge
         QUERIES_LIMIT_EXCEEDED = 3;
         INCORRECT_REQUEST = 4;
         INSUFFICIENT_DATA = 5;
+        EXCESS_DATA = 6;
+        OUTPUT_LIMIT_EXCEEDED = 7;
+        TERMINATION_REAL_TIME_LIMIT_EXCEEDED = 8;
 
         // special verdicts
         CUSTOM_FAILURE = 500;
