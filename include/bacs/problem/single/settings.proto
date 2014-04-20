@@ -1,5 +1,6 @@
 package bacs.problem.single.settings;
 
+import "bacs/file.proto";
 import "bacs/process.proto";
 
 // should be moved into testing
@@ -69,24 +70,9 @@ message File
         EXECUTE = 2;
     }
 
-    message Range
-    {
-        enum Whence
-        {
-            BEGIN = 0;
-            END = 1;
-        };
-        /// Position from which offset will be calculated.
-        required Whence whence = 1;
-        /// Negative or positive offset from position specified by whence field.
-        required int64 offset = 2;
-        /// Size of chunk will be transmitted (if EOF reached size of chunk may be smaller).
-        required uint64 size = 3;
-    }
-
     required string id = 1;
     repeated Permissions permission = 2;
     optional /*DataId*/string init = 3;
     optional Path path = 4; // note: arbitrary paths are not supported, path will be stripped to filename
-    optional Range receive = 5;
+    optional bacs.file.Range receive = 5;
 }
