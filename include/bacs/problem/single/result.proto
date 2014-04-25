@@ -50,6 +50,9 @@ message Judge
         // system failure verdicts
         FAIL_TEST = 999;
         FAILED = 1000;
+
+        // judge status is meaningless
+        SKIPPED = 2000;
     }
     required Status status = 1;
     optional string message = 2;
