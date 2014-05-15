@@ -79,7 +79,8 @@ namespace bacs{namespace problem{namespace single{namespace detail
                    test_data_type::binary : test_data_type::text;
     }
 
-    void list_tests::set_data_type(const std::string &data_id, const test_data_type type)
+    void list_tests::set_data_type(const std::string &data_id,
+                                   const test_data_type type)
     {
         if (m_tests.empty())
             BOOST_THROW_EXCEPTION(test_empty_set_error());
@@ -119,13 +120,18 @@ namespace bacs{namespace problem{namespace single{namespace detail
             boost::filesystem::create_directories(destination);
             bunsan::pm::index index;
             // tests builder
-            index.source.import.package.insert(std::make_pair(".", "bacs/system/single/list_tests"));
+            index.source.import.package.insert(
+                std::make_pair(".", "bacs/system/single/list_tests")
+            );
             // tests
             index.source.self.insert(std::make_pair("share/tests", "tests"));
             boost::filesystem::create_directory(destination / "tests");
             for (const auto &id_data: m_tests)
                 for (const auto &id_path: id_data.second)
-                    boost::filesystem::copy_file(location() / id_path.second, destination / "tests" / (id_data.first + "." + id_path.first));
+                    boost::filesystem::copy_file(
+                        location() / id_path.second,
+                        destination / "tests" / (id_data.first + "." + id_path.first)
+                    );
             // configuration for tests generator
             index.source.self.insert(std::make_pair("etc", "etc"));
             boost::filesystem::create_directory(destination / "etc");
@@ -133,11 +139,13 @@ namespace bacs{namespace problem{namespace single{namespace detail
             BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
             {
                 {
-                    // note: test_set_ and data_set_ are not altered, but boost::oarchive interface
-                    // does not support const references in operator<<()
-                    std::unordered_set<std::string> test_set_ = test_set(), data_set_ = data_set();
+                    // note: test_set_ and data_set_ are not altered,
+                    // but boost::oarchive interface does not support
+                    // const references in operator<<()
+                    std::unordered_set<std::string> test_set_ = test_set();
+                    std::unordered_set<std::string> data_set_ = data_set();
                     boost::archive::text_oarchive oa(fout);
-                    // FIXME I don't like that order should be checked by programmer.
+                    // FIXME order is hard-coded
                     // Should be moved into separate header.
                     oa << test_set_ << data_set_ << m_text_data_set;
                 }
@@ -149,10 +157,11 @@ namespace bacs{namespace problem{namespace single{namespace detail
         }
         catch (std::exception &)
         {
-            BOOST_THROW_EXCEPTION(tests_make_package_error() <<
-                                  tests_make_package_error::destination(destination) <<
-                                  //tests_make_package_error::package(package) <<
-                                  bunsan::enable_nested_current());
+            BOOST_THROW_EXCEPTION(
+                tests_make_package_error() <<
+                tests_make_package_error::destination(destination) <<
+                //tests_make_package_error::package(package) <<
+                bunsan::enable_nested_current());
         }
     }
 }}}}

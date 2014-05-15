@@ -73,6 +73,8 @@ message File
     required string id = 1;
     repeated Permissions permission = 2;
     optional /*DataId*/string init = 3;
-    optional Path path = 4; // note: arbitrary paths are not supported, path will be stripped to filename
+    /// \note arbitrary paths are not supported,
+    /// path will be stripped to filename
+    optional Path path = 4;
     optional bacs.file.Range receive = 5;
 }

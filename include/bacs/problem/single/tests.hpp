@@ -16,11 +16,17 @@ namespace bacs{namespace problem{namespace single
         typedef boost::error_info<struct tag_test_id, std::string> test_id;
         typedef boost::error_info<struct tag_data_id, std::string> data_id;
     };
-    struct invalid_test_id_error: virtual invalid_id_error, virtual tests_error {};
-    struct invalid_data_id_error: virtual invalid_id_error, virtual tests_error {};
+    struct invalid_test_id_error:
+        virtual invalid_id_error,
+        virtual tests_error {};
+    struct invalid_data_id_error:
+        virtual invalid_id_error,
+        virtual tests_error {};
     struct test_format_error: virtual tests_error {};
     struct test_data_format_error: virtual test_format_error {};
-    struct tests_make_package_error: virtual utility_make_package_error, virtual tests_error {};
+    struct tests_make_package_error:
+        virtual utility_make_package_error,
+        virtual tests_error {};
 
     class tests: public utility
     BUNSAN_FACTORY_BEGIN(tests, const boost::filesystem::path &/*location*/,

@@ -31,7 +31,10 @@ namespace bacs{namespace problem{namespace single
             problem_info.mutable_info()->mutable_system()->set_hash(
                 options_.hash.data(),
                 options_.hash.size());
-            problem_info.mutable_info()->mutable_system()->set_problem_type(problem_type);
+            problem_info.
+                mutable_info()->
+                mutable_system()->
+                set_problem_type(problem_type);
             return problem_info;
         }
         catch (std::exception &)

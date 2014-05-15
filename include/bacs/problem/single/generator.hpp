@@ -28,7 +28,10 @@ namespace bacs{namespace problem{namespace single
     struct generator_error: virtual error {};
     struct generator_generate_error: virtual generator_error
     {
-        typedef boost::error_info<struct tag_options, generator_detail::options> options;
+        typedef boost::error_info<
+            struct tag_options,
+            generator_detail::options
+        > options;
     };
 
     class generator: private boost::noncopyable

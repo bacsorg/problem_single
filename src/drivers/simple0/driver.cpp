@@ -42,18 +42,35 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         // this code should be executed after profiles and tests initialization
         BOOST_ASSERT(m_overview.profile_size() == 1);
         BOOST_ASSERT(
-            m_overview.profile(0).GetExtension(Profile_::testing).test_group_size() == 1);
+            m_overview.
+            profile(0).
+            GetExtension(Profile_::testing).
+            test_group_size() == 1
+        );
         // select tests order
         bool only_digits = true;
-        for (const std::string &id: m_overview.GetExtension(Problem_::tests).test_set())
+        for (const std::string &id:
+                m_overview.GetExtension(Problem_::tests).test_set())
         {
-            if (!(only_digits = only_digits &&
-                  std::all_of(id.begin(), id.end(), boost::algorithm::is_digit())))
+            only_digits = only_digits && std::all_of(
+                id.begin(),
+                id.end(),
+                boost::algorithm::is_digit()
+            );
+            if (!only_digits)
                 break;
         }
-        m_overview.mutable_profile(0)->MutableExtension(Profile_::testing)->
-            mutable_test_group(0)->mutable_settings()->mutable_run()->set_order(
-                only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL);
+        m_overview.
+            mutable_profile(0)->
+            MutableExtension(Profile_::testing)->
+            mutable_test_group(0)->
+            mutable_settings()->
+            mutable_run()->
+            set_order(
+                only_digits ?
+                settings::Run::NUMERIC :
+                settings::Run::LEXICOGRAPHICAL
+            );
     }
 
     Problem driver::overview() const
@@ -132,7 +149,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
         for (Statement::Version &v: *info.mutable_version())
         {
-            const bunsan::pm::entry package = bunsan::pm::entry("statement") / v.package();
+            const bunsan::pm::entry package =
+                bunsan::pm::entry("statement") / v.package();
             v.set_package(package.name());
         }
     }
@@ -143,7 +161,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
-        testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
+        testing::SolutionTesting &testing =
+            *profile.MutableExtension(Profile_::testing);
         testing.Clear();
         testing::TestGroup &test_group = *testing.add_test_group();
         test_group.set_id("");
