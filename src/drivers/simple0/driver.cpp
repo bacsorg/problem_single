@@ -228,26 +228,38 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_checker()
     {
-        m_checker = utility::instance_optional(m_location / "checker");
-        if (!m_checker)
+        try
+        {
+            m_checker = utility::instance(m_location / "checker");
+            *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
+                m_checker->info();
+        }
+        catch (std::exception &)
+        {
             BOOST_THROW_EXCEPTION(
                 checker_error() <<
-                checker_error::message("Unable to initialize checker's driver."));
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
-            m_checker->info();
+                checker_error::message("Unable to initialize checker's driver.") <<
+                bunsan::enable_nested_current());
+        }
     }
 
     void driver::read_interactor()
     {
         if (boost::filesystem::exists(m_location / "interactor"))
         {
-            m_interactor = utility::instance_optional(m_location / "interactor");
-            if (!m_interactor)
+            try
+            {
+                m_interactor = utility::instance(m_location / "interactor");
+                *m_overview.mutable_utilities()->MutableExtension(Utilities_::interactor) =
+                    m_interactor->info();
+            }
+            catch (std::exception &)
+            {
                 BOOST_THROW_EXCEPTION(
                     interactor_error() <<
-                    interactor_error::message("Unable to initialize interactor's driver."));
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::interactor) =
-                m_interactor->info();
+                    interactor_error::message("Unable to initialize interactor's driver.") <<
+                    bunsan::enable_nested_current());
+            }
         }
     }
 }}}}}
