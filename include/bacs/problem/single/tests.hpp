@@ -5,7 +5,6 @@
 #include <bacs/problem/utility.hpp>
 
 #include <bunsan/factory_helper.hpp>
-#include <bunsan/forward_constructor.hpp>
 
 #include <unordered_set>
 
@@ -34,7 +33,7 @@ namespace bacs{namespace problem{namespace single
     public:
         static tests_ptr instance(const boost::filesystem::path &location);
 
-        BUNSAN_FORWARD_EXPLICIT_CONSTRUCTOR(tests, utility)
+        using utility::utility;
 
     public:
         // create() will be provided by appropriate package

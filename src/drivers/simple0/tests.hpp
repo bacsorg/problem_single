@@ -1,7 +1,7 @@
 #pragma once
 
-#include <bacs/problem/single/detail/list_tests.hpp>
 #include <bacs/problem/single/error.hpp>
+#include <bacs/problem/single/tests.hpp>
 
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace simple0
@@ -9,10 +9,16 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     struct test_no_in_data_error: virtual test_data_format_error {};
     struct test_unknown_data_error: virtual test_data_format_error {};
 
-    // implementation without registration in factory
-    class tests: public detail::list_tests
+    class tests: public single::tests
     {
     public:
-        explicit tests(const boost::filesystem::path &location);
+        using single::tests::tests;
+
+    public:
+        using single::tests::instance;
+
+        static tests_ptr instance(
+            const boost::filesystem::path &location,
+            const boost::property_tree::ptree &config);
     };
 }}}}}

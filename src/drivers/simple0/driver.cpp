@@ -1,5 +1,7 @@
 #include "driver.hpp"
 
+#include "tests.hpp"
+
 #include <bacs/problem/single/detail/path.hpp>
 #include <bacs/problem/single/error.hpp>
 #include <bacs/problem/single/problem.pb.h>
@@ -124,19 +126,25 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_tests()
     {
-        m_tests.reset(new simple0::tests(m_location / "tests"));
-        const boost::optional<boost::property_tree::ptree &> tests_ =
-            m_config.get_child_optional("tests");
-        if (tests_)
-        {
-            for (const auto kv: tests_.get())
-            {
-                const std::string data_type = kv.second.get_value<std::string>();
-                m_tests->set_data_type(
-                    kv.first,
-                    boost::lexical_cast<tests::test_data_type>(data_type));
-            }
-        }
+        boost::property_tree::ptree empty_tests_section;
+        const boost::property_tree::ptree &tests_section =
+            m_config.get_child("tests", empty_tests_section);
+        m_tests = simple0::tests::instance(
+            m_location / "tests",
+            tests_section
+        );
+
+        // simple0-related restriction
+        const auto data_set_ = m_tests->data_set();
+        if (data_set_.find("in") == data_set_.end())
+            BOOST_THROW_EXCEPTION(test_no_in_data_error());
+        // note out is optional
+        const std::size_t expected_size =
+            data_set_.find("out") == data_set_.end() ? 1 : 2;
+        if (data_set_.size() != expected_size)
+            // TODO send at least first unknown data_id
+            BOOST_THROW_EXCEPTION(test_unknown_data_error());
+
         *m_overview.MutableExtension(Problem_::tests) =
             m_tests->test_set_info();
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) =

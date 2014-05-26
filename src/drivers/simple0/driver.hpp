@@ -1,4 +1,4 @@
-#include "tests.hpp"
+#pragma once
 
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
@@ -39,7 +39,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
         Problem m_overview;
-        tests::shared_ptr<simple0::tests> m_tests;
+        tests_ptr m_tests;
         utility_ptr m_checker;
         utility_ptr m_interactor;
         statement_ptr m_statement;
