@@ -138,17 +138,15 @@ namespace bacs{namespace problem{namespace single{namespace detail
             bunsan::filesystem::ofstream fout(destination / "etc/tests");
             BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout)
             {
-                {
-                    // note: test_set_ and data_set_ are not altered,
-                    // but boost::oarchive interface does not support
-                    // const references in operator<<()
-                    std::unordered_set<std::string> test_set_ = test_set();
-                    std::unordered_set<std::string> data_set_ = data_set();
-                    boost::archive::text_oarchive oa(fout);
-                    // FIXME order is hard-coded
-                    // Should be moved into separate header.
-                    oa << test_set_ << data_set_ << m_text_data_set;
-                }
+                // note: test_set_ and data_set_ are not altered,
+                // but boost::oarchive interface does not support
+                // const references in operator<<()
+                std::unordered_set<std::string> test_set_ = test_set();
+                std::unordered_set<std::string> data_set_ = data_set();
+                boost::archive::text_oarchive oa(fout);
+                // FIXME order is hard-coded
+                // Should be moved into separate header.
+                oa << test_set_ << data_set_ << m_text_data_set;
             }
             BUNSAN_FILESYSTEM_FSTREAM_WRAP_END(fout)
             fout.close();
