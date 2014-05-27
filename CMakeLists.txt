@@ -36,7 +36,6 @@ bunsan_add_shared_library(${PROJECT_NAME}
 
     src/drivers/simple0/driver.cpp
     src/drivers/simple0/tests.cpp
-    src/drivers/simple0/tests/embedded.cpp
 
     src/drivers/polygon_codeforces_com/driver.cpp
     src/drivers/polygon_codeforces_com/statement.cpp
