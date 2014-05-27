@@ -29,6 +29,28 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             return tmp;
         });
 
+    namespace
+    {
+        template <typename Range>
+        settings::Run::Order run_order(const Range &tests)
+        {
+            bool only_digits = true;
+            for (const std::string &id: tests)
+            {
+                only_digits = only_digits && std::all_of(
+                    id.begin(),
+                    id.end(),
+                    boost::algorithm::is_digit()
+                );
+                if (!only_digits)
+                    break;
+            }
+            return only_digits ?
+                settings::Run::NUMERIC :
+                settings::Run::LEXICOGRAPHICAL;
+        }
+    }
+
     driver::driver(const boost::filesystem::path &location):
         m_location(location)
     {
@@ -49,19 +71,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             GetExtension(Profile_::testing).
             test_group_size() == 1
         );
-        // select tests order
-        bool only_digits = true;
-        for (const std::string &id:
-                m_overview.GetExtension(Problem_::tests).test_set())
-        {
-            only_digits = only_digits && std::all_of(
-                id.begin(),
-                id.end(),
-                boost::algorithm::is_digit()
-            );
-            if (!only_digits)
-                break;
-        }
         m_overview.
             mutable_profile(0)->
             MutableExtension(Profile_::testing)->
@@ -69,9 +78,11 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             mutable_settings()->
             mutable_run()->
             set_order(
-                only_digits ?
-                settings::Run::NUMERIC :
-                settings::Run::LEXICOGRAPHICAL
+                run_order(
+                    m_overview.
+                    GetExtension(Problem_::tests).
+                    test_set()
+                )
             );
     }
 
