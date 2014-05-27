@@ -27,7 +27,8 @@ message SolutionTestingResult
 message TestGroupResult
 {
     required string id = 1;
-    repeated TestResult test = 2;
+    required bool executed = 2;
+    repeated TestResult test = 3;
 }
 
 message Judge
