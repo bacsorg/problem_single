@@ -92,7 +92,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         // override data types from config
         for (const auto kv: config)
         {
-            const std::string key = kv.second.get_value<std::string>();
+            const std::string &key = kv.first;
             if (boost::algorithm::starts_with(key, data_prefix))
             {
                 const std::string data_id = key.substr(data_prefix.size());
