@@ -59,6 +59,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         read_info();
         read_tests();
         read_statement();
+        read_settings();
         read_profiles();
         read_checker();
         read_interactor();
@@ -152,6 +153,63 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         }
     }
 
+    void driver::read_settings()
+    {
+        settings::ProcessSettings &process = *m_settings.mutable_process();
+
+        boost::optional<std::string> value;
+        // resource limits
+        bacs::process::ResourceLimits &resource_limits =
+            *process.mutable_resource_limits();
+        if ((value = m_config.get_optional<std::string>("resource_limits.time")))
+            resource_limits.set_time_limit_millis(
+                resource::parse::time_millis(value.get()));
+        if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
+            resource_limits.set_memory_limit_bytes(
+                resource::parse::memory_bytes(value.get()));
+        if ((value = m_config.get_optional<std::string>("resource_limits.output")))
+            resource_limits.set_output_limit_bytes(
+                resource::parse::memory_bytes(value.get()));
+        // number of processes is not supported here
+        if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
+            resource_limits.set_real_time_limit_millis(
+                resource::parse::time_millis(value.get()));
+        // run
+        settings::Run &run = *m_settings.mutable_run();
+        //run.set_order(); // depending on tests, is set in other location
+        run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
+        // files & execution
+        settings::File *file = process.add_file();
+        settings::Execution &execution = *process.mutable_execution();
+        file->set_id("stdin");
+        file->set_init("in");
+        file->add_permission(settings::File::READ);
+        if ((value = m_config.get_optional<std::string>("files.stdin")))
+        {
+            detail::to_pb_path(value.get(), *file->mutable_path());
+        }
+        else
+        {
+            settings::Execution::Redirection &rd = *execution.add_redirection();
+            rd.set_stream(settings::Execution::Redirection::STDIN);
+            rd.set_file_id("stdin");
+        }
+        file = process.add_file();
+        file->set_id("stdout");
+        file->add_permission(settings::File::READ);
+        file->add_permission(settings::File::WRITE);
+        if ((value = m_config.get_optional<std::string>("files.stdout")))
+        {
+            detail::to_pb_path(value.get(), *file->mutable_path());
+        }
+        else
+        {
+            settings::Execution::Redirection &rd = *execution.add_redirection();
+            rd.set_stream(settings::Execution::Redirection::STDOUT);
+            rd.set_file_id("stdout");
+        }
+    }
+
     void driver::read_profiles()
     {
         google::protobuf::RepeatedPtrField<Profile> &profiles =
@@ -163,61 +221,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         testing.Clear();
         testing::TestGroup &test_group = *testing.add_test_group();
         test_group.set_id("");
-        settings::TestGroupSettings &settings = *test_group.mutable_settings();
-        settings::ProcessSettings &process = *settings.mutable_process();
-        {
-            boost::optional<std::string> value;
-            // resource limits
-            bacs::process::ResourceLimits &resource_limits =
-                *process.mutable_resource_limits();
-            if ((value = m_config.get_optional<std::string>("resource_limits.time")))
-                resource_limits.set_time_limit_millis(
-                    resource::parse::time_millis(value.get()));
-            if ((value = m_config.get_optional<std::string>("resource_limits.memory")))
-                resource_limits.set_memory_limit_bytes(
-                    resource::parse::memory_bytes(value.get()));
-            if ((value = m_config.get_optional<std::string>("resource_limits.output")))
-                resource_limits.set_output_limit_bytes(
-                    resource::parse::memory_bytes(value.get()));
-            // number of processes is not supported here
-            if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
-                resource_limits.set_real_time_limit_millis(
-                    resource::parse::time_millis(value.get()));
-            // run
-            settings::Run &run = *settings.mutable_run();
-            //run.set_order(); // depending on tests, is set in other location
-            run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
-            // files & execution
-            settings::File *file = process.add_file();
-            settings::Execution &execution = *process.mutable_execution();
-            file->set_id("stdin");
-            file->set_init("in");
-            file->add_permission(settings::File::READ);
-            if ((value = m_config.get_optional<std::string>("files.stdin")))
-            {
-                detail::to_pb_path(value.get(), *file->mutable_path());
-            }
-            else
-            {
-                settings::Execution::Redirection &rd = *execution.add_redirection();
-                rd.set_stream(settings::Execution::Redirection::STDIN);
-                rd.set_file_id("stdin");
-            }
-            file = process.add_file();
-            file->set_id("stdout");
-            file->add_permission(settings::File::READ);
-            file->add_permission(settings::File::WRITE);
-            if ((value = m_config.get_optional<std::string>("files.stdout")))
-            {
-                detail::to_pb_path(value.get(), *file->mutable_path());
-            }
-            else
-            {
-                settings::Execution::Redirection &rd = *execution.add_redirection();
-                rd.set_stream(settings::Execution::Redirection::STDOUT);
-                rd.set_file_id("stdout");
-            }
-        }
+        *test_group.mutable_settings() = m_settings;
         test_group.clear_test_set();
         testing::TestQuery &test_query = *test_group.add_test_set();
         test_query.mutable_wildcard()->set_value("*"); // select all tests

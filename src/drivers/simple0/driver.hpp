@@ -31,6 +31,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         void read_info();
         void read_tests();
         void read_statement();
+        void read_settings();
         void read_profiles();
         void read_checker();
         void read_interactor();
@@ -38,6 +39,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     private:
         const boost::filesystem::path m_location;
         boost::property_tree::ptree m_config;
+        settings::TestGroupSettings m_settings;
         Problem m_overview;
         tests_ptr m_tests;
         utility_ptr m_checker;
