@@ -18,7 +18,7 @@ message Dependency
         AT_LEAST_HALF_OK = 4;
     }
     required string test_group = 1;
-    required Requirement requirement = 2 [default=ALL_OK];
+    optional Requirement requirement = 2 [default=ALL_OK];
 }
 
 message TestGroup
