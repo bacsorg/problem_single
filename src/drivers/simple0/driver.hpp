@@ -6,12 +6,16 @@
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+#include <map>
 #include <string>
 #include <vector>
 
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace simple0
 {
+    struct invalid_group_id_error: virtual error {};
+    struct empty_group_id_error: virtual invalid_group_id_error {};
+
     /// \ref format_simple0_page implementation
     class driver: public single::driver
     {
@@ -45,6 +49,12 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         utility_ptr m_checker;
         utility_ptr m_interactor;
         statement_ptr m_statement;
+
+        // sorted
+        std::map<
+            std::string,
+            std::vector<std::string>
+        > m_test_groups;
 
     private:
         static const bool factory_reg_hook;

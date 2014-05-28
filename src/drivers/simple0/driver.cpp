@@ -9,7 +9,10 @@
 #include <bacs/problem/split.hpp>
 #include <bacs/problem/resource/parse.hpp>
 
+#include <bunsan/range/construct_from_range.hpp>
+
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
@@ -114,6 +117,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         system.set_hash("unknown"); // initialized later
     }
 
+    static const std::string group_prefix = "group_";
+
     void driver::read_tests()
     {
         boost::property_tree::ptree empty_tests_section;
@@ -134,6 +139,29 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         if (data_set_.size() != expected_size)
             // TODO send at least first unknown data_id
             BOOST_THROW_EXCEPTION(test_unknown_data_error());
+
+        for (const auto kv: tests_section)
+        {
+            const std::string &key = kv.first;
+            if (boost::algorithm::starts_with(key, group_prefix))
+            {
+                const std::string group_id = key.substr(group_prefix.size());
+                if (group_id.empty())
+                    BOOST_THROW_EXCEPTION(empty_group_id_error());
+                std::string tests = kv.second.get_value<std::string>();
+                std::vector<std::string> &test_group = m_test_groups[group_id];
+                boost::algorithm::split(
+                    test_group,
+                    tests,
+                    boost::algorithm::is_space(),
+                    boost::algorithm::token_compress_on
+                );
+                if (test_group.size() == 1 && test_group[0].empty())
+                    test_group.clear();
+                if (test_group.empty())
+                    m_test_groups.erase(group_id);
+            }
+        }
 
         *m_overview.MutableExtension(Problem_::tests) =
             m_tests->test_set_info();
@@ -210,6 +238,38 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         }
     }
 
+    namespace
+    {
+        template <typename Range>
+        void add_test_group(
+            testing::TestGroup &test_group,
+            boost::optional<std::string> &dependency_test_group,
+            const settings::TestGroupSettings &settings,
+            const std::string &group_id,
+            const Range &tests)
+        {
+            test_group.set_id(group_id);
+
+            if (dependency_test_group)
+            {
+                testing::Dependency &dependency = *test_group.add_dependency();
+                dependency.set_test_group(*dependency_test_group);
+            }
+
+            *test_group.mutable_settings() = settings;
+            test_group.mutable_settings()->mutable_run()->set_order(
+                run_order(tests)
+            );
+
+            test_group.clear_test_set();
+            for (const std::string &test_id: tests)
+            {
+                testing::TestQuery &test_query = *test_group.add_test_set();
+                test_query.set_id(test_id);
+            }
+        }
+    }
+
     void driver::read_profiles()
     {
         google::protobuf::RepeatedPtrField<Profile> &profiles =
@@ -219,24 +279,39 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         testing::SolutionTesting &testing =
             *profile.MutableExtension(Profile_::testing);
         testing.Clear();
-        testing::TestGroup &test_group = *testing.add_test_group();
-        test_group.set_id("");
-        *test_group.mutable_settings() = m_settings;
-        test_group.clear_test_set();
-        testing::TestQuery &test_query = *test_group.add_test_set();
-        test_query.mutable_wildcard()->set_value("*"); // select all tests
 
-        // depending on tests set test order may differ
-        test_group.
-            mutable_settings()->
-            mutable_run()->
-            set_order(
-                run_order(
-                    m_overview.
-                    GetExtension(Problem_::tests).
-                    test_set()
-                )
+        auto unused_tests = bunsan::range::construct_from_range<
+                std::unordered_set<std::string>
+            >(
+                m_overview.
+                GetExtension(Problem_::tests).
+                test_set()
             );
+
+        boost::optional<std::string> previous_test_group;
+        for (const auto &group_tests: m_test_groups)
+        {
+            const std::string &group_id = group_tests.first;
+            const std::vector<std::string> &tests = group_tests.second;
+            add_test_group(
+                *testing.add_test_group(),
+                previous_test_group,
+                m_settings,
+                group_id,
+                tests
+            );
+            previous_test_group = group_id;
+            for (const std::string &test_id: tests)
+                unused_tests.erase(test_id);
+        }
+
+        add_test_group(
+            *testing.add_test_group(),
+            previous_test_group,
+            m_settings,
+            "",
+            unused_tests
+        );
     }
 
     void driver::read_checker()
