@@ -62,28 +62,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         read_profiles();
         read_checker();
         read_interactor();
-        // depending on tests set test order may differ
-        // this code should be executed after profiles and tests initialization
-        BOOST_ASSERT(m_overview.profile_size() == 1);
-        BOOST_ASSERT(
-            m_overview.
-            profile(0).
-            GetExtension(Profile_::testing).
-            test_group_size() == 1
-        );
-        m_overview.
-            mutable_profile(0)->
-            MutableExtension(Profile_::testing)->
-            mutable_test_group(0)->
-            mutable_settings()->
-            mutable_run()->
-            set_order(
-                run_order(
-                    m_overview.
-                    GetExtension(Problem_::tests).
-                    test_set()
-                )
-            );
     }
 
     Problem driver::overview() const
@@ -243,6 +221,18 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         test_group.clear_test_set();
         testing::TestQuery &test_query = *test_group.add_test_set();
         test_query.mutable_wildcard()->set_value("*"); // select all tests
+
+        // depending on tests set test order may differ
+        test_group.
+            mutable_settings()->
+            mutable_run()->
+            set_order(
+                run_order(
+                    m_overview.
+                    GetExtension(Problem_::tests).
+                    test_set()
+                )
+            );
     }
 
     void driver::read_checker()
