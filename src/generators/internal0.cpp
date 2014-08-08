@@ -70,15 +70,26 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 const bunsan::pm::entry package =
                     options_.root_package / "checker";
                 const utility_ptr checker = options_.driver->checker();
-                BOOST_ASSERT(checker);
-                if (checker->make_package(package_root, package))
-                    root_index.package.import.package.insert(
-                        std::make_pair(".", package)
-                    );
-                // calling conventions
-                root_index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/single/checker/call") /
-                    checker->section("utility").get<std::string>("call")));
+                if (checker)
+                {
+                    if (checker->make_package(package_root, package))
+                        root_index.package.import.package.insert(
+                            std::make_pair(".", package)
+                        );
+                    // calling conventions
+                    root_index.source.import.source.insert(std::make_pair(".",
+                        bunsan::pm::entry("bacs/system/single/checker/call") /
+                        checker->section("utility").get<std::string>("call")));
+                }
+                else
+                {
+                    root_index.source.import.source.insert(std::make_pair(
+                        ".",
+                        bunsan::pm::entry(
+                            "bacs/system/single/checker/call/std/ok"
+                        )
+                    ));
+                }
             }
 
             // interactor package
@@ -109,6 +120,11 @@ namespace bacs{namespace problem{namespace single{namespace generators
                     ));
                 }
             }
+
+            if (!options_.driver->checker() && !options_.driver->interactor())
+                BOOST_THROW_EXCEPTION(
+                    utility_error() <<
+                    utility_error::message("Checker or interactor is required"));
 
             // statement package
             {

@@ -316,18 +316,21 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_checker()
     {
-        try
+        if (boost::filesystem::exists(m_location / "checker"))
         {
-            m_checker = utility::instance(m_location / "checker");
-            *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
-                m_checker->info();
-        }
-        catch (std::exception &)
-        {
-            BOOST_THROW_EXCEPTION(
-                checker_error() <<
-                checker_error::message("Unable to initialize checker's driver.") <<
-                bunsan::enable_nested_current());
+            try
+            {
+                m_checker = utility::instance(m_location / "checker");
+                *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
+                    m_checker->info();
+            }
+            catch (std::exception &)
+            {
+                BOOST_THROW_EXCEPTION(
+                    checker_error() <<
+                    checker_error::message("Unable to initialize checker's driver.") <<
+                    bunsan::enable_nested_current());
+            }
         }
     }
 
