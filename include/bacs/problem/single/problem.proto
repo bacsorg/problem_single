@@ -8,7 +8,7 @@ message Problem_
 {
     extend Problem
     {
-        required Tests tests = 1000;
+        optional Tests tests = 1000;
     }
 }
 
@@ -22,7 +22,7 @@ message Profile_
 {
     extend Profile
     {
-        required testing.SolutionTesting testing = 1000;
+        optional testing.SolutionTesting testing = 1000;
     }
 }
 
@@ -30,8 +30,8 @@ message Utilities_
 {
     extend Utilities
     {
-        required Utility tests = 1000;
-        required Utility checker = 1001;
+        optional Utility tests = 1000;
+        optional Utility checker = 1001;
         optional Utility interactor = 1002;
     }
 }
