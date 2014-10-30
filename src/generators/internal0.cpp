@@ -14,6 +14,41 @@ namespace bacs{namespace problem{namespace single{namespace generators
 
     internal0::internal0(const boost::property_tree::ptree &/*config*/) {}
 
+    namespace
+    {
+        void generate_utility(
+            const std::string &name,
+            const utility_ptr &utility_,
+            const generator::options &options,
+            bunsan::pm::index &root_index,
+            const char *const fallback=nullptr)
+        {
+            const boost::filesystem::path package_root =
+                options.destination / name;
+            const bunsan::pm::entry package =
+                options.root_package / name;
+            if (utility_)
+            {
+                if (utility_->make_package(package_root, package))
+                    root_index.package.import.package.insert(
+                        std::make_pair(".", package)
+                    );
+                // calling conventions
+                root_index.source.import.source.insert(std::make_pair(".",
+                    bunsan::pm::entry("bacs/system/single") / name / "call" /
+                    utility_->section("utility").get<std::string>("call")));
+            }
+            else
+            {
+                BOOST_ASSERT_MSG(!fallback, name.c_str());
+                root_index.source.import.source.insert(std::make_pair(
+                    ".",
+                    bunsan::pm::entry(fallback)
+                ));
+            }
+        }
+    }
+
     Problem internal0::generate(const options &options_)
     {
         try
@@ -45,86 +80,37 @@ namespace bacs{namespace problem{namespace single{namespace generators
                     std::make_pair(".", "bacs/system/single"));
             }
 
-            // tests package
-            {
-                const boost::filesystem::path package_root =
-                    options_.destination / "tests";
-                const bunsan::pm::entry package =
-                    options_.root_package / "tests";
-                const utility_ptr tests = options_.driver->tests();
-                BOOST_ASSERT(tests);
-                if (tests->make_package(package_root, package))
-                    root_index.package.import.package.insert(
-                        std::make_pair(".", package)
-                    );
-                // calling conventions
-                root_index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/single/tests/call") /
-                    tests->section("utility").get<std::string>("call")));
-            }
-
-            // checker package
-            {
-                const boost::filesystem::path package_root =
-                    options_.destination / "checker";
-                const bunsan::pm::entry package =
-                    options_.root_package / "checker";
-                const utility_ptr checker = options_.driver->checker();
-                if (checker)
-                {
-                    if (checker->make_package(package_root, package))
-                        root_index.package.import.package.insert(
-                            std::make_pair(".", package)
-                        );
-                    // calling conventions
-                    root_index.source.import.source.insert(std::make_pair(".",
-                        bunsan::pm::entry("bacs/system/single/checker/call") /
-                        checker->section("utility").get<std::string>("call")));
-                }
-                else
-                {
-                    root_index.source.import.source.insert(std::make_pair(
-                        ".",
-                        bunsan::pm::entry(
-                            "bacs/system/single/checker/call/std/ok"
-                        )
-                    ));
-                }
-            }
-
-            // interactor package
-            {
-                const boost::filesystem::path package_root =
-                    options_.destination / "interactor";
-                const bunsan::pm::entry package =
-                    options_.root_package / "interactor";
-                const utility_ptr interactor = options_.driver->interactor();
-                if (interactor)
-                {
-                    if (interactor->make_package(package_root, package))
-                        root_index.package.import.package.insert(
-                            std::make_pair(".", package)
-                        );
-                    // calling conventions
-                    root_index.source.import.source.insert(std::make_pair(".",
-                        bunsan::pm::entry("bacs/system/single/tester/call") /
-                        interactor->section("utility").get<std::string>("call")));
-                }
-                else
-                {
-                    root_index.source.import.source.insert(std::make_pair(
-                        ".",
-                        bunsan::pm::entry(
-                            "bacs/system/single/tester/call/std/standalone"
-                        )
-                    ));
-                }
-            }
-
+            BOOST_ASSERT(options_.driver->tests());
             if (!options_.driver->checker() && !options_.driver->interactor())
                 BOOST_THROW_EXCEPTION(
                     utility_error() <<
                     utility_error::message("Checker or interactor is required"));
+
+            // tests package
+            generate_utility(
+                "tests",
+                options_.driver->tests(),
+                options_,
+                root_index
+            );
+
+            // checker package
+            generate_utility(
+                "checker",
+                options_.driver->checker(),
+                options_,
+                root_index,
+                "bacs/system/single/checker/call/std/ok"
+            );
+
+            // interactor package
+            generate_utility(
+                "interactor",
+                options_.driver->interactor(),
+                options_,
+                root_index,
+                "bacs/system/single/tester/call/std/standalone"
+            );
 
             // statement package
             {
@@ -133,7 +119,9 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 const bunsan::pm::entry package =
                     options_.root_package / "statement";
                 (void) options_.driver->statement()->make_package(
-                    package_root, package);
+                    package_root,
+                    package
+                );
             }
 
             // the last command
