@@ -233,7 +233,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             const std::string &call)
         {
             boost::property_tree::ptree cfg;
-            cfg.put("build.builder", "none");
             cfg.put("build.target", target);
             cfg.put("utility.call", call);
             return utility::instance(root, cfg);
