@@ -37,6 +37,9 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 root_index.source.import.source.insert(std::make_pair(".",
                     bunsan::pm::entry("bacs/system/single") / name / "call" /
                     utility_->section("utility").get<std::string>("call")));
+                root_index.source.import.source.insert(std::make_pair(".",
+                    bunsan::pm::entry("bacs/system/single") / name / "return" /
+                    utility_->section("utility").get<std::string>("return", "none")));
             }
             else
             {

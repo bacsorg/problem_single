@@ -215,7 +215,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             const boost::property_tree::ptree &config,
             const boost::filesystem::path &root,
             const std::string &target,
-            const std::string &call)
+            const std::string &call,
+            const std::string &return_)
         {
             const boost::filesystem::path path =
                 config.get<std::string>("source.<xmlattr>.path");
@@ -224,6 +225,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             cfg.put("build.target", target);
             cfg.put("build.source", path.filename().string());
             cfg.put("utility.call", call);
+            cfg.put("utility.return", return_);
             return utility::instance(root / path.parent_path(), cfg);
         }
 
@@ -244,7 +246,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         const boost::optional<boost::property_tree::ptree &> checker =
             m_config.get_child_optional("problem.assets.checker");
         if (checker)
-            m_checker = get_utility(*checker, m_location, "checker", "in_out_hint");
+            m_checker = get_utility(*checker, m_location, "checker", "in_out_hint", "testlib");
         else
             m_checker = get_utility_default(m_location, "checker", "std/strict/out_stdout");
         *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
