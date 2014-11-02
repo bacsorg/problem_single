@@ -32,7 +32,7 @@ Problem in "simple0" is a folder with the following entries:
 \subsubsection format_simple0_specifications_sssec Specifications
 - It has \ref ini_page
 - It has "utf8" encoding
-- It is divied into several sections
+- It is divided into several sections
     - **info** section has the following options
         - name -- the name of the problem
         - authors -- the list of authors separated by spaces, see \ref format_simple0_username_sssec
