@@ -16,6 +16,11 @@ namespace bacs{namespace problem{namespace single{namespace generators
 
     namespace
     {
+        struct generator_generate_utility_error: virtual generator_generate_error
+        {
+            typedef boost::error_info<struct tag_utility_name, std::string> utility_name;
+        };
+
         void generate_utility(
             const std::string &name,
             const utility_ptr &utility_,
@@ -23,31 +28,41 @@ namespace bacs{namespace problem{namespace single{namespace generators
             bunsan::pm::index &root_index,
             const char *const fallback=nullptr)
         {
-            const boost::filesystem::path package_root =
-                options.destination / name;
-            const bunsan::pm::entry package =
-                options.root_package / name;
-            if (utility_)
+            try
             {
-                if (utility_->make_package(package_root, package))
-                    root_index.package.import.package.insert(
-                        std::make_pair(".", package)
-                    );
-                // calling conventions
-                root_index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/single") / name / "call" /
-                    utility_->section("utility").get<std::string>("call")));
-                root_index.source.import.source.insert(std::make_pair(".",
-                    bunsan::pm::entry("bacs/system/single") / name / "return" /
-                    utility_->section("utility").get<std::string>("return", "none")));
+                const boost::filesystem::path package_root =
+                    options.destination / name;
+                const bunsan::pm::entry package =
+                    options.root_package / name;
+                if (utility_)
+                {
+                    if (utility_->make_package(package_root, package))
+                        root_index.package.import.package.insert(
+                            std::make_pair(".", package)
+                        );
+                    // calling conventions
+                    root_index.source.import.source.insert(std::make_pair(".",
+                        bunsan::pm::entry("bacs/system/single") / name / "call" /
+                        utility_->section("utility").get<std::string>("call")));
+                    root_index.source.import.source.insert(std::make_pair(".",
+                        bunsan::pm::entry("bacs/system/single") / name / "return" /
+                        utility_->section("utility").get<std::string>("return", "none")));
+                }
+                else
+                {
+                    BOOST_ASSERT_MSG(!fallback, name.c_str());
+                    root_index.source.import.source.insert(std::make_pair(
+                        ".",
+                        bunsan::pm::entry(fallback)
+                    ));
+                }
             }
-            else
+            catch (std::exception &)
             {
-                BOOST_ASSERT_MSG(!fallback, name.c_str());
-                root_index.source.import.source.insert(std::make_pair(
-                    ".",
-                    bunsan::pm::entry(fallback)
-                ));
+                BOOST_THROW_EXCEPTION(
+                    generator_generate_utility_error() <<
+                    generator_generate_utility_error::utility_name(name) <<
+                    bunsan::enable_nested_current());
             }
         }
     }
