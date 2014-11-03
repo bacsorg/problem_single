@@ -21,6 +21,9 @@ namespace bacs{namespace problem{namespace single{namespace generators
             typedef boost::error_info<struct tag_utility_name, std::string> utility_name;
         };
 
+        struct generator_generate_utility_null_fallback_error:
+            virtual generator_generate_utility_error {};
+
         void generate_utility(
             const std::string &name,
             const utility_ptr &utility_,
@@ -50,7 +53,9 @@ namespace bacs{namespace problem{namespace single{namespace generators
                 }
                 else
                 {
-                    BOOST_ASSERT_MSG(!fallback, name.c_str());
+                    if (!fallback)
+                        BOOST_THROW_EXCEPTION(
+                            generator_generate_utility_null_fallback_error());
                     root_index.source.import.source.insert(std::make_pair(
                         ".",
                         bunsan::pm::entry(fallback)
