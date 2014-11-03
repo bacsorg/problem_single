@@ -26,6 +26,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
 
         void generate_utility(
             const std::string &name,
+            const std::string &internal_name,
             const utility_ptr &utility_,
             const generator::options &options,
             bunsan::pm::index &root_index,
@@ -45,10 +46,12 @@ namespace bacs{namespace problem{namespace single{namespace generators
                         );
                     // calling conventions
                     root_index.source.import.source.insert(std::make_pair(".",
-                        bunsan::pm::entry("bacs/system/single") / name / "call" /
+                        bunsan::pm::entry("bacs/system/single") /
+                        internal_name / "call" /
                         utility_->section("utility").get<std::string>("call")));
                     root_index.source.import.source.insert(std::make_pair(".",
-                        bunsan::pm::entry("bacs/system/single") / name / "return" /
+                        bunsan::pm::entry("bacs/system/single") /
+                        internal_name / "return" /
                         utility_->section("utility").get<std::string>("return", "none")));
                 }
                 else
@@ -112,6 +115,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
             // tests package
             generate_utility(
                 "tests",
+                "tests",
                 options_.driver->tests(),
                 options_,
                 root_index
@@ -119,6 +123,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
 
             // checker package
             generate_utility(
+                "checker",
                 "checker",
                 options_.driver->checker(),
                 options_,
@@ -129,6 +134,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
             // interactor package
             generate_utility(
                 "interactor",
+                "tester",
                 options_.driver->interactor(),
                 options_,
                 root_index,
