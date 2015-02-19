@@ -4,11 +4,11 @@
 
 #include <bunsan/filesystem/fstream.hpp>
 #include <bunsan/pm/index.hpp>
-#include <bunsan/range/construct_from_range.hpp>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/range/adaptor/map.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <bunsan/serialization/unordered_set.hpp>
 
 namespace bacs{namespace problem{namespace single{namespace detail
@@ -27,9 +27,11 @@ namespace bacs{namespace problem{namespace single{namespace detail
         std::unordered_set<std::string> map_keys(
             const std::unordered_map<std::string, T> &map)
         {
-            return bunsan::range::construct_from_range<
-                std::unordered_set<std::string>>(
-                    map | boost::adaptors::map_keys);
+            return boost::copy_range<
+                std::unordered_set<std::string>
+            >(
+                map | boost::adaptors::map_keys
+            );
         }
     }
 

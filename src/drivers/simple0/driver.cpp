@@ -9,14 +9,13 @@
 #include <bacs/problem/split.hpp>
 #include <bacs/problem/resource/parse.hpp>
 
-#include <bunsan/range/construct_from_range.hpp>
-
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/assert.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <boost/range/iterator_range.hpp>
 
 #include <algorithm>
 #include <unordered_map>
@@ -280,13 +279,13 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             *profile.MutableExtension(Profile_::testing);
         testing.Clear();
 
-        auto unused_tests = bunsan::range::construct_from_range<
-                std::unordered_set<std::string>
-            >(
-                m_overview.
-                GetExtension(Problem_::tests).
-                test_set()
-            );
+        auto unused_tests = boost::copy_range<
+            std::unordered_set<std::string>
+        >(
+            m_overview.
+            GetExtension(Problem_::tests).
+            test_set()
+        );
 
         boost::optional<std::string> previous_test_group;
         for (const auto &group_tests: m_test_groups)
