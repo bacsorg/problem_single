@@ -1,8 +1,8 @@
-project(bunsan_bacs_problem_single)
+cmake_minimum_required(VERSION 3.0)
 
 include(${CMAKE_SOURCE_DIR}/system-config.cmake OPTIONAL)
 
-cmake_minimum_required(VERSION 3.0)
+project(bunsan_bacs_problem_single)
 
 find_package(BunsanCMake CONFIG REQUIRED)
 
