@@ -2,16 +2,21 @@
 
 #include <bacs/problem/single/driver.hpp>
 
+#include <bunsan/static_initializer.hpp>
+
 namespace bacs{namespace problem{namespace single
 {
     static const char problem_type[] = "bacs/problem/single";
 
-    const bool importer::factory_reg_hook = importer::register_new(problem_type,
-        [](const boost::property_tree::ptree &config)
-        {
-            const importer_ptr tmp(new importer(config));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_problem_single_importer,
+    {
+        BUNSAN_FACTORY_REGISTER(importer, problem::importer, problem_type,
+            [](const boost::property_tree::ptree &config)
+            {
+                const importer_ptr tmp(new importer(config));
+                return tmp;
+            })
+    })
 
     importer::importer(const boost::property_tree::ptree &config):
         m_generator(generator::instance(

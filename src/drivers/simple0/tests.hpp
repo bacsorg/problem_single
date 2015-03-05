@@ -44,8 +44,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     private:
         detail::list_tests m_tests;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}}}

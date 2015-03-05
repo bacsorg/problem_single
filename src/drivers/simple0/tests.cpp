@@ -3,6 +3,7 @@
 #include <bunsan/enable_error_info.hpp>
 #include <bunsan/filesystem/fstream.hpp>
 #include <bunsan/pm/index.hpp>
+#include <bunsan/static_initializer.hpp>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -16,14 +17,16 @@
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace simple0
 {
-    const bool tests::factory_reg_hook =
-        tests::register_new("simple0_embedded",
+    BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_simple0_tests,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(tests, simple0_embedded,
             [](const boost::filesystem::path &location,
                const boost::property_tree::ptree &config)
             {
                 tests_ptr tmp(new tests(location, config));
                 return tmp;
-            });
+            })
+    })
 
     tests_ptr tests::instance(
         const boost::filesystem::path &location,

@@ -11,8 +11,5 @@ namespace bacs{namespace problem{namespace single{namespace generators
         explicit internal0(const boost::property_tree::ptree &config);
 
         Problem generate(const options &options_) override;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}}

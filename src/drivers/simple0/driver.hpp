@@ -55,8 +55,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             std::string,
             std::vector<std::string>
         > m_test_groups;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}}}

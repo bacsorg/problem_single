@@ -43,8 +43,5 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         single::tests::shared_ptr<polygon_codeforces_com::tests> m_tests;
         utility_ptr m_checker;
         statement_ptr m_statement;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}}}

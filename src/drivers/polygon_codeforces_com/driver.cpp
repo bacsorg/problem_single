@@ -6,6 +6,8 @@
 #include <bacs/problem/single/problem.pb.h>
 #include <bacs/problem/split.hpp>
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -14,13 +16,15 @@
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace polygon_codeforces_com
 {
-    const bool driver::factory_reg_hook =
-        single::driver::register_new("polygon.codeforces.com",
-        [](const boost::filesystem::path &location)
-        {
-            driver_ptr tmp(new driver(location));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_polygon_codeforces_com,
+    {
+        BUNSAN_FACTORY_REGISTER(polygon_codeforces_com, single::driver, "polygon.codeforces.com",
+            [](const boost::filesystem::path &location)
+            {
+                driver_ptr tmp(new driver(location));
+                return tmp;
+            })
+    })
 
     driver::driver(
         const boost::filesystem::path &location):

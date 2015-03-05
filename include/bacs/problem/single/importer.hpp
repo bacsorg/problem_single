@@ -15,8 +15,5 @@ namespace bacs{namespace problem{namespace single
 
     private:
         const generator_ptr m_generator;
-
-    private:
-        static const bool factory_reg_hook;
     };
 }}}

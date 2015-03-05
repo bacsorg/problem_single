@@ -2,15 +2,19 @@
 
 #include <bunsan/filesystem/operations.hpp>
 #include <bunsan/pm/index.hpp>
+#include <bunsan/static_initializer.hpp>
 
 namespace bacs{namespace problem{namespace single{namespace generators
 {
-    const bool internal0::factory_reg_hook = generator::register_new("internal0",
-        [](const boost::property_tree::ptree &config)
-        {
-            generator_ptr tmp(new internal0(config));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_problem_single_generators_internal0,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(generator, internal0,
+            [](const boost::property_tree::ptree &config)
+            {
+                generator_ptr tmp(new internal0(config));
+                return tmp;
+            })
+    })
 
     internal0::internal0(const boost::property_tree::ptree &/*config*/) {}
 

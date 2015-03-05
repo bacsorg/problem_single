@@ -9,6 +9,8 @@
 #include <bacs/problem/split.hpp>
 #include <bacs/problem/resource/parse.hpp>
 
+#include <bunsan/static_initializer.hpp>
+
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/assert.hpp>
@@ -24,12 +26,15 @@
 namespace bacs{namespace problem{namespace single{namespace drivers{
     namespace simple0
 {
-    const bool driver::factory_reg_hook = driver::register_new("simple0",
-        [](const boost::filesystem::path &location)
-        {
-            driver_ptr tmp(new driver(location));
-            return tmp;
-        });
+    BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_simple0,
+    {
+        BUNSAN_FACTORY_REGISTER_TOKEN(driver, simple0,
+            [](const boost::filesystem::path &location)
+            {
+                driver_ptr tmp(new driver(location));
+                return tmp;
+            })
+    })
 
     namespace
     {
