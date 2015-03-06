@@ -10,7 +10,6 @@ bunsan_find_bunsan_package(bunsan_bacs_problem bunsan_bacs_problem)
 
 bunsan_add_protobuf_cxx_library(
     TARGET ${PROJECT_NAME}_pb
-    SHARED
     PROTOS
         bacs/problem/single/task.proto
         bacs/problem/single/result.proto
@@ -23,7 +22,7 @@ bunsan_add_protobuf_cxx_library(
     INSTALL
 )
 
-bunsan_add_shared_library(${PROJECT_NAME}
+bunsan_add_library(${PROJECT_NAME}
     src/tests.cpp
     src/driver.cpp
     src/generator.cpp
