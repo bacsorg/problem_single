@@ -31,8 +31,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         BUNSAN_FACTORY_REGISTER_TOKEN(driver, simple0,
             [](const boost::filesystem::path &location)
             {
-                driver_ptr tmp(new driver(location));
-                return tmp;
+                return single::driver::make_shared<driver>(location);
             })
     })
 

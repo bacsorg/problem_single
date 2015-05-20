@@ -40,13 +40,12 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 BOOST_THROW_EXCEPTION(invalid_statement_version_path_error() <<
                                       invalid_statement_version_path_error::path(path));
 
-            // ptr
-            version_ptr ptr(new version(
+            // commit
+            versions.push_back(statement::version::make_shared<version>(
                 statement_version.second.get<std::string>("<xmlattr>.language", "C"),
                 format,
                 path
             ));
-            versions.push_back(std::move(ptr));
         }
         return versions;
     }

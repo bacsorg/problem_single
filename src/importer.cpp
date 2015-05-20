@@ -13,8 +13,7 @@ namespace bacs{namespace problem{namespace single
         BUNSAN_FACTORY_REGISTER(importer, problem::importer, problem_type,
             [](const boost::property_tree::ptree &config)
             {
-                const importer_ptr tmp(new importer(config));
-                return tmp;
+                return problem::importer::make_shared<importer>(config);
             })
     })
 

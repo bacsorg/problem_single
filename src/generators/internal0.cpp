@@ -11,8 +11,7 @@ namespace bacs{namespace problem{namespace single{namespace generators
         BUNSAN_FACTORY_REGISTER_TOKEN(generator, internal0,
             [](const boost::property_tree::ptree &config)
             {
-                generator_ptr tmp(new internal0(config));
-                return tmp;
+                return generator::make_shared<internal0>(config);
             })
     })
 

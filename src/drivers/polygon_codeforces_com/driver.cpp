@@ -21,8 +21,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         BUNSAN_FACTORY_REGISTER(polygon_codeforces_com, single::driver, "polygon.codeforces.com",
             [](const boost::filesystem::path &location)
             {
-                driver_ptr tmp(new driver(location));
-                return tmp;
+                return single::driver::make_shared<driver>(location);
             })
     })
 
@@ -109,9 +108,10 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_statement()
     {
-        m_statement.reset(new polygon_codeforces_com::statement(
+        m_statement = std::make_shared<polygon_codeforces_com::statement>(
             m_location / "statements",
-            m_config.get_child("problem.statements")));
+            m_config.get_child("problem.statements")
+        );
         Statement &info = *m_overview.mutable_statement() = m_statement->info();
         for (Statement::Version &v: *info.mutable_version())
         {
@@ -123,7 +123,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
 
     void driver::read_profiles()
     {
-        m_tests.reset(new polygon_codeforces_com::tests(m_location));
+        m_tests = single::tests::make_shared<polygon_codeforces_com::tests>(m_location);
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();

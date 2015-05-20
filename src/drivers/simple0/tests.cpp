@@ -23,8 +23,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             [](const boost::filesystem::path &location,
                const boost::property_tree::ptree &config)
             {
-                tests_ptr tmp(new tests(location, config));
-                return tmp;
+                return single::tests::make_shared<tests>(location, config);
             })
     })
 
