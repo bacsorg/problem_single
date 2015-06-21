@@ -1,70 +1,79 @@
-"simple0" format {#format_simple0_page}
-================
+# "simple0" format
 
-\section format_simple0_specifications_sec Specifications
+## Specifications
 
-\subsection format_simple0_directory_tree_ssec Directory tree
+### Directory tree
 Problem in "simple0" is a folder with the following entries:
 
-- *config.ini* -- \ref format_simple0_configuration_file_ssec
-- *checker/* -- directory with \ref checker_page
-- *statement/* -- directory with \ref statement_page
+- *config.ini* -- [Configuration file](#configuration-file)
+- *checker/* -- directory with [Checker#TODO]
+- *statement/* -- directory with
+  [Statement](../../../../bacs_problem/blob/master/doc/statement.md)
 - *tests/* -- directory with tests
-    - Each test is set of files which names has "test_id.data_id" format
+    - Each test is set of files which names has `test_id.data_id` format
     - Data set of test is set of data_ids
-    - Data set must be equal to ``{'in'}`` or ``{'in', 'out'}``.
+    - Data set must be equal to `{'in'}` or `{'in', 'out'}`.
     - Data sets are equal among different tests
     - Each test file is considered to be either *text* or *binary*
-        - File is considered to be *binary* if it is specified in section "[tests]" from config.ini
-        - File is considered to be *text* if it is specified in section "[tests]" from config.ini
+        - File is considered to be *binary* if it is specified in section `[tests]`
+          from config.ini
+        - File is considered to be *text* if it is specified in section `[tests]`
+          from config.ini
         - File is considered to be *text* if it is not specified
 
-\subsection format_simple0_testing_algorithm_ssec Testing algorithm
+## Testing algorithm
 
 1. Solution testing is performed on all tests.
-2. Test order is numeric if all test_ids match pattern ``'\d+'`` otherwise order is lexicographical.
+2. Test order is numeric if all test_ids match pattern `'\d+'`
+   otherwise order is lexicographical.
 3. Testing algorithm is *WHILE_NOT_FAIL*.
 4. Solution is executed on specified test.
 5. After solution execution checker is executed.
 
-\subsection format_simple0_configuration_file_ssec Configuration file
+### Configuration file
 
-\subsubsection format_simple0_specifications_sssec Specifications
-- It has \ref ini_page
+#### Specifications
+- It has [INI format](../../../../bacs_problem/blob/master/doc/ini.md)
 - It has "utf8" encoding
 - It is divided into several sections
     - **info** section has the following options
         - name -- the name of the problem
-        - authors -- the list of authors separated by spaces, see \ref format_simple0_username_sssec
-        - maintainers -- the list of maintainers separated by spaces, see \ref format_simple0_username_sssec
+        - authors -- the list of authors separated by spaces,
+          see [Username](#username)
+        - maintainers -- the list of maintainers separated by spaces,
+          see [Username](#username)
         - source -- the source of the problem (contest name, championship...)
     - **resource_limits** section has the following options
-        - *memory* -- \ref format_simple0_fixed_point_decimal_sssec, see \ref format_simple0_memory_value_par
-        - *time* --  \ref format_simple0_fixed_point_decimal_sssec, see \ref format_simple0_time_value_par
-        - *output* -- \ref format_simple0_fixed_point_decimal_sssec, see \ref format_simple0_memory_value_par
-        - *real_time* --  \ref format_simple0_fixed_point_decimal_sssec, see \ref format_simple0_time_value_par
+        - *memory* -- [Fixed point decimal](#fixed-point-decimal),
+          see [Memory value](#memory-value)
+        - *time* --  [Fixed point decimal](#fixed-point-decimal),
+          see [Time value](#time-value)
+        - *output* -- [Fixed point decimal](#fixed-point-decimal),
+          see [Memory value](#memory-value)
+        - *real_time* --  [Fixed point decimal](#fixed-point-decimal),
+          see [Time value](#time-value)
     - **files** section has following options: *stdin*, *stdout*, *stderr*.
-        - Solution can use up to 3 files corresponding to *stdin*, *stdout* and *stderr* data streams.
+        - Solution can use up to 3 files corresponding to
+          *stdin*, *stdout* and *stderr* data streams.
         - File ids are *stdin*, *stdout*, *stderr*.
-        - File with *stdin* id is filled from test file with ``data_id=in``.
+        - File with *stdin* id is filled from test file with `data_id=in`.
         - *stdout* and *stderr* may be filled by solution.
         - If option is present no redirections are introduced for file id.
         - If option is not present file redirection is introduced
           and file name is unspecified.
     - **tests** section describes data set of the tests.
       You can specify file format of the data_id.
-      ``data_id`` is one of *in* or *out*.
-        - ``data_id = text`` -- for text files
-        - ``data_id = binary`` -- for binary files
+      `data_id` is one of *in* or *out*.
+        - `data_id = text` -- for text files
+        - `data_id = binary` -- for binary files
 
-\subsubsection format_simple0_username_sssec Username
+#### Username
 
 Username is used by BACS.WEB.
 
-Username is non-empty string matching the following regular expression: ``^[a-zA-Z0-9_-]+$``.
+Username is non-empty string matching the following regular expression: `^[a-zA-Z0-9_-]+$`.
 
-
-\subsubsection format_simple0_fixed_point_decimal_sssec Fixed point decimal
+#### Fixed point decimal
 
 Values in configuration files are fixed point decimals
 with optional multiple suffix.
@@ -72,12 +81,11 @@ with optional multiple suffix.
 Values is defined corresponding to EBNF below.
 "multiple unit" non-terminal is defined for specified value types.
 
-Si multiples give \f$10^k\f$ multiplier.
-Si submultiples give \f$10^{-k}\f$ multiplier.
-Binary multiples give \f$2^{10k}\f$ multiplier.
+Si multiples give 10<sup>k</sup> multiplier.
+Si submultiples give 10<sup>-k</sup> multiplier.
+Binary multiples give 2<sup>10k</sup> multiplier.
 
-
-\code{none}
+```
 value = decimal, multiple unit ;
 decimal = unsigned, [dot, unsigned] ;
 dot = "." ;
@@ -88,29 +96,29 @@ no multiple = "" ;
 si multiple = "da" | "h" | "k" | "M" | "G" | "T" | "P" | "E" | "Z" | "Y" ;
 si submultiple = "d" | "c" | "m" | "u" | "n" | "p" | "f" | "a" | "z" | "y" ;
 binary multiple = "Ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi" ;
-\endcode
+```
 
-\paragraph format_simple0_memory_value_par Memory value
+##### Memory value
 
-\code{none}
+```
 multiple unit = "" | (multiple, unit) ;
 multiple = si multiple | binary multiple | no multiple ;
 unit = "B" ;
-\endcode
+```
 
-\paragraph format_simple0_time_value_par Time value
+##### Time value
 
-\code{none}
+```
 multiple unit = "" | (multiple, unit) ;
 multiple = si multiple | si submultiple | no multiple ;
 unit = "s" ;
-\endcode
+```
 
-\subsubsection format_simple0_examples_sssec Examples
+#### Examples
 
-\paragraph format_simple0_complicated_sample_par Complicated sample
+##### Complicated sample
 
-\code{.ini}
+```ini
 [info]
 ; It is comment
 name = Problem name
@@ -145,12 +153,11 @@ in = text
 
 ; This line describes files "1.out", "2.out" ...
 out = text
-\endcode
+```
 
+##### Short sample
 
-\paragraph format_simple0_short_sample_par Short sample
-
-\code{.ini}
+```ini
 [info]
 name = Problem name
 maintainers = admin
@@ -162,4 +169,4 @@ time = 1
 [files]
 stdin = input.txt
 stdout = output.txt
-\endcode
+```
