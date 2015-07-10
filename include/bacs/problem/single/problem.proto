@@ -4,18 +4,15 @@ package bacs.problem.single;
 
 import "bacs/problem/single/testing.proto";
 
-message ProblemExtension
-{
+message ProblemExtension {
     optional Tests tests = 1;
 }
 
-message Tests
-{
+message Tests {
     repeated string data_set = 1;
     repeated string test_set = 2;
 }
 
-message ProfileExtension
-{
+message ProfileExtension {
     optional testing.SolutionTesting testing = 1;
 }

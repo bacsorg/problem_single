@@ -4,39 +4,32 @@ package bacs.problem.single.result;
 
 import "bacs/process.proto";
 
-message Result
-{
+message Result {
     required SystemResult system = 1;
     optional process.BuildResult build = 2;
     optional SolutionTestingResult testing_result = 3;
 }
 
-message SystemResult
-{
-    enum Status
-    {
+message SystemResult {
+    enum Status {
         OK = 0;
         INVALID_HASH = 1;
     }
     required Status status = 1;
 }
 
-message SolutionTestingResult
-{
+message SolutionTestingResult {
     repeated TestGroupResult test_group = 1;
 }
 
-message TestGroupResult
-{
+message TestGroupResult {
     required string id = 1;
     required bool executed = 2;
     repeated TestResult test = 3;
 }
 
-message Judge
-{
-    enum Status
-    {
+message Judge {
+    enum Status {
         OK = 0;
         WRONG_ANSWER = 1;
         PRESENTATION_ERROR = 2;
@@ -60,18 +53,15 @@ message Judge
     required Status status = 1;
     optional string message = 2;
 
-    message Utility
-    {
+    message Utility {
         required process.ExecutionResult execution = 1;
         optional bytes output = 2;
     }
-    message AuxiliaryUtility
-    {
+    message AuxiliaryUtility {
         required string name = 1;
         required Utility utility = 2;
     }
-    message Utilities
-    {
+    message Utilities {
         optional Utility interactor = 1;
         optional Utility checker = 2;
         repeated AuxiliaryUtility auxiliary = 1000;
@@ -79,16 +69,13 @@ message Judge
     optional Utilities utilities = 3;
 }
 
-message File
-{
+message File {
     required string id = 1;
     required bytes data = 2;
 }
 
-message TestResult
-{
-    enum Status
-    {
+message TestResult {
+    enum Status {
         OK = 0;
         FAILED = 1;
         SKIPPED = 2;

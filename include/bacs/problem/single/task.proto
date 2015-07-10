@@ -10,8 +10,7 @@ import "bacs/process.proto";
 /*!
  * \brief Task for testing system
  */
-message Task
-{
+message Task {
     /*!
      * \brief Problem hash.
      *
@@ -23,8 +22,7 @@ message Task
     required testing.SolutionTesting testing = 4;
 }
 
-message Callbacks
-{
+message Callbacks {
     /// Accepts result (error is a result).
     required Callback result = 1;
     /// Accepts intermediate statuses (not guaranteed to be delivered).
