@@ -38,6 +38,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         read_profiles();
         read_tests(); // should be called after read_profiles()
         read_checker();
+        m_overview.mutable_extension()->PackFrom(m_overview_extension);
     }
 
     Problem driver::overview() const
@@ -100,10 +101,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
     {
         BOOST_ASSERT_MSG(m_tests, "Initialized by driver::read_profiles()");
         // note: binary tests are not supported for now
-        *m_overview.MutableExtension(Problem_::tests) =
-            m_tests->test_set_info();
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) =
-            m_tests->info();
+        *m_overview_extension.mutable_tests() = m_tests->test_set_info();
+        (*m_overview.mutable_utility())["tests"] = m_tests->info();
     }
 
     void driver::read_statement()
@@ -127,7 +126,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         google::protobuf::RepeatedPtrField<Profile> &profiles = *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
-        testing::SolutionTesting &testing = *profile.MutableExtension(Profile_::testing);
+        ProfileExtension profile_extension;
+        testing::SolutionTesting &testing = *profile_extension.mutable_testing();
         testing.Clear();
         const boost::property_tree::ptree judging = m_config.get_child("problem.judging");
         for (const boost::property_tree::ptree::value_type &testset: judging)
@@ -211,6 +211,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
                 }
             }
         }
+        profile.mutable_extension()->PackFrom(profile_extension);
     }
 
     namespace
@@ -253,7 +254,6 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             m_checker = get_utility(*checker, m_location, "checker", "in_out_hint", "testlib");
         else
             m_checker = get_utility_default(m_location, "checker", "std/strict/out_stdout");
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
-            m_checker->info();
+        (*m_overview.mutable_utility())["checker"] = m_checker->info();
     }
 }}}}}

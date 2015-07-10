@@ -69,6 +69,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         read_profiles();
         read_checker();
         read_interactor();
+        m_overview.mutable_extension()->PackFrom(m_overview_extension);
     }
 
     Problem driver::overview() const
@@ -166,10 +167,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             }
         }
 
-        *m_overview.MutableExtension(Problem_::tests) =
-            m_tests->test_set_info();
-        *m_overview.mutable_utilities()->MutableExtension(Utilities_::tests) =
-            m_tests->info();
+        *m_overview_extension.mutable_tests() = m_tests->test_set_info();
+        (*m_overview.mutable_utility())["tests"] = m_tests->info();
     }
 
     void driver::read_statement()
@@ -279,16 +278,14 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             *m_overview.mutable_profile();
         profiles.Clear();
         Profile &profile = *profiles.Add();
-        testing::SolutionTesting &testing =
-            *profile.MutableExtension(Profile_::testing);
+        ProfileExtension profile_extension;
+        testing::SolutionTesting &testing = *profile_extension.mutable_testing();
         testing.Clear();
 
         auto unused_tests = boost::copy_range<
             std::unordered_set<std::string>
         >(
-            m_overview.
-            GetExtension(Problem_::tests).
-            test_set()
+            m_overview_extension.tests().test_set()
         );
 
         boost::optional<std::string> previous_test_group;
@@ -315,6 +312,8 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             "",
             unused_tests
         );
+
+        profile.mutable_extension()->PackFrom(profile_extension);
     }
 
     void driver::read_checker()
@@ -324,8 +323,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             try
             {
                 m_checker = utility::instance(m_location / "checker");
-                *m_overview.mutable_utilities()->MutableExtension(Utilities_::checker) =
-                    m_checker->info();
+                (*m_overview.mutable_utility())["checker"] = m_checker->info();
             }
             catch (std::exception &)
             {
@@ -344,8 +342,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
             try
             {
                 m_interactor = utility::instance(m_location / "interactor");
-                *m_overview.mutable_utilities()->MutableExtension(Utilities_::interactor) =
-                    m_interactor->info();
+                (*m_overview.mutable_utility())["interactor"] = m_interactor->info();
             }
             catch (std::exception &)
             {

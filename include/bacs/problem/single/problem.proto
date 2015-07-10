@@ -4,14 +4,9 @@ package bacs.problem.single;
 
 import "bacs/problem/single/testing.proto";
 
-import "bacs/problem/problem.proto";
-
-message Problem_
+message ProblemExtension
 {
-    extend Problem
-    {
-        optional Tests tests = 1000;
-    }
+    optional Tests tests = 1;
 }
 
 message Tests
@@ -20,20 +15,7 @@ message Tests
     repeated string test_set = 2;
 }
 
-message Profile_
+message ProfileExtension
 {
-    extend Profile
-    {
-        optional testing.SolutionTesting testing = 1000;
-    }
-}
-
-message Utilities_
-{
-    extend Utilities
-    {
-        optional Utility tests = 1000;
-        optional Utility checker = 1001;
-        optional Utility interactor = 1002;
-    }
+    optional testing.SolutionTesting testing = 1;
 }

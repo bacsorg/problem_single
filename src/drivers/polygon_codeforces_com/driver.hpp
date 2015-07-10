@@ -40,6 +40,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         boost::property_tree::ptree m_config;
         boost::property_tree::ptree m_override_config;
         Problem m_overview;
+        ProblemExtension m_overview_extension;
         single::tests::shared_ptr<polygon_codeforces_com::tests> m_tests;
         utility_ptr m_checker;
         statement_ptr m_statement;

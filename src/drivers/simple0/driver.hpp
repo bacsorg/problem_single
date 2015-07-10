@@ -45,6 +45,7 @@ namespace bacs{namespace problem{namespace single{namespace drivers{
         boost::property_tree::ptree m_config;
         settings::TestGroupSettings m_settings;
         Problem m_overview;
+        ProblemExtension m_overview_extension;
         tests_ptr m_tests;
         utility_ptr m_checker;
         utility_ptr m_interactor;
