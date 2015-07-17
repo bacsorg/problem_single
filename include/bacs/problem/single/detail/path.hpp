@@ -4,7 +4,14 @@
 
 #include <boost/filesystem/path.hpp>
 
-namespace bacs{namespace problem{namespace single{namespace detail
-{
-    void to_pb_path(const boost::filesystem::path &path, settings::Path &pb_path);
-}}}}
+namespace bacs {
+namespace problem {
+namespace single {
+namespace detail {
+
+void to_pb_path(const boost::filesystem::path &path, settings::Path &pb_path);
+
+}  // namespace detail
+}  // namespace single
+}  // namespace problem
+}  // namespace bacs

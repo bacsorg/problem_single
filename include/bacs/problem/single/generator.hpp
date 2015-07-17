@@ -10,42 +10,42 @@
 #include <boost/noncopyable.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-namespace bacs{namespace problem{namespace single
-{
-    namespace generator_detail
-    {
-        struct options
-        {
-            driver_ptr driver;
+namespace bacs {
+namespace problem {
+namespace single {
 
-            /// Root package directory
-            boost::filesystem::path destination;
+namespace generator_detail {
+struct options {
+  driver_ptr driver;
 
-            bunsan::pm::entry root_package;
-        };
-    }
+  /// Root package directory
+  boost::filesystem::path destination;
 
-    struct generator_error: virtual error {};
-    struct generator_generate_error: virtual generator_error
-    {
-        typedef boost::error_info<
-            struct tag_options,
-            generator_detail::options
-        > options;
-    };
+  bunsan::pm::entry root_package;
+};
+}  // namespace generator_detail
 
-    class generator: private boost::noncopyable
-    BUNSAN_FACTORY_BEGIN(generator, const boost::property_tree::ptree &/*config*/)
-    public:
-        typedef generator_detail::options options;
+struct generator_error : virtual error {};
+struct generator_generate_error : virtual generator_error {
+  using options =
+      boost::error_info<struct tag_options, generator_detail::options>;
+};
 
-    public:
-        virtual Problem generate(const options &options_)=0;
-    BUNSAN_FACTORY_END(generator)
-}}}
+class generator : private boost::noncopyable {
+  BUNSAN_FACTORY_BODY(generator, const boost::property_tree::ptree & /*config*/)
+ public:
+  using options = generator_detail::options;
 
-namespace boost
-{
-    std::string to_string(
-        const bacs::problem::single::generator_generate_error::options &options);
-}
+ public:
+  virtual Problem generate(const options &options_) = 0;
+};
+BUNSAN_FACTORY_TYPES(generator)
+
+}  // namespace single
+}  // namespace problem
+}  // namespace bacs
+
+namespace boost {
+std::string to_string(
+    const bacs::problem::single::generator_generate_error::options &options);
+}  // namespace boost

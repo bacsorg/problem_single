@@ -5,84 +5,84 @@ package bacs.problem.single.result;
 import "bacs/process.proto";
 
 message Result {
-    required SystemResult system = 1;
-    optional process.BuildResult build = 2;
-    optional SolutionTestingResult testing_result = 3;
+  required SystemResult system = 1;
+  optional process.BuildResult build = 2;
+  optional SolutionTestingResult testing_result = 3;
 }
 
 message SystemResult {
-    enum Status {
-        OK = 0;
-        INVALID_HASH = 1;
-    }
-    required Status status = 1;
+  enum Status {
+    OK = 0;
+    INVALID_HASH = 1;
+  }
+  required Status status = 1;
 }
 
 message SolutionTestingResult {
-    repeated TestGroupResult test_group = 1;
+  repeated TestGroupResult test_group = 1;
 }
 
 message TestGroupResult {
-    required string id = 1;
-    required bool executed = 2;
-    repeated TestResult test = 3;
+  required string id = 1;
+  required bool executed = 2;
+  repeated TestResult test = 3;
 }
 
 message Judge {
-    enum Status {
-        OK = 0;
-        WRONG_ANSWER = 1;
-        PRESENTATION_ERROR = 2;
-        QUERIES_LIMIT_EXCEEDED = 3;
-        INCORRECT_REQUEST = 4;
-        INSUFFICIENT_DATA = 5;
-        EXCESS_DATA = 6;
-        OUTPUT_LIMIT_EXCEEDED = 7;
-        TERMINATION_REAL_TIME_LIMIT_EXCEEDED = 8;
+  enum Status {
+    OK = 0;
+    WRONG_ANSWER = 1;
+    PRESENTATION_ERROR = 2;
+    QUERIES_LIMIT_EXCEEDED = 3;
+    INCORRECT_REQUEST = 4;
+    INSUFFICIENT_DATA = 5;
+    EXCESS_DATA = 6;
+    OUTPUT_LIMIT_EXCEEDED = 7;
+    TERMINATION_REAL_TIME_LIMIT_EXCEEDED = 8;
 
-        // special verdicts
-        CUSTOM_FAILURE = 500;
+    // special verdicts
+    CUSTOM_FAILURE = 500;
 
-        // system failure verdicts
-        FAIL_TEST = 999;
-        FAILED = 1000;
+    // system failure verdicts
+    FAIL_TEST = 999;
+    FAILED = 1000;
 
-        // judge status is meaningless
-        SKIPPED = 2000;
-    }
-    required Status status = 1;
-    optional string message = 2;
+    // judge status is meaningless
+    SKIPPED = 2000;
+  }
+  required Status status = 1;
+  optional string message = 2;
 
-    message Utility {
-        required process.ExecutionResult execution = 1;
-        optional bytes output = 2;
-    }
-    message AuxiliaryUtility {
-        required string name = 1;
-        required Utility utility = 2;
-    }
-    message Utilities {
-        optional Utility interactor = 1;
-        optional Utility checker = 2;
-        repeated AuxiliaryUtility auxiliary = 1000;
-    }
-    optional Utilities utilities = 3;
+  message Utility {
+    required process.ExecutionResult execution = 1;
+    optional bytes output = 2;
+  }
+  message AuxiliaryUtility {
+    required string name = 1;
+    required Utility utility = 2;
+  }
+  message Utilities {
+    optional Utility interactor = 1;
+    optional Utility checker = 2;
+    repeated AuxiliaryUtility auxiliary = 1000;
+  }
+  optional Utilities utilities = 3;
 }
 
 message File {
-    required string id = 1;
-    required bytes data = 2;
+  required string id = 1;
+  required bytes data = 2;
 }
 
 message TestResult {
-    enum Status {
-        OK = 0;
-        FAILED = 1;
-        SKIPPED = 2;
-    }
-    required string id = 1;
-    required Status status = 2;
-    optional process.ExecutionResult execution = 3;
-    optional Judge judge = 4;
-    repeated File file = 5;
+  enum Status {
+    OK = 0;
+    FAILED = 1;
+    SKIPPED = 2;
+  }
+  required string id = 1;
+  required Status status = 2;
+  optional process.ExecutionResult execution = 3;
+  optional Judge judge = 4;
+  repeated File file = 5;
 }

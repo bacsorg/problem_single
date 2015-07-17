@@ -5,14 +5,14 @@ package bacs.problem.single;
 import "bacs/problem/single/testing.proto";
 
 message ProblemExtension {
-    optional Tests tests = 1;
+  optional Tests tests = 1;
 }
 
 message Tests {
-    repeated string data_set = 1;
-    repeated string test_set = 2;
+  repeated string data_set = 1;
+  repeated string test_set = 2;
 }
 
 message ProfileExtension {
-    optional testing.SolutionTesting testing = 1;
+  optional testing.SolutionTesting testing = 1;
 }

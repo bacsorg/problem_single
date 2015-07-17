@@ -10,51 +10,55 @@
 #include <string>
 #include <vector>
 
-namespace bacs{namespace problem{namespace single{namespace drivers{
-    namespace simple0
-{
-    struct invalid_group_id_error: virtual error {};
-    struct empty_group_id_error: virtual invalid_group_id_error {};
+namespace bacs {
+namespace problem {
+namespace single {
+namespace drivers {
+namespace simple0 {
 
-    /// \ref format_simple0_page implementation
-    class driver: public single::driver
-    {
-    public:
-        explicit driver(const boost::filesystem::path &location);
+struct invalid_group_id_error : virtual error {};
+struct empty_group_id_error : virtual invalid_group_id_error {};
 
-        Problem overview() const override;
+/// \ref format_simple0_page implementation
+class driver : public single::driver {
+ public:
+  explicit driver(const boost::filesystem::path &location);
 
-        // utilities
-        tests_ptr tests() const override;
-        utility_ptr checker() const override;
-        utility_ptr interactor() const override;
+  Problem overview() const override;
 
-        statement_ptr statement() const override;
+  // utilities
+  tests_ptr tests() const override;
+  utility_ptr checker() const override;
+  utility_ptr interactor() const override;
 
-    private:
-        void read_info();
-        void read_tests();
-        void read_statement();
-        void read_settings();
-        void read_profiles();
-        void read_checker();
-        void read_interactor();
+  statement_ptr statement() const override;
 
-    private:
-        const boost::filesystem::path m_location;
-        boost::property_tree::ptree m_config;
-        settings::TestGroupSettings m_settings;
-        Problem m_overview;
-        ProblemExtension m_overview_extension;
-        tests_ptr m_tests;
-        utility_ptr m_checker;
-        utility_ptr m_interactor;
-        statement_ptr m_statement;
+ private:
+  void read_info();
+  void read_tests();
+  void read_statement();
+  void read_settings();
+  void read_profiles();
+  void read_checker();
+  void read_interactor();
 
-        // sorted
-        std::map<
-            std::string,
-            std::vector<std::string>
-        > m_test_groups;
-    };
-}}}}}
+ private:
+  const boost::filesystem::path m_location;
+  boost::property_tree::ptree m_config;
+  settings::TestGroupSettings m_settings;
+  Problem m_overview;
+  ProblemExtension m_overview_extension;
+  tests_ptr m_tests;
+  utility_ptr m_checker;
+  utility_ptr m_interactor;
+  statement_ptr m_statement;
+
+  // sorted
+  std::map<std::string, std::vector<std::string>> m_test_groups;
+};
+
+}  // namespace simple0
+}  // namespace drivers
+}  // namespace single
+}  // namespace problem
+}  // namespace bacs

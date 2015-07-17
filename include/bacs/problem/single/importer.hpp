@@ -4,16 +4,20 @@
 
 #include <bacs/problem/importer.hpp>
 
-namespace bacs{namespace problem{namespace single
-{
-    class importer: public bacs::problem::importer
-    {
-    public:
-        explicit importer(const boost::property_tree::ptree &config);
+namespace bacs {
+namespace problem {
+namespace single {
 
-        Problem convert(const options &options_) override;
+class importer : public bacs::problem::importer {
+ public:
+  explicit importer(const boost::property_tree::ptree &config);
 
-    private:
-        const generator_ptr m_generator;
-    };
-}}}
+  Problem convert(const options &options_) override;
+
+ private:
+  const generator_ptr m_generator;
+};
+
+}  // namespace single
+}  // namespace problem
+}  // namespace bacs
