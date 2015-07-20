@@ -27,11 +27,12 @@ message TestGroup {
   repeated Dependency dependency = 4;
 }
 
-// TODO: specify behavior on no/multiple options
 message TestQuery {
-  optional string id = 1;
-  optional WildcardQuery wildcard = 2;
-  optional RegexQuery regex = 3;
+  oneof query {
+    string id = 1;
+    WildcardQuery wildcard = 2;
+    RegexQuery regex = 3;
+  }
 }
 
 message WildcardQuery {
