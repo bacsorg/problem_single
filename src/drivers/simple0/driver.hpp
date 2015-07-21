@@ -2,6 +2,7 @@
 
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
+#include <bacs/problem/single/process.pb.h>
 
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -24,14 +25,14 @@ class driver : public single::driver {
  public:
   explicit driver(const boost::filesystem::path &location);
 
-  Problem overview() const override;
+  Problem overview() const override { return m_overview; }
 
   // utilities
-  tests_ptr tests() const override;
-  utility_ptr checker() const override;
-  utility_ptr interactor() const override;
+  test::storage_ptr tests() const override { return m_tests; }
+  utility_ptr checker() const override { return m_checker; }
+  utility_ptr interactor() const override { return m_interactor; }
 
-  statement_ptr statement() const override;
+  statement_ptr statement() const override { return m_statement; }
 
  private:
   void read_info();
@@ -45,10 +46,10 @@ class driver : public single::driver {
  private:
   const boost::filesystem::path m_location;
   boost::property_tree::ptree m_config;
-  settings::TestGroupSettings m_settings;
+  process::Settings m_settings;
   Problem m_overview;
   ProblemExtension m_overview_extension;
-  tests_ptr m_tests;
+  test::storage_ptr m_tests;
   utility_ptr m_checker;
   utility_ptr m_interactor;
   statement_ptr m_statement;

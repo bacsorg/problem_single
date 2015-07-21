@@ -15,24 +15,24 @@ bunsan_find_bunsan_package(bunsan_bacs_problem bunsan_bacs_problem)
 bunsan_add_protobuf_cxx_library(
     TARGET ${PROJECT_NAME}_pb
     PROTOS
-        bacs/problem/single/task.proto
-        bacs/problem/single/result.proto
-        bacs/problem/single/problem.proto
-        bacs/problem/single/testing.proto
-        bacs/problem/single/settings.proto
         bacs/problem/single/intermediate.proto
+        bacs/problem/single/problem.proto
+        bacs/problem/single/process.proto
+        bacs/problem/single/result.proto
+        bacs/problem/single/task.proto
+        bacs/problem/single/test.proto
     LIBRARIES ${bunsan_bacs_problem_LIBRARIES}
     INCLUDE_DIRECTORIES ${bunsan_bacs_problem_INCLUDE_DIRS}
     INSTALL
 )
 
 bunsan_add_library(${PROJECT_NAME}
-    src/tests.cpp
     src/driver.cpp
     src/generator.cpp
 
-    src/detail/path.cpp
-    src/detail/list_tests.cpp
+    src/test/list_storage.cpp
+    src/test/matcher.cpp
+    src/test/storage.cpp
 
     src/drivers/simple0/driver.cpp
     src/drivers/simple0/tests.cpp

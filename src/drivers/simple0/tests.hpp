@@ -1,8 +1,7 @@
 #pragma once
 
-#include <bacs/problem/single/detail/list_tests.hpp>
-#include <bacs/problem/single/error.hpp>
-#include <bacs/problem/single/tests.hpp>
+#include <bacs/problem/single/test/error.hpp>
+#include <bacs/problem/single/test/list_storage.hpp>
 
 namespace bacs {
 namespace problem {
@@ -10,18 +9,18 @@ namespace single {
 namespace drivers {
 namespace simple0 {
 
-struct test_no_in_data_error : virtual test_data_format_error {};
-struct test_unknown_data_error : virtual test_data_format_error {};
+struct test_no_in_data_error : virtual test::data_format_error {};
+struct test_unknown_data_error : virtual test::data_format_error {};
 
-class tests : public single::tests {
+class tests : public test::storage {
  public:
-  using single::tests::tests;
+  using test::storage::storage;
 
  public:
-  using single::tests::instance;
+  using test::storage::instance;
 
-  static tests_ptr instance(const boost::filesystem::path &location,
-                            const boost::property_tree::ptree &config);
+  static storage_ptr instance(const boost::filesystem::path &location,
+                              const boost::property_tree::ptree &config);
 
   explicit tests(const boost::filesystem::path &location,
                  const boost::property_tree::ptree &config);
@@ -40,7 +39,7 @@ class tests : public single::tests {
   }
 
  private:
-  detail::list_tests m_tests;
+  test::list_storage m_tests;
 };
 
 }  // namespace simple0

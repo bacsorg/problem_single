@@ -2,7 +2,8 @@ syntax = "proto2";
 
 package bacs.problem.single;
 
-import "bacs/problem/single/testing.proto";
+import "bacs/problem/single/process.proto";
+import "bacs/problem/single/test.proto";
 
 message ProblemExtension {
   optional Tests tests = 1;
@@ -14,5 +15,24 @@ message Tests {
 }
 
 message ProfileExtension {
-  optional testing.SolutionTesting testing = 1;
+  repeated TestGroup test_group = 1;
+}
+
+message Dependency {
+  enum Requirement {
+    ALL_OK = 0;
+    ALL_FAIL = 1;
+    AT_LEAST_ONE_OK = 2;
+    AT_MOST_ONE_FAIL = 3;
+    AT_LEAST_HALF_OK = 4;
+  }
+  required string test_group = 1;
+  optional Requirement requirement = 2 [default = ALL_OK];
+}
+
+message TestGroup {
+  required string id = 1;
+  required single.process.Settings process = 2;
+  required test.Sequence tests = 3;
+  repeated Dependency dependency = 4;
 }

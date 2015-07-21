@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+package bacs.problem.single.process;
+
+import "bacs/file.proto";
+import "bacs/process.proto";
+
+message Settings {
+  required bacs.process.ResourceLimits resource_limits = 1;
+  repeated File file = 2;
+  required Execution execution = 3;
+}
+
+message Execution {
+  message Redirection {
+    enum Stream {
+      STDIN = 0;
+      STDOUT = 1;
+      STDERR = 2;
+    }
+    required Stream stream = 1;
+    required string file_id = 2;
+  }
+  repeated string argument = 1;
+  optional bacs.file.Path current_path = 2;  // not supported (will be ignored)
+  repeated Redirection redirection = 3;
+}
+
+message File {
+  enum Permissions {
+    READ = 0;
+    WRITE = 1;
+    EXECUTE = 2;
+  }
+
+  required string id = 1;
+  repeated Permissions permission = 2;
+  optional /*DataId*/ string init = 3;
+  // arbitrary paths are not supported and stripped to filename
+  optional bacs.file.Path path = 4;
+  optional bacs.file.Range receive = 5;
+}

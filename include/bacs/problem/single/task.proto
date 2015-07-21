@@ -1,8 +1,8 @@
 syntax = "proto2";
 
-package bacs.problem.single.task;
+package bacs.problem.single;
 
-import "bacs/problem/single/testing.proto";
+import "bacs/problem/problem.proto";
 
 import "bacs/callback.proto";
 import "bacs/process.proto";
@@ -11,6 +11,12 @@ import "bacs/process.proto";
  * \brief Task for testing system
  */
 message Task {
+  message Callbacks {
+    /// Accepts result (error is a result).
+    required Callback result = 1;
+    /// Accepts intermediate statuses (not guaranteed to be delivered).
+    optional Callback intermediate = 2;
+  }
   /*!
    * \brief Problem hash.
    *
@@ -19,12 +25,5 @@ message Task {
   required bytes hash = 1;
   required Callbacks callbacks = 2;
   required process.Buildable solution = 3;
-  required testing.SolutionTesting testing = 4;
-}
-
-message Callbacks {
-  /// Accepts result (error is a result).
-  required Callback result = 1;
-  /// Accepts intermediate statuses (not guaranteed to be delivered).
-  optional Callback intermediate = 2;
+  required bacs.problem.Profile profile = 4;
 }

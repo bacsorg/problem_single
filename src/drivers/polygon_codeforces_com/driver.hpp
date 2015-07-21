@@ -21,14 +21,14 @@ class driver : public single::driver {
  public:
   explicit driver(const boost::filesystem::path &location);
 
-  Problem overview() const override;
+  Problem overview() const override { return m_overview; }
 
   // utilities
-  tests_ptr tests() const override;
-  utility_ptr checker() const override;
-  utility_ptr interactor() const override;
+  test::storage_ptr tests() const override { return m_tests; }
+  utility_ptr checker() const override { return m_checker; }
+  utility_ptr interactor() const override { return nullptr; }
 
-  statement_ptr statement() const override;
+  statement_ptr statement() const override { return m_statement; }
 
  private:
   void read_info();
@@ -43,7 +43,7 @@ class driver : public single::driver {
   boost::property_tree::ptree m_override_config;
   Problem m_overview;
   ProblemExtension m_overview_extension;
-  single::tests::shared_ptr<polygon_codeforces_com::tests> m_tests;
+  single::test::storage::shared_ptr<polygon_codeforces_com::tests> m_tests;
   utility_ptr m_checker;
   statement_ptr m_statement;
 };

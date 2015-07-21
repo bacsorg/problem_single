@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bacs/problem/single/detail/list_tests.hpp>
+#include <bacs/problem/single/test/list_storage.hpp>
 
 namespace bacs {
 namespace problem {
@@ -8,7 +8,7 @@ namespace single {
 namespace drivers {
 namespace polygon_codeforces_com {
 
-class tests : public detail::list_tests {
+class tests : public test::list_storage {
  public:
   explicit tests(const boost::filesystem::path &location);
 

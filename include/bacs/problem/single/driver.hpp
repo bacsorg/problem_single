@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bacs/problem/single/tests.hpp>
+#include <bacs/problem/single/test/storage.hpp>
 
 #include <bacs/problem/problem.pb.h>
 #include <bacs/problem/statement.hpp>
@@ -34,7 +34,7 @@ class driver : private boost::noncopyable {
   virtual Problem overview() const = 0;
 
   // utilities
-  virtual tests_ptr tests() const = 0;
+  virtual test::storage_ptr tests() const = 0;
 
   virtual utility_ptr checker() const = 0;
 

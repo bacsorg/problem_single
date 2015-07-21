@@ -24,13 +24,13 @@ BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_simple0_tests, {
   BUNSAN_FACTORY_REGISTER_TOKEN(tests, simple0_embedded,
                                 [](const boost::filesystem::path &location,
                                    const boost::property_tree::ptree &config) {
-                                  return single::tests::make_shared<tests>(
+                                  return test::storage::make_shared<tests>(
                                       location, config);
                                 })
 })
 
-tests_ptr tests::instance(const boost::filesystem::path &location,
-                          const boost::property_tree::ptree &config) {
+test::storage_ptr tests::instance(const boost::filesystem::path &location,
+                                  const boost::property_tree::ptree &config) {
   boost::property_tree::ptree cfg = config;
   const std::string type = config.get<std::string>("type", "simple0_embedded");
   if (type != "simple0_embedded") {
@@ -39,7 +39,7 @@ tests_ptr tests::instance(const boost::filesystem::path &location,
   return instance(type, location, cfg);
 }
 
-boost::property_tree::ptree get_config(
+static boost::property_tree::ptree get_config(
     const boost::property_tree::ptree &config) {
   boost::property_tree::ptree cfg;
   cfg.put("build.builder", "simple0_embedded");
@@ -52,20 +52,20 @@ static const std::string data_prefix = "data_";
 
 tests::tests(const boost::filesystem::path &location,
              const boost::property_tree::ptree &config)
-    : single::tests(location, get_config(config)),
-      m_tests(location, detail::list_tests::test_data_type::text) {
-  using test_data = detail::list_tests::test_data;
-  using test_data_type = detail::list_tests::test_data_type;
+    : test::storage(location, get_config(config)),
+      m_tests(location, test::list_storage::test_data_type::text) {
+  using test_data = test::list_storage::test_data;
+  using test_data_type = test::list_storage::test_data_type;
 
   std::unordered_map<std::string, std::unordered_set<std::string>> test_files;
   for (boost::filesystem::directory_iterator i(location), end; i != end; ++i) {
     if (!boost::filesystem::is_regular_file(i->path()))
-      BOOST_THROW_EXCEPTION(test_format_error());
+      BOOST_THROW_EXCEPTION(test::format_error());
     const std::string fname = i->path().filename().string();
     const std::string::size_type dot = fname.find('.');
-    if (dot == std::string::npos) BOOST_THROW_EXCEPTION(test_format_error());
+    if (dot == std::string::npos) BOOST_THROW_EXCEPTION(test::format_error());
     if (fname.find('.', dot + 1) != std::string::npos)
-      BOOST_THROW_EXCEPTION(test_format_error());
+      BOOST_THROW_EXCEPTION(test::format_error());
     const std::string test_id = fname.substr(0, dot);
     const std::string data_id = fname.substr(dot + 1);
     test_files[test_id].insert(data_id);

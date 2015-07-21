@@ -1,6 +1,6 @@
 #include <bunsan/config.hpp>
 
-#include <bacs/problem/single/detail/list_tests.hpp>
+#include <bacs/problem/single/test/list_storage.hpp>
 
 #include <bunsan/filesystem/fstream.hpp>
 #include <bunsan/pm/index.hpp>
@@ -14,8 +14,9 @@
 namespace bacs {
 namespace problem {
 namespace single {
-namespace detail {
+namespace test {
 
+namespace {
 boost::property_tree::ptree get_config(const std::string &builder_name) {
   boost::property_tree::ptree config;
   config.put("build.builder", builder_name);
@@ -23,7 +24,6 @@ boost::property_tree::ptree get_config(const std::string &builder_name) {
   return config;
 }
 
-namespace {
 template <typename T>
 std::unordered_set<std::string> map_keys(
     const std::unordered_map<std::string, T> &map) {
@@ -32,17 +32,18 @@ std::unordered_set<std::string> map_keys(
 }
 }  // namespace
 
-list_tests::list_tests(const boost::filesystem::path &location,
-                       const test_data_type default_data_type,
-                       const std::string &builder_name)
-    : tests(location, get_config(builder_name)),
+list_storage::list_storage(const boost::filesystem::path &location,
+                           const test_data_type default_data_type,
+                           const std::string &builder_name)
+    : storage(location, get_config(builder_name)),
       m_default_data_type(default_data_type) {}
 
-list_tests::list_tests(const boost::filesystem::path &location,
-                       const test_data_type default_data_type)
-    : list_tests(location, default_data_type, "[list_tests tests generator]") {}
+list_storage::list_storage(const boost::filesystem::path &location,
+                           const test_data_type default_data_type)
+    : list_storage(location, default_data_type,
+                   "[list_storage tests generator]") {}
 
-void list_tests::add_test(const std::string &test_id, const test_data &data) {
+void list_storage::add_test(const std::string &test_id, const test_data &data) {
   if (m_tests.empty()) {
     m_tests[test_id] = data;
     for (const auto &id_file : data)
@@ -64,19 +65,19 @@ void list_tests::add_test(const std::string &test_id, const test_data &data) {
   }
 }
 
-list_tests::test_data_type list_tests::data_type(
+list_storage::test_data_type list_storage::data_type(
     const std::string &data_id) const {
   return m_text_data_set.find(data_id) == m_text_data_set.end()
              ? test_data_type::binary
              : test_data_type::text;
 }
 
-void list_tests::set_data_type(const std::string &data_id,
-                               const test_data_type type) {
-  if (m_tests.empty()) BOOST_THROW_EXCEPTION(test_empty_set_error());
+void list_storage::set_data_type(const std::string &data_id,
+                                 const test_data_type type) {
+  if (m_tests.empty()) BOOST_THROW_EXCEPTION(empty_set_error());
   if (m_tests.begin()->second.find(data_id) == m_tests.begin()->second.end())
-    BOOST_THROW_EXCEPTION(test_unknown_data_error()
-                          << test_unknown_data_error::data_id(data_id));
+    BOOST_THROW_EXCEPTION(unknown_data_error()
+                          << unknown_data_error::data_id(data_id));
   switch (type) {
     case test_data_type::binary:
       m_text_data_set.erase(data_id);
@@ -89,17 +90,17 @@ void list_tests::set_data_type(const std::string &data_id,
   }
 }
 
-std::unordered_set<std::string> list_tests::data_set() const {
-  if (m_tests.empty()) BOOST_THROW_EXCEPTION(test_empty_set_error());
+std::unordered_set<std::string> list_storage::data_set() const {
+  if (m_tests.empty()) BOOST_THROW_EXCEPTION(empty_set_error());
   return map_keys(m_tests.begin()->second);
 }
 
-std::unordered_set<std::string> list_tests::test_set() const {
+std::unordered_set<std::string> list_storage::test_set() const {
   return map_keys(m_tests);
 }
 
-bool list_tests::make_package(const boost::filesystem::path &destination,
-                              const bunsan::pm::entry & /*package*/) const {
+bool list_storage::make_package(const boost::filesystem::path &destination,
+                                const bunsan::pm::entry & /*package*/) const {
   try {
     boost::filesystem::create_directories(destination);
     bunsan::pm::index index;
@@ -134,14 +135,14 @@ bool list_tests::make_package(const boost::filesystem::path &destination,
     index.save(destination / "index");
     return true;
   } catch (std::exception &) {
-    BOOST_THROW_EXCEPTION(tests_make_package_error()
-                          << tests_make_package_error::destination(destination)
-                          // << tests_make_package_error::package(package)
+    BOOST_THROW_EXCEPTION(make_package_error()
+                          << make_package_error::destination(destination)
+                          // << make_package_error::package(package)
                           << bunsan::enable_nested_current());
   }
 }
 
-}  // namespace detail
+}  // namespace test
 }  // namespace single
 }  // namespace problem
 }  // namespace bacs

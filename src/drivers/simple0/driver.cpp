@@ -2,7 +2,7 @@
 
 #include "tests.hpp"
 
-#include <bacs/problem/single/detail/path.hpp>
+#include <bacs/file.hpp>
 #include <bacs/problem/single/error.hpp>
 #include <bacs/problem/single/problem.pb.h>
 
@@ -39,14 +39,15 @@ BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_simple0, {
 
 namespace {
 template <typename Range>
-settings::Run::Order run_order(const Range &tests) {
+test::Sequence::Order test_order(const Range &tests) {
   bool only_digits = true;
   for (const std::string &id : tests) {
     only_digits = only_digits && std::all_of(id.begin(), id.end(),
                                              boost::algorithm::is_digit());
     if (!only_digits) break;
   }
-  return only_digits ? settings::Run::NUMERIC : settings::Run::LEXICOGRAPHICAL;
+  return only_digits ? test::Sequence::NUMERIC
+                     : test::Sequence::LEXICOGRAPHICAL;
 }
 }  // namespace
 
@@ -62,17 +63,6 @@ driver::driver(const boost::filesystem::path &location) : m_location(location) {
   read_interactor();
   m_overview.mutable_extension()->PackFrom(m_overview_extension);
 }
-
-Problem driver::overview() const { return m_overview; }
-
-// utilities
-tests_ptr driver::tests() const { return m_tests; }
-
-utility_ptr driver::checker() const { return m_checker; }
-
-utility_ptr driver::interactor() const { return m_interactor; }
-
-statement_ptr driver::statement() const { return m_statement; }
 
 void driver::read_info() {
   Info &info = *m_overview.mutable_info();
@@ -144,12 +134,10 @@ void driver::read_statement() {
 }
 
 void driver::read_settings() {
-  settings::ProcessSettings &process = *m_settings.mutable_process();
-
   boost::optional<std::string> value;
   // resource limits
   bacs::process::ResourceLimits &resource_limits =
-      *process.mutable_resource_limits();
+      *m_settings.mutable_resource_limits();
   if ((value = m_config.get_optional<std::string>("resource_limits.time")))
     resource_limits.set_time_limit_millis(
         resource::parse::time_millis(value.get()));
@@ -163,68 +151,62 @@ void driver::read_settings() {
   if ((value = m_config.get_optional<std::string>("resource_limits.real_time")))
     resource_limits.set_real_time_limit_millis(
         resource::parse::time_millis(value.get()));
-  // run
-  settings::Run &run = *m_settings.mutable_run();
-  // run.set_order(); // depending on tests, is set in other location
-  run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
   // files & execution
-  settings::File *file = process.add_file();
-  settings::Execution &execution = *process.mutable_execution();
+  process::File *file = m_settings.add_file();
+  process::Execution &execution = *m_settings.mutable_execution();
   file->set_id("stdin");
   file->set_init("in");
-  file->add_permission(settings::File::READ);
+  file->add_permission(process::File::READ);
   if ((value = m_config.get_optional<std::string>("files.stdin"))) {
-    detail::to_pb_path(value.get(), *file->mutable_path());
+    bacs::file::path_convert(value.get(), *file->mutable_path());
   } else {
-    settings::Execution::Redirection &rd = *execution.add_redirection();
-    rd.set_stream(settings::Execution::Redirection::STDIN);
+    process::Execution::Redirection &rd = *execution.add_redirection();
+    rd.set_stream(process::Execution::Redirection::STDIN);
     rd.set_file_id("stdin");
   }
-  file = process.add_file();
+  file = m_settings.add_file();
   file->set_id("stdout");
-  file->add_permission(settings::File::READ);
-  file->add_permission(settings::File::WRITE);
+  file->add_permission(process::File::READ);
+  file->add_permission(process::File::WRITE);
   if ((value = m_config.get_optional<std::string>("files.stdout"))) {
-    detail::to_pb_path(value.get(), *file->mutable_path());
+    bacs::file::path_convert(value.get(), *file->mutable_path());
   } else {
-    settings::Execution::Redirection &rd = *execution.add_redirection();
-    rd.set_stream(settings::Execution::Redirection::STDOUT);
+    process::Execution::Redirection &rd = *execution.add_redirection();
+    rd.set_stream(process::Execution::Redirection::STDOUT);
     rd.set_file_id("stdout");
   }
 }
 
 namespace {
 template <typename Range>
-void add_test_group(testing::TestGroup &test_group,
+void add_test_group(TestGroup &test_group,
                     boost::optional<std::string> &dependency_test_group,
-                    const settings::TestGroupSettings &settings,
+                    const process::Settings &process_settings,
                     const std::string &group_id, const Range &tests) {
   test_group.set_id(group_id);
 
   if (dependency_test_group) {
-    testing::Dependency &dependency = *test_group.add_dependency();
+    Dependency &dependency = *test_group.add_dependency();
     dependency.set_test_group(*dependency_test_group);
   }
 
-  *test_group.mutable_settings() = settings;
-  test_group.mutable_settings()->mutable_run()->set_order(run_order(tests));
+  *test_group.mutable_process() = process_settings;
 
-  test_group.clear_test_set();
+  test_group.mutable_tests()->set_order(test_order(tests));
+  test_group.mutable_tests()->clear_query();
   for (const std::string &test_id : tests) {
-    testing::TestQuery &test_query = *test_group.add_test_set();
+    test::Query &test_query = *test_group.mutable_tests()->add_query();
     test_query.set_id(test_id);
   }
+  test_group.mutable_tests()->set_continue_condition(test::Sequence::WHILE_OK);
 }
 }  // namespace
 
 void driver::read_profiles() {
-  google::protobuf::RepeatedPtrField<Profile> &profiles =
-      *m_overview.mutable_profile();
+  auto &profiles = *m_overview.mutable_profile();
   profiles.Clear();
   Profile &profile = *profiles.Add();
   ProfileExtension profile_extension;
-  testing::SolutionTesting &testing = *profile_extension.mutable_testing();
-  testing.Clear();
 
   auto unused_tests = boost::copy_range<std::unordered_set<std::string>>(
       m_overview_extension.tests().test_set());
@@ -233,14 +215,14 @@ void driver::read_profiles() {
   for (const auto &group_tests : m_test_groups) {
     const std::string &group_id = group_tests.first;
     const std::vector<std::string> &tests = group_tests.second;
-    add_test_group(*testing.add_test_group(), previous_test_group, m_settings,
-                   group_id, tests);
+    add_test_group(*profile_extension.add_test_group(), previous_test_group,
+                   m_settings, group_id, tests);
     previous_test_group = group_id;
     for (const std::string &test_id : tests) unused_tests.erase(test_id);
   }
 
-  add_test_group(*testing.add_test_group(), previous_test_group, m_settings, "",
-                 unused_tests);
+  add_test_group(*profile_extension.add_test_group(), previous_test_group,
+                 m_settings, "", unused_tests);
 
   profile.mutable_extension()->PackFrom(profile_extension);
 }

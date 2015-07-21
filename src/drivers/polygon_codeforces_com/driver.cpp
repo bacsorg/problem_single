@@ -2,7 +2,7 @@
 
 #include "statement.hpp"
 
-#include <bacs/problem/single/detail/path.hpp>
+#include <bacs/file.hpp>
 #include <bacs/problem/single/problem.pb.h>
 #include <bacs/problem/split.hpp>
 
@@ -40,19 +40,6 @@ driver::driver(const boost::filesystem::path &location) : m_location(location) {
   read_checker();
   m_overview.mutable_extension()->PackFrom(m_overview_extension);
 }
-
-Problem driver::overview() const { return m_overview; }
-
-// utilities
-tests_ptr driver::tests() const { return m_tests; }
-
-utility_ptr driver::checker() const { return m_checker; }
-
-utility_ptr driver::interactor() const {
-  return utility_ptr();  // not supported
-}
-
-statement_ptr driver::statement() const { return m_statement; }
 
 void driver::read_info() {
   Info &info = *m_overview.mutable_info();
@@ -102,26 +89,22 @@ void driver::read_statement() {
 
 void driver::read_profiles() {
   m_tests =
-      single::tests::make_shared<polygon_codeforces_com::tests>(m_location);
-  google::protobuf::RepeatedPtrField<Profile> &profiles =
-      *m_overview.mutable_profile();
+      test::storage::make_shared<polygon_codeforces_com::tests>(m_location);
+  auto &profiles = *m_overview.mutable_profile();
   profiles.Clear();
   Profile &profile = *profiles.Add();
   ProfileExtension profile_extension;
-  testing::SolutionTesting &testing = *profile_extension.mutable_testing();
-  testing.Clear();
   const boost::property_tree::ptree judging =
       m_config.get_child("problem.judging");
   for (const boost::property_tree::ptree::value_type &testset : judging) {
     if (testset.first == "<xmlattr>") continue;
-    testing::TestGroup &test_group = *testing.add_test_group();
+    TestGroup &test_group = *profile_extension.add_test_group();
     test_group.set_id(testset.second.get<std::string>("<xmlattr>.name", ""));
-    settings::TestGroupSettings &settings = *test_group.mutable_settings();
-    settings::ProcessSettings &process = *settings.mutable_process();
+    process::Settings &process_settings = *test_group.mutable_process();
     {  // resource limits
       boost::optional<std::int64_t> value;
       bacs::process::ResourceLimits &resource_limits =
-          *process.mutable_resource_limits();
+          *process_settings.mutable_resource_limits();
       if ((value = testset.second.get_optional<std::int64_t>("time-limit")))
         resource_limits.set_time_limit_millis(*value);
       if ((value = testset.second.get_optional<std::int64_t>("memory-limit")))
@@ -130,44 +113,44 @@ void driver::read_profiles() {
       // number of processes is not supported here
       // real time limit is not supported here
     }
-    {  // run
-      boost::optional<std::string> value;
-      settings::Run &run = *settings.mutable_run();
-      run.set_order(settings::Run::NUMERIC);
-      run.set_algorithm(settings::Run::WHILE_NOT_FAIL);
+    {
       // files & execution
-      settings::File *file = process.add_file();
-      settings::Execution &execution = *process.mutable_execution();
+      boost::optional<std::string> value;
+      process::File *file = process_settings.add_file();
+      process::Execution &execution = *process_settings.mutable_execution();
       file->set_id("stdin");
       file->set_init("in");
-      file->add_permission(settings::File::READ);
+      file->add_permission(process::File::READ);
       if ((value = judging.get_optional<std::string>("<xmlattr>.input-file")) &&
           !value->empty()) {
-        detail::to_pb_path(value.get(), *file->mutable_path());
+        bacs::file::path_convert(value.get(), *file->mutable_path());
       } else {
-        settings::Execution::Redirection &rd = *execution.add_redirection();
-        rd.set_stream(settings::Execution::Redirection::STDIN);
+        process::Execution::Redirection &rd = *execution.add_redirection();
+        rd.set_stream(process::Execution::Redirection::STDIN);
         rd.set_file_id("stdin");
       }
-      file = process.add_file();
+      file = process_settings.add_file();
       file->set_id("stdout");
-      file->add_permission(settings::File::READ);
-      file->add_permission(settings::File::WRITE);
+      file->add_permission(process::File::READ);
+      file->add_permission(process::File::WRITE);
       if ((value =
                judging.get_optional<std::string>("<xmlattr>.output-file")) &&
           !value->empty()) {
-        detail::to_pb_path(value.get(), *file->mutable_path());
+        bacs::file::path_convert(value.get(), *file->mutable_path());
       } else {
-        settings::Execution::Redirection &rd = *execution.add_redirection();
-        rd.set_stream(settings::Execution::Redirection::STDOUT);
+        process::Execution::Redirection &rd = *execution.add_redirection();
+        rd.set_stream(process::Execution::Redirection::STDOUT);
         rd.set_file_id("stdout");
       }
     }
+    test_group.mutable_tests()->set_order(test::Sequence::NUMERIC);
+    test_group.mutable_tests()->set_continue_condition(
+        test::Sequence::WHILE_OK);
     const std::string in_test_format =
         testset.second.get<std::string>("input-path-pattern", "tests/%02d");
     const std::string out_test_format =
         testset.second.get<std::string>("output-path-pattern", "tests/%02d.a");
-    test_group.clear_test_set();
+    test_group.mutable_tests()->clear_query();
     {
       std::size_t test_id_ = 0;
       for (const boost::property_tree::ptree::value_type &test :
@@ -175,7 +158,7 @@ void driver::read_profiles() {
         if (test.first == "<xmlattr>") continue;
         const std::string test_id =
             boost::lexical_cast<std::string>(++test_id_);
-        testing::TestQuery &test_query = *test_group.add_test_set();
+        test::Query &test_query = *test_group.mutable_tests()->add_query();
         test_query.set_id(test_id);
         m_tests->add_test(test_id, str(boost::format(in_test_format) % test_id),
                           str(boost::format(out_test_format) % test_id));
