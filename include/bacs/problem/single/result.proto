@@ -1,13 +1,13 @@
 syntax = "proto2";
 
-package bacs.problem.single.result;
+package bacs.problem.single;
 
 import "bacs/process.proto";
 
 message Result {
   required SystemResult system = 1;
   optional process.BuildResult build = 2;
-  optional SolutionTestingResult testing_result = 3;
+  repeated TestGroupResult test_group = 3;
 }
 
 message SystemResult {
@@ -18,17 +18,26 @@ message SystemResult {
   required Status status = 1;
 }
 
-message SolutionTestingResult {
-  repeated TestGroupResult test_group = 1;
-}
-
 message TestGroupResult {
   required string id = 1;
   required bool executed = 2;
   repeated TestResult test = 3;
 }
 
-message Judge {
+message TestResult {
+  enum Status {
+    OK = 0;
+    FAILED = 1;
+    SKIPPED = 2;
+  }
+  required string id = 1;
+  required Status status = 2;
+  optional process.ExecutionResult execution = 3;
+  optional JudgeResult judge = 4;
+  repeated FileResult file = 5;
+}
+
+message JudgeResult {
   enum Status {
     OK = 0;
     WRONG_ANSWER = 1;
@@ -50,9 +59,6 @@ message Judge {
     // judge status is meaningless
     SKIPPED = 2000;
   }
-  required Status status = 1;
-  optional string message = 2;
-
   message Utility {
     required process.ExecutionResult execution = 1;
     optional bytes output = 2;
@@ -66,23 +72,12 @@ message Judge {
     optional Utility checker = 2;
     repeated AuxiliaryUtility auxiliary = 1000;
   }
+  required Status status = 1;
+  optional string message = 2;
   optional Utilities utilities = 3;
 }
 
-message File {
+message FileResult {
   required string id = 1;
   required bytes data = 2;
-}
-
-message TestResult {
-  enum Status {
-    OK = 0;
-    FAILED = 1;
-    SKIPPED = 2;
-  }
-  required string id = 1;
-  required Status status = 2;
-  optional process.ExecutionResult execution = 3;
-  optional Judge judge = 4;
-  repeated File file = 5;
 }
