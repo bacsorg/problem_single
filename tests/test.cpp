@@ -18,6 +18,17 @@ BOOST_AUTO_TEST_CASE(id) {
   BOOST_CHECK(!matcher(""));
 }
 
+BOOST_AUTO_TEST_CASE(copy) {
+  bpst::Query query;
+  query.set_id("copy");
+  const bpst::matcher matcher(query);
+  BOOST_CHECK(matcher("copy"));
+  BOOST_CHECK(!matcher("not copy"));
+  const bpst::matcher matcher2 = matcher;
+  BOOST_CHECK(matcher2("copy"));
+  BOOST_CHECK(!matcher2("not copy"));
+}
+
 BOOST_AUTO_TEST_CASE(wildcard) {
   bpst::Query query;
   query.mutable_wildcard()->set_value("some*");

@@ -95,14 +95,14 @@ bool matcher::operator()(const std::string &test_id) const {
   return m_impl->match(test_id);
 }
 
-std::unique_ptr<matcher::impl> matcher::make_query(const Query &query) {
+std::shared_ptr<const matcher::impl> matcher::make_query(const Query &query) {
   switch (query.query_case()) {
     case Query::kId:
-      return std::make_unique<id>(query.id());
+      return std::make_shared<id>(query.id());
     case Query::kWildcard:
-      return std::make_unique<wildcard>(query.wildcard());
+      return std::make_shared<wildcard>(query.wildcard());
     case Query::kRegex:
-      return std::make_unique<regex>(query.regex());
+      return std::make_shared<regex>(query.regex());
     default:
       BOOST_THROW_EXCEPTION(matcher_not_set_error());
       return nullptr;

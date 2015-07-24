@@ -26,10 +26,10 @@ class matcher {
   class wildcard;
   class regex;
 
-  std::unique_ptr<impl> make_query(const Query &query);
+  std::shared_ptr<const impl> make_query(const Query &query);
 
  private:
-  std::unique_ptr<impl> m_impl;
+  std::shared_ptr<const impl> m_impl;
 };
 
 }  // namespace test
