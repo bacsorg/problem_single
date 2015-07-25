@@ -39,18 +39,18 @@ void generate_utility(const std::string &name, const std::string &internal_name,
       if (utility_->make_package(package_root, package))
         root_index.package.import.package.insert(std::make_pair(".", package));
       // calling conventions
-      root_index.source.import.source.insert(std::make_pair(
+      root_index.package.import.package.insert(std::make_pair(
           ".", bunsan::pm::entry("bacs/system/single") / internal_name /
                    "call" /
                    utility_->section("utility").get<std::string>("call")));
-      root_index.source.import.source.insert(std::make_pair(
+      root_index.package.import.package.insert(std::make_pair(
           ".",
           bunsan::pm::entry("bacs/system/single") / internal_name / "return" /
               utility_->section("utility").get<std::string>("return", "none")));
     } else {
       if (!fallback)
         BOOST_THROW_EXCEPTION(generator_generate_utility_null_fallback_error());
-      root_index.source.import.source.insert(
+      root_index.package.import.package.insert(
           std::make_pair(".", bunsan::pm::entry(fallback)));
     }
   } catch (std::exception &) {
