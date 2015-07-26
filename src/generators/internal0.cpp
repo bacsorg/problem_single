@@ -52,6 +52,9 @@ void generate_utility(const std::string &name, const std::string &internal_name,
         BOOST_THROW_EXCEPTION(generator_generate_utility_null_fallback_error());
       root_index.package.import.package.insert(
           std::make_pair(".", bunsan::pm::entry(fallback)));
+      root_index.package.import.package.insert(
+          std::make_pair(".", bunsan::pm::entry("bacs/system/single") /
+                                  internal_name / "return" / "none"));
     }
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(generator_generate_utility_error()
