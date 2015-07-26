@@ -32,7 +32,6 @@ message File {
     WRITE = 1;
     EXECUTE = 2;
   }
-
   required string id = 1;
   repeated Permissions permission = 2;
   optional /*DataId*/ string init = 3;
