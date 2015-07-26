@@ -9,7 +9,7 @@ message Sequence {
     LEXICOGRAPHICAL = 2;
   }
   enum ContinueCondition {
-    ALL = 0;
+    ALWAYS = 0;
     WHILE_OK = 1;
   }
   repeated Query query = 1;
