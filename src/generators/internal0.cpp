@@ -82,13 +82,8 @@ Problem internal0::generate(const options &options_) {
     bunsan::pm::index root_index;
 
     // root package
-    {
-      // \note: package directory is already created,
-      // package does not contain sources
-      // TODO: think about library import
-      root_index.source.import.source.insert(
-          std::make_pair(".", "bacs/system/single"));
-    }
+    root_index.package.import.package.insert(
+        std::make_pair(".", "bacs/system/single"));
 
     BOOST_ASSERT(options_.driver->tests());
     if (!options_.driver->checker() && !options_.driver->interactor())
