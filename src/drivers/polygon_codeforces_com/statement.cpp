@@ -51,9 +51,10 @@ std::vector<statement::version_ptr> statement::parse_versions(
   return versions;
 }
 
-statement::version::version(const std::string &lang, const std::string &format,
+statement::version::version(const std::string &language,
+                            const std::string &format,
                             const boost::filesystem::path &source)
-    : problem::statement::version(lang, format), m_source(source) {}
+    : problem::statement::version(language, format), m_source(source) {}
 
 void statement::version::make_package(
     const boost::filesystem::path &destination,
@@ -67,7 +68,7 @@ void statement::version::make_package(
     index.package.self.insert(std::make_pair(".", "pkg"));
     boost::filesystem::create_directory(destination / "pkg");
     manifest statement_manifest;
-    statement_manifest.version.lang = lang();
+    statement_manifest.version.language = language();
     statement_manifest.version.format = format();
     statement_manifest.data.index = m_source;
     boost::property_tree::write_ini(

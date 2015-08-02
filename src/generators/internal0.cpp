@@ -69,8 +69,7 @@ Problem internal0::generate(const options &options_) {
     Problem problem_info = options_.driver->overview();
 
     // initialize package names
-    problem_info.mutable_info()->mutable_system()->set_package(
-        options_.root_package.name());
+    problem_info.mutable_system()->set_package(options_.root_package.name());
     for (Statement::Version &v :
          *problem_info.mutable_statement()->mutable_version()) {
       const bunsan::pm::entry package = options_.root_package / v.package();

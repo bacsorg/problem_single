@@ -23,7 +23,7 @@ class statement : public problem::statement {
  private:
   class version : public problem::statement::version {
    public:
-    version(const std::string &lang, const std::string &format,
+    version(const std::string &language, const std::string &format,
             const boost::filesystem::path &source);
 
     void make_package(

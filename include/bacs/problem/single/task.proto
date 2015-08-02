@@ -14,7 +14,7 @@ message Task {
    *
    * If is not the same as worker's, task is rejected.
    */
-  required bytes hash = 1;
+  required System system = 1;
   required process.Buildable solution = 2;
   required bacs.problem.Profile profile = 3;
 }

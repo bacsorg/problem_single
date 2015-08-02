@@ -54,6 +54,7 @@ test::Sequence::Order test_order(const Range &tests) {
 driver::driver(const boost::filesystem::path &location) : m_location(location) {
   boost::property_tree::read_ini((location / "config.ini").string(), m_config);
   // TODO
+  read_system();
   read_info();
   read_tests();
   read_statement();
@@ -64,13 +65,19 @@ driver::driver(const boost::filesystem::path &location) : m_location(location) {
   m_overview.mutable_extension()->PackFrom(m_overview_extension);
 }
 
+void driver::read_system() {
+  m_overview.mutable_system()->set_problem_type("to-be-set-later");
+  m_overview.mutable_system()->set_package("to-be-set-later");
+  m_overview.mutable_system()->set_version("to-be-set-later");
+}
+
 void driver::read_info() {
   Info &info = *m_overview.mutable_info();
   info.Clear();
   const boost::property_tree::ptree m_info = m_config.get_child("info");
   // name
   Info::Name &name = *info.add_name();
-  name.set_lang("C");
+  name.set_language("C");
   name.set_value(m_info.get<std::string>("name"));
   // authors
   split::parse_repeated(*info.mutable_author(), m_info, "authors");
@@ -80,10 +87,6 @@ void driver::read_info() {
     info.set_source(value.get());
   // maintainers
   split::parse_repeated(*info.mutable_maintainer(), m_info, "maintainers");
-  // system
-  Info::System &system = *info.mutable_system();
-  system.set_package("unknown");  // initialized later
-  system.set_hash("unknown");     // initialized later
 }
 
 static const std::string group_prefix = "group_";

@@ -2,20 +2,13 @@ syntax = "proto2";
 
 package bacs.problem.single;
 
+import "bacs/problem/result.proto";
 import "bacs/process.proto";
 
 message Result {
   required SystemResult system = 1;
   optional process.BuildResult build = 2;
   repeated TestGroupResult test_group = 3;
-}
-
-message SystemResult {
-  enum Status {
-    OK = 0;
-    INVALID_HASH = 1;
-  }
-  required Status status = 1;
 }
 
 message TestGroupResult {

@@ -32,10 +32,9 @@ Problem importer::convert(const options &options_) {
         .root_package = options_.root_package,
     };
     Problem problem_info = m_generator->generate(goptions);
-    problem_info.mutable_info()->mutable_system()->set_hash(
-        options_.hash.data(), options_.hash.size());
-    problem_info.mutable_info()->mutable_system()->set_problem_type(
-        problem_type);
+    problem_info.mutable_system()->set_version(options_.version.data(),
+                                               options_.version.size());
+    problem_info.mutable_system()->set_problem_type(problem_type);
     return problem_info;
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(importer_convert_error()

@@ -35,6 +35,7 @@ class driver : public single::driver {
   statement_ptr statement() const override { return m_statement; }
 
  private:
+  void read_system();
   void read_info();
   void read_tests();
   void read_statement();

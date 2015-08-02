@@ -33,12 +33,19 @@ driver::driver(const boost::filesystem::path &location) : m_location(location) {
                                  m_config);
   boost::property_tree::read_ini((m_location / "config.ini").string(),
                                  m_override_config);
+  read_system();
   read_info();
   read_statement();
   read_profiles();
   read_tests();  // should be called after read_profiles()
   read_checker();
   m_overview.mutable_extension()->PackFrom(m_overview_extension);
+}
+
+void driver::read_system() {
+  m_overview.mutable_system()->set_problem_type("to-be-set-later");
+  m_overview.mutable_system()->set_package("to-be-set-later");
+  m_overview.mutable_system()->set_version("to-be-set-later");
 }
 
 void driver::read_info() {
@@ -48,7 +55,7 @@ void driver::read_info() {
        m_config.get_child("problem.names")) {
     if (name_value.first == "<xmlattr>") continue;
     Info::Name &name = *info.add_name();
-    name.set_lang(
+    name.set_language(
         name_value.second.get<std::string>("<xmlattr>.language", "C"));
     name.set_value(
         name_value.second.get<std::string>("<xmlattr>.value", "UNNAMED"));
@@ -63,10 +70,6 @@ void driver::read_info() {
     info.set_source(value.get());
   // maintainers
   split::parse_repeated(*info.mutable_maintainer(), m_info, "maintainers");
-  // system
-  Info::System &system = *info.mutable_system();
-  system.set_package("unknown");  // initialized later
-  system.set_hash("unknown");     // initialized later
 }
 
 void driver::read_tests() {
