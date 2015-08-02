@@ -1,5 +1,7 @@
 #include "internal0.hpp"
 
+#include <bacs/problem/system_verifier.hpp>
+
 #include <bunsan/filesystem/operations.hpp>
 #include <bunsan/pm/index.hpp>
 #include <bunsan/static_initializer.hpp>
@@ -20,6 +22,16 @@ BUNSAN_STATIC_INITIALIZER(bacs_problem_single_generators_internal0, {
 internal0::internal0(const boost::property_tree::ptree & /*config*/) {}
 
 namespace {
+void generate_verifier(const System &system, const generator::options &options,
+                       bunsan::pm::index &root_index) {
+  const char name[] = "system_verifier";
+  const boost::filesystem::path package_root = options.destination / name;
+  const bunsan::pm::entry package = options.root_package / name;
+  system_verifier verifier(system);
+  if (verifier.make_package(package_root, package))
+    root_index.package.import.package.insert(std::make_pair(".", package));
+}
+
 struct generator_generate_utility_error : virtual generator_generate_error {
   using utility_name = boost::error_info<struct tag_utility_name, std::string>;
 };
@@ -67,9 +79,9 @@ void generate_utility(const std::string &name, const std::string &internal_name,
 Problem internal0::generate(const options &options_) {
   try {
     Problem problem_info = options_.driver->overview();
+    *problem_info.mutable_system() = options_.system;
 
     // initialize package names
-    problem_info.mutable_system()->set_package(options_.root_package.name());
     for (Statement::Version &v :
          *problem_info.mutable_statement()->mutable_version()) {
       const bunsan::pm::entry package = options_.root_package / v.package();
@@ -88,6 +100,9 @@ Problem internal0::generate(const options &options_) {
     if (!options_.driver->checker() && !options_.driver->interactor())
       BOOST_THROW_EXCEPTION(utility_error() << utility_error::message(
                                 "Checker or interactor is required"));
+
+    // system_verifier package
+    generate_verifier(problem_info.system(), options_, root_index);
 
     // tests package
     generate_utility("tests", "tests", options_.driver->tests(), options_,

@@ -22,6 +22,8 @@ struct options {
   boost::filesystem::path destination;
 
   bunsan::pm::entry root_package;
+
+  System system;
 };
 }  // namespace generator_detail
 

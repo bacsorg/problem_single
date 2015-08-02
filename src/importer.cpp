@@ -26,16 +26,17 @@ importer::importer(const boost::property_tree::ptree &config)
 
 Problem importer::convert(const options &options_) {
   try {
-    const generator::options goptions = {
+    generator::options goptions = {
         .driver = driver::instance(options_.problem_dir),
         .destination = options_.destination,
         .root_package = options_.root_package,
+        .system = System(),
     };
-    Problem problem_info = m_generator->generate(goptions);
-    problem_info.mutable_system()->set_version(options_.version.data(),
-                                               options_.version.size());
-    problem_info.mutable_system()->set_problem_type(problem_type);
-    return problem_info;
+    goptions.system.set_problem_type(problem_type);
+    goptions.system.set_version(options_.version.data(),
+                                options_.version.size());
+    goptions.system.set_package(options_.root_package.name());
+    return m_generator->generate(goptions);
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(importer_convert_error()
                           << importer_convert_error::options(options_)
