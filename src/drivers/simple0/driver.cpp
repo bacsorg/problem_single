@@ -68,7 +68,7 @@ driver::driver(const boost::filesystem::path &location) : m_location(location) {
 void driver::read_system() {
   m_overview.mutable_system()->set_problem_type("to-be-set-later");
   m_overview.mutable_system()->set_package("to-be-set-later");
-  m_overview.mutable_system()->set_version("to-be-set-later");
+  m_overview.mutable_system()->set_revision("to-be-set-later");
 }
 
 void driver::read_info() {

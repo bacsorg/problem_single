@@ -33,9 +33,9 @@ Problem importer::convert(const options &options_) {
         .system = System(),
     };
     goptions.system.set_problem_type(problem_type);
-    goptions.system.set_version(options_.version.data(),
-                                options_.version.size());
     goptions.system.set_package(options_.root_package.name());
+    goptions.system.set_revision(options_.revision.data(),
+                                 options_.revision.size());
     return m_generator->generate(goptions);
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(importer_convert_error()
