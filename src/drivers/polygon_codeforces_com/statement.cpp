@@ -78,10 +78,10 @@ void statement::version::make_package(
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(
         statement_version_make_package_error()
-        << statement_version_make_package_error::destination(destination) <<
-        // statement_version_make_package_error::package(package) <<
-        statement_version_make_package_error::resources_package(
-            resources_package) << bunsan::enable_nested_current());
+        << statement_version_make_package_error::destination(destination)
+        // << statement_version_make_package_error::package(package)
+        << statement_version_make_package_error::resources_package(
+               resources_package) << bunsan::enable_nested_current());
   }
 }
 
