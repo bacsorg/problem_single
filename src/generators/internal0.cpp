@@ -22,13 +22,13 @@ BUNSAN_STATIC_INITIALIZER(bacs_problem_single_generators_internal0, {
 internal0::internal0(const boost::property_tree::ptree & /*config*/) {}
 
 namespace {
-void generate_verifier(const System &system, const generator::options &options,
+void generate_verifier(const generator::options &options,
                        bunsan::pm::index &root_index) {
   const char name[] = "system_verifier";
   const boost::filesystem::path package_root = options.destination / name;
   const bunsan::pm::entry package = options.root_package / name;
-  system_verifier verifier(system);
-  if (verifier.make_package(package_root, package))
+  system_verifier verifier(options.system);
+  if (verifier.make_package(package_root, package, options.system.revision()))
     root_index.package.import.package.insert(std::make_pair(".", package));
 }
 
@@ -48,8 +48,10 @@ void generate_utility(const std::string &name, const std::string &internal_name,
     const boost::filesystem::path package_root = options.destination / name;
     const bunsan::pm::entry package = options.root_package / name;
     if (utility_) {
-      if (utility_->make_package(package_root, package))
+      if (utility_->make_package(package_root, package,
+                                 options.system.revision())) {
         root_index.package.import.package.insert(std::make_pair(".", package));
+      }
       // calling conventions
       root_index.package.import.package.insert(std::make_pair(
           ".", bunsan::pm::entry("bacs/system/single") / internal_name /
@@ -102,7 +104,7 @@ Problem internal0::generate(const options &options_) {
                                 "Checker or interactor is required"));
 
     // system_verifier package
-    generate_verifier(problem_info.system(), options_, root_index);
+    generate_verifier(options_, root_index);
 
     // tests package
     generate_utility("tests", "tests", options_.driver->tests(), options_,
@@ -122,7 +124,9 @@ Problem internal0::generate(const options &options_) {
       const boost::filesystem::path package_root =
           options_.destination / "statement";
       const bunsan::pm::entry package = options_.root_package / "statement";
-      (void)options_.driver->statement()->make_package(package_root, package);
+      // statement is not included into problem's main package
+      options_.driver->statement()->make_package(package_root, package,
+                                                 options_.system.revision());
     }
 
     // the last command

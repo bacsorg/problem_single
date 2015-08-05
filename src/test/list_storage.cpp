@@ -100,7 +100,8 @@ std::unordered_set<std::string> list_storage::test_set() const {
 }
 
 bool list_storage::make_package(const boost::filesystem::path &destination,
-                                const bunsan::pm::entry & /*package*/) const {
+                                const bunsan::pm::entry & /*package*/,
+                                const Revision & /*revision*/) const {
   try {
     boost::filesystem::create_directories(destination);
     bunsan::pm::index index;

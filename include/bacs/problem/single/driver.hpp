@@ -16,7 +16,7 @@ namespace problem {
 namespace single {
 
 class driver : private boost::noncopyable {
-  BUNSAN_FACTORY_BODY(driver, const boost::filesystem::path & /*location*/)
+  BUNSAN_FACTORY_BODY(driver, const boost::filesystem::path &location)
  public:
   static driver_ptr instance(const boost::filesystem::path &location);
 

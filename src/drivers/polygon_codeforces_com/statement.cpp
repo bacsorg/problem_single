@@ -1,11 +1,10 @@
 #include "statement.hpp"
 
-#include <bunsan/config/cast.hpp>
 #include <bunsan/filesystem/operations.hpp>
 #include <bunsan/pm/index.hpp>
+#include <bunsan/protobuf/binary.hpp>
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/property_tree/ini_parser.hpp>
 
 namespace bacs {
 namespace problem {
@@ -58,8 +57,9 @@ statement::version::version(const std::string &language,
 
 void statement::version::make_package(
     const boost::filesystem::path &destination,
-    const bunsan::pm::entry & /*package*/,
-    const bunsan::pm::entry &resources_package) const {
+    const bunsan::pm::entry &package,
+    const bunsan::pm::entry &resources_package,
+    const Revision &revision) const {
   try {
     bunsan::filesystem::reset_dir(destination);
     bunsan::pm::index index;
@@ -67,13 +67,14 @@ void statement::version::make_package(
         std::make_pair("data", resources_package));
     index.package.self.insert(std::make_pair(".", "pkg"));
     boost::filesystem::create_directory(destination / "pkg");
-    manifest statement_manifest;
-    statement_manifest.version.language = language();
-    statement_manifest.version.format = format();
-    statement_manifest.data.index = m_source;
-    boost::property_tree::write_ini(
-        (destination / "pkg" / manifest_path).string(),
-        bunsan::config::save<boost::property_tree::ptree>(statement_manifest));
+    Statement::Version::Manifest statement_manifest;
+    statement_manifest.mutable_version()->set_language(language());
+    statement_manifest.mutable_version()->set_format(format());
+    statement_manifest.mutable_version()->set_package(package.name());
+    *statement_manifest.mutable_revision() = revision;
+    statement_manifest.mutable_data()->set_index(m_source.string());
+    bunsan::protobuf::binary::serialize(statement_manifest,
+                                        destination / "pkg" / manifest_path);
     index.save(destination / "index");
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(

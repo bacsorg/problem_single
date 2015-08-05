@@ -34,7 +34,7 @@ struct generator_generate_error : virtual generator_error {
 };
 
 class generator : private boost::noncopyable {
-  BUNSAN_FACTORY_BODY(generator, const boost::property_tree::ptree & /*config*/)
+  BUNSAN_FACTORY_BODY(generator, const boost::property_tree::ptree &config)
  public:
   using options = generator_detail::options;
 

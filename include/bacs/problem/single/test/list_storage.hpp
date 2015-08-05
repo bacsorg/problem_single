@@ -37,7 +37,8 @@ class list_storage : public storage {
   std::unordered_set<std::string> test_set() const override;
 
   bool make_package(const boost::filesystem::path &destination,
-                    const bunsan::pm::entry &package) const override;
+                    const bunsan::pm::entry &package,
+                    const Revision &revision) const override;
 
  protected:
   list_storage(const boost::filesystem::path &location,

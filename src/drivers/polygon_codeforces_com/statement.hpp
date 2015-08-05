@@ -26,10 +26,10 @@ class statement : public problem::statement {
     version(const std::string &language, const std::string &format,
             const boost::filesystem::path &source);
 
-    void make_package(
-        const boost::filesystem::path &destination,
-        const bunsan::pm::entry &package,
-        const bunsan::pm::entry &resources_package) const override;
+    void make_package(const boost::filesystem::path &destination,
+                      const bunsan::pm::entry &package,
+                      const bunsan::pm::entry &resources_package,
+                      const Revision &revision) const override;
 
    private:
     const boost::filesystem::path m_root, m_source;
