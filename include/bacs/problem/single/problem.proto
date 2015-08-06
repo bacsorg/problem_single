@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package bacs.problem.single;
 
@@ -6,7 +6,7 @@ import "bacs/problem/single/process.proto";
 import "bacs/problem/single/test.proto";
 
 message ProblemExtension {
-  optional Tests tests = 1;
+  Tests tests = 1;
 }
 
 message Tests {
@@ -26,13 +26,13 @@ message Dependency {
     AT_MOST_ONE_FAIL = 3;
     AT_LEAST_HALF_OK = 4;
   }
-  required string test_group = 1;
-  optional Requirement requirement = 2 [default = ALL_OK];
+  string test_group = 1;
+  Requirement requirement = 2;  // default = ALL_OK
 }
 
 message TestGroup {
-  required string id = 1;
-  required single.process.Settings process = 2;
-  required test.Sequence tests = 3;
+  string id = 1;
+  single.process.Settings process = 2;
+  test.Sequence tests = 3;
   repeated Dependency dependency = 4;
 }

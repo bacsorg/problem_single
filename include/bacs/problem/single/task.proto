@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package bacs.problem.single;
 
@@ -14,7 +14,7 @@ message Task {
    *
    * If is not the same as worker's, task is rejected.
    */
-  required System system = 1;
-  required process.Buildable solution = 2;
-  required bacs.problem.Profile profile = 3;
+  System system = 1;
+  process.Buildable solution = 2;
+  bacs.problem.Profile profile = 3;
 }

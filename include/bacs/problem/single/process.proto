@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package bacs.problem.single.process;
 
@@ -6,9 +6,9 @@ import "bacs/file.proto";
 import "bacs/process.proto";
 
 message Settings {
-  required bacs.process.ResourceLimits resource_limits = 1;
+  bacs.process.ResourceLimits resource_limits = 1;
   repeated File file = 2;
-  required Execution execution = 3;
+  Execution execution = 3;
 }
 
 message Execution {
@@ -18,11 +18,11 @@ message Execution {
       STDOUT = 1;
       STDERR = 2;
     }
-    required Stream stream = 1;
-    required string file_id = 2;
+    Stream stream = 1;
+    string file_id = 2;
   }
   repeated string argument = 1;
-  optional bacs.file.Path current_path = 2;  // not supported (will be ignored)
+  bacs.file.Path current_path = 2;  // not supported, ignored
   repeated Redirection redirection = 3;
 }
 
@@ -32,10 +32,10 @@ message File {
     WRITE = 1;
     EXECUTE = 2;
   }
-  required string id = 1;
+  string id = 1;
   repeated Permissions permission = 2;
-  optional /*DataId*/ string init = 3;
+  /*DataId*/ string init = 3;
   // arbitrary paths are not supported and stripped to filename
-  optional bacs.file.Path path = 4;
-  optional bacs.file.Range receive = 5;
+  bacs.file.Path path = 4;
+  bacs.file.Range receive = 5;
 }

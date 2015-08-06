@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package bacs.problem.single;
 
@@ -6,14 +6,14 @@ import "bacs/problem/result.proto";
 import "bacs/process.proto";
 
 message Result {
-  required SystemResult system = 1;
-  optional process.BuildResult build = 2;
+  SystemResult system = 1;
+  process.BuildResult build = 2;
   repeated TestGroupResult test_group = 3;
 }
 
 message TestGroupResult {
-  required string id = 1;
-  required bool executed = 2;
+  string id = 1;
+  bool executed = 2;
   repeated TestResult test = 3;
 }
 
@@ -23,10 +23,10 @@ message TestResult {
     FAILED = 1;
     SKIPPED = 2;
   }
-  required string id = 1;
-  required Status status = 2;
-  optional process.ExecutionResult execution = 3;
-  optional JudgeResult judge = 4;
+  string id = 1;
+  Status status = 2;
+  process.ExecutionResult execution = 3;
+  JudgeResult judge = 4;
   repeated FileResult file = 5;
 }
 
@@ -53,24 +53,24 @@ message JudgeResult {
     SKIPPED = 2000;
   }
   message Utility {
-    required process.ExecutionResult execution = 1;
-    optional bytes output = 2;
+    process.ExecutionResult execution = 1;
+    bytes output = 2;
   }
   message AuxiliaryUtility {
-    required string name = 1;
-    required Utility utility = 2;
+    string name = 1;
+    Utility utility = 2;
   }
   message Utilities {
-    optional Utility interactor = 1;
-    optional Utility checker = 2;
+    Utility interactor = 1;
+    Utility checker = 2;
     repeated AuxiliaryUtility auxiliary = 1000;
   }
-  required Status status = 1;
-  optional string message = 2;
-  optional Utilities utilities = 3;
+  Status status = 1;
+  string message = 2;
+  Utilities utilities = 3;
 }
 
 message FileResult {
-  required string id = 1;
-  required bytes data = 2;
+  string id = 1;
+  bytes data = 2;
 }
