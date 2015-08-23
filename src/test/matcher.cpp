@@ -1,8 +1,8 @@
 #include <bacs/problem/single/test/matcher.hpp>
 
-#include <boost/regex.hpp>
+#include <bunsan/fnmatch.hpp>
 
-#include <fnmatch.h>
+#include <boost/regex.hpp>
 
 namespace bacs {
 namespace problem {
@@ -30,23 +30,19 @@ class matcher::id : public matcher::impl {
 class matcher::wildcard : public matcher::impl {
  public:
   explicit wildcard(const WildcardQuery &query)
-      : m_wildcard(query.value()), m_flags(flags(query)) {}
+      : m_wildcard(query.value(), flags(query)) {}
 
   bool match(const std::string &test_id) const override {
-    const int m = ::fnmatch(m_wildcard.c_str(), test_id.c_str(), m_flags);
-    if (m && m != FNM_NOMATCH)
-      BOOST_THROW_EXCEPTION(matcher_error()
-                            << matcher_error::message("fnmatch() has failed"));
-    return !m;
+    return m_wildcard(test_id);
   }
 
  private:
-  int flags(const WildcardQuery &query) {
-    int flags_ = 0;
+  bunsan::fnmatcher::flag flags(const WildcardQuery &query) {
+    bunsan::fnmatcher::flag flags_ = bunsan::fnmatcher::defaults;
     for (const int flag : query.flag()) {
       switch (static_cast<WildcardQuery::Flag>(flag)) {
         case problem::single::test::WildcardQuery::IGNORE_CASE:
-          flags_ |= FNM_CASEFOLD;
+          flags_ |= bunsan::fnmatcher::icase;
           break;
       }
     }
@@ -54,8 +50,7 @@ class matcher::wildcard : public matcher::impl {
   }
 
  private:
-  const std::string m_wildcard;
-  int m_flags;
+  const bunsan::fnmatcher m_wildcard;
 };
 
 class matcher::regex : public matcher::impl {
