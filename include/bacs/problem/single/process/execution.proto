@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package bacs.problem.single.process;
+
+import "bacs/file/path.proto";
+
+message Execution {
+  message Redirection {
+    enum Stream {
+      STDIN = 0;
+      STDOUT = 1;
+      STDERR = 2;
+    }
+    Stream stream = 1;
+    string file_id = 2;
+  }
+  repeated string argument = 1;
+  bacs.file.Path current_path = 2;  // not supported, ignored
+  repeated Redirection redirection = 3;
+}

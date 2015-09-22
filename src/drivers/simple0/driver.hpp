@@ -2,7 +2,7 @@
 
 #include <bacs/problem/single/driver.hpp>
 #include <bacs/problem/single/error.hpp>
-#include <bacs/problem/single/process.pb.h>
+#include <bacs/problem/single/process/settings.pb.h>
 
 #include <boost/optional.hpp>
 #include <boost/property_tree/ptree.hpp>

@@ -17,10 +17,13 @@ bunsan_add_protobuf_cxx_library(
     PROTOS
         bacs/problem/single/intermediate.proto
         bacs/problem/single/problem.proto
-        bacs/problem/single/process.proto
+        bacs/problem/single/process/execution.proto
+        bacs/problem/single/process/file.proto
+        bacs/problem/single/process/settings.proto
         bacs/problem/single/result.proto
         bacs/problem/single/task.proto
-        bacs/problem/single/test.proto
+        bacs/problem/single/test/query.proto
+        bacs/problem/single/test/sequence.proto
     LIBRARIES ${bunsan_bacs_problem_LIBRARIES}
     INCLUDE_DIRECTORIES ${bunsan_bacs_problem_INCLUDE_DIRS}
     INSTALL

@@ -2,21 +2,6 @@ syntax = "proto3";
 
 package bacs.problem.single.test;
 
-message Sequence {
-  enum Order {
-    IDENTITY = 0;  ///< Preserve order from query.
-    NUMERIC = 1;   ///< Non-numeric tests are skipped.
-    LEXICOGRAPHICAL = 2;
-  }
-  enum ContinueCondition {
-    ALWAYS = 0;
-    WHILE_OK = 1;
-  }
-  repeated Query query = 1;
-  Order order = 2;
-  ContinueCondition continue_condition = 3;
-}
-
 message Query {
   oneof query {
     string id = 1;

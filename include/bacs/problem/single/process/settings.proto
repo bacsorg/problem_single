@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package bacs.problem.single.process;
+
+import "bacs/problem/single/process/execution.proto";
+import "bacs/problem/single/process/file.proto";
+import "bacs/process/resource.proto";
+
+message Settings {
+  bacs.process.ResourceLimits resource_limits = 1;
+  repeated File file = 2;
+  Execution execution = 3;
+}

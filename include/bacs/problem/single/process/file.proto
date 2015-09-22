@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package bacs.problem.single.process;
+
+import "bacs/file/path.proto";
+import "bacs/file/range.proto";
+
+message File {
+  enum Permissions {
+    READ = 0;
+    WRITE = 1;
+    EXECUTE = 2;
+  }
+  string id = 1;
+  repeated Permissions permission = 2;
+  /*DataId*/ string init = 3;
+  // arbitrary paths are not supported and stripped to filename
+  bacs.file.Path path = 4;
+  bacs.file.Range receive = 5;
+}

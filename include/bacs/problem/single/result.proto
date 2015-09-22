@@ -3,7 +3,8 @@ syntax = "proto3";
 package bacs.problem.single;
 
 import "bacs/problem/result.proto";
-import "bacs/process.proto";
+import "bacs/process/resource.proto";
+import "bacs/process/source.proto";
 
 message Result {
   SystemResult system = 1;

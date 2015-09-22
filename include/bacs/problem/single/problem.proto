@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package bacs.problem.single;
 
-import "bacs/problem/single/process.proto";
-import "bacs/problem/single/test.proto";
+import "bacs/problem/single/process/settings.proto";
+import "bacs/problem/single/test/sequence.proto";
 
 message ProblemExtension {
   Tests tests = 1;

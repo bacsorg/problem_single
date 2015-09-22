@@ -3,7 +3,7 @@ syntax = "proto3";
 package bacs.problem.single;
 
 import "bacs/problem/problem.proto";
-import "bacs/process.proto";
+import "bacs/process/source.proto";
 
 /*!
  * \brief Task for testing system
