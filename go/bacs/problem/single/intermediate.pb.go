@@ -3,7 +3,7 @@
 // DO NOT EDIT!
 
 /*
-Package bacs_problem_single is a generated protocol buffer package.
+Package single is a generated protocol buffer package.
 
 It is generated from these files:
 	bacs/problem/single/intermediate.proto
@@ -13,8 +13,19 @@ It is generated from these files:
 
 It has these top-level messages:
 	IntermediateResult
+	ProblemExtension
+	Tests
+	ProfileExtension
+	Dependency
+	TestGroup
+	Result
+	TestGroupResult
+	TestResult
+	JudgeResult
+	FileResult
+	Task
 */
-package bacs_problem_single
+package single
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"

@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package bacs.problem.single.process;
+option go_package = "process";
 
 import "bacs/file/path.proto";
 

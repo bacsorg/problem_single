@@ -2,7 +2,7 @@
 // source: bacs/problem/single/process/file.proto
 // DO NOT EDIT!
 
-package bacs_problem_single_process
+package process
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"

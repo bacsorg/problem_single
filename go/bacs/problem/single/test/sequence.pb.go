@@ -2,7 +2,7 @@
 // source: bacs/problem/single/test/sequence.proto
 // DO NOT EDIT!
 
-package bacs_problem_single_test
+package test
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"

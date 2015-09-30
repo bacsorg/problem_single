@@ -3,7 +3,7 @@
 // DO NOT EDIT!
 
 /*
-Package bacs_problem_single_test is a generated protocol buffer package.
+Package test is a generated protocol buffer package.
 
 It is generated from these files:
 	bacs/problem/single/test/query.proto
@@ -13,8 +13,9 @@ It has these top-level messages:
 	Query
 	WildcardQuery
 	RegexQuery
+	Sequence
 */
-package bacs_problem_single_test
+package test
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
@@ -76,13 +77,13 @@ type isQuery_Query interface {
 }
 
 type Query_Id struct {
-	Id string `protobuf:"bytes,1,opt,name=id"`
+	Id string `protobuf:"bytes,1,opt,name=id,oneof"`
 }
 type Query_Wildcard struct {
-	Wildcard *WildcardQuery `protobuf:"bytes,2,opt,name=wildcard"`
+	Wildcard *WildcardQuery `protobuf:"bytes,2,opt,name=wildcard,oneof"`
 }
 type Query_Regex struct {
-	Regex *RegexQuery `protobuf:"bytes,3,opt,name=regex"`
+	Regex *RegexQuery `protobuf:"bytes,3,opt,name=regex,oneof"`
 }
 
 func (*Query_Id) isQuery_Query()       {}

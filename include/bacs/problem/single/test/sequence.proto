@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package bacs.problem.single.test;
+option go_package = "test";
 
 import "bacs/problem/single/test/query.proto";
 
