@@ -36,4 +36,7 @@ message TestGroup {
   single.process.Settings process = 2;
   test.Sequence tests = 3;
   repeated Dependency dependency = 4;
+  // partially per-test if tests.continue_condition == ALL
+  // conditionally if tests.continue_condition == WHILE_OK
+  int64 score = 5;
 }

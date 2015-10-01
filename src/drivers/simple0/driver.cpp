@@ -49,6 +49,19 @@ test::Sequence::Order test_order(const Range &tests) {
   return only_digits ? test::Sequence::NUMERIC
                      : test::Sequence::LEXICOGRAPHICAL;
 }
+
+test::Sequence::ContinueCondition test_continue_condition(
+    const std::string &continue_condition_string) {
+  test::Sequence::ContinueCondition continue_condition;
+  if (!test::Sequence_ContinueCondition_Parse(continue_condition_string,
+                                              &continue_condition)) {
+    BOOST_THROW_EXCEPTION(
+        invalid_continue_condition_error()
+        << invalid_continue_condition_error::continue_condition(
+            continue_condition_string));
+  }
+  return continue_condition;
+}
 }  // namespace
 
 driver::driver(const boost::filesystem::path &location) : m_location(location) {
@@ -88,7 +101,9 @@ void driver::read_info() {
   split::parse_repeated(*info.mutable_maintainer(), m_info, "maintainers");
 }
 
+static const std::string continue_condition_prefix = "continue_condition_";
 static const std::string group_prefix = "group_";
+static const std::string score_prefix = "score_";
 
 void driver::read_tests() {
   boost::property_tree::ptree empty_tests_section;
@@ -107,17 +122,40 @@ void driver::read_tests() {
     // TODO send at least first unknown data_id
     BOOST_THROW_EXCEPTION(test_unknown_data_error());
 
+  // first initialize groups
   for (const auto kv : tests_section) {
     const std::string &key = kv.first;
     if (boost::algorithm::starts_with(key, group_prefix)) {
       const std::string group_id = key.substr(group_prefix.size());
       if (group_id.empty()) BOOST_THROW_EXCEPTION(empty_group_id_error());
       std::string tests = kv.second.get_value<std::string>();
-      std::vector<std::string> &test_group = m_test_groups[group_id];
-      boost::algorithm::split(test_group, tests, boost::algorithm::is_space(),
+      TestGroup &test_group = m_test_groups[group_id];
+      test_group.set_id(group_id);
+      std::vector<std::string> test_ids;
+      boost::algorithm::split(test_ids, tests, boost::algorithm::is_space(),
                               boost::algorithm::token_compress_on);
-      if (test_group.size() == 1 && test_group[0].empty()) test_group.clear();
-      if (test_group.empty()) m_test_groups.erase(group_id);
+      if (test_ids.size() == 1 && test_ids[0].empty()) test_ids.clear();
+      test_group.mutable_tests()->set_order(test_order(test_ids));
+      test_group.mutable_tests()->clear_query();
+      for (const auto &test_id : test_ids) {
+        test_group.mutable_tests()->add_query()->set_id(test_id);
+      }
+      test_group.mutable_tests()->set_continue_condition(
+          test::Sequence::WHILE_OK);
+    }
+  }
+  // only after initialization set values
+  for (const auto kv : tests_section) {
+    const std::string &key = kv.first;
+    if (boost::algorithm::starts_with(key, score_prefix)) {
+      const std::string group_id = key.substr(score_prefix.size());
+      if (group_id.empty()) BOOST_THROW_EXCEPTION(empty_group_id_error());
+      m_test_groups[group_id].set_score(kv.second.get_value<std::int64_t>());
+    } else if (boost::algorithm::starts_with(key, continue_condition_prefix)) {
+      const std::string group_id = key.substr(continue_condition_prefix.size());
+      if (group_id.empty()) BOOST_THROW_EXCEPTION(empty_group_id_error());
+      m_test_groups[group_id].mutable_tests()->set_continue_condition(
+          test_continue_condition(kv.second.get_value<std::string>()));
     }
   }
 
@@ -180,27 +218,14 @@ void driver::read_settings() {
 }
 
 namespace {
-template <typename Range>
-void add_test_group(TestGroup &test_group,
-                    boost::optional<std::string> &dependency_test_group,
-                    const process::Settings &process_settings,
-                    const std::string &group_id, const Range &tests) {
-  test_group.set_id(group_id);
-
+void add_test_group_dependency(
+    TestGroup &test_group,
+    boost::optional<std::string> &dependency_test_group) {
   if (dependency_test_group) {
     Dependency &dependency = *test_group.add_dependency();
     dependency.set_test_group(*dependency_test_group);
+    // FIXME dependency type?
   }
-
-  *test_group.mutable_process() = process_settings;
-
-  test_group.mutable_tests()->set_order(test_order(tests));
-  test_group.mutable_tests()->clear_query();
-  for (const std::string &test_id : tests) {
-    test::Query &test_query = *test_group.mutable_tests()->add_query();
-    test_query.set_id(test_id);
-  }
-  test_group.mutable_tests()->set_continue_condition(test::Sequence::WHILE_OK);
 }
 }  // namespace
 
@@ -214,17 +239,28 @@ void driver::read_profiles() {
       m_overview_extension.tests().test_set());
 
   boost::optional<std::string> previous_test_group;
-  for (const auto &group_tests : m_test_groups) {
-    const std::string &group_id = group_tests.first;
-    const std::vector<std::string> &tests = group_tests.second;
-    add_test_group(*profile_extension.add_test_group(), previous_test_group,
-                   m_settings, group_id, tests);
-    previous_test_group = group_id;
-    for (const std::string &test_id : tests) unused_tests.erase(test_id);
+  for (auto &group_tgroup : m_test_groups) {
+    TestGroup &test_group = *profile_extension.add_test_group();
+    test_group = std::move(group_tgroup.second);
+    for (const test::Query &test_query : test_group.tests().query()) {
+      unused_tests.erase(test_query.id());
+    }
+    *test_group.mutable_process() = m_settings;
+    add_test_group_dependency(test_group, previous_test_group);
+    previous_test_group = group_tgroup.first;
   }
 
-  add_test_group(*profile_extension.add_test_group(), previous_test_group,
-                 m_settings, "", unused_tests);
+  TestGroup &default_test_group = *profile_extension.add_test_group();
+  default_test_group.mutable_tests()->set_order(test_order(unused_tests));
+  for (const std::string &test_id : unused_tests) {
+    default_test_group.mutable_tests()->add_query()->set_id(test_id);
+  }
+  default_test_group.mutable_tests()->set_continue_condition(
+      test_continue_condition(
+          m_config.get<std::string>("tests.continue_condition", "WHILE_OK")));
+  *default_test_group.mutable_process() = m_settings;
+  default_test_group.set_score(m_config.get<std::int64_t>("tests.score", 0));
+  add_test_group_dependency(default_test_group, previous_test_group);
 
   profile.mutable_extension()->PackFrom(profile_extension);
 }

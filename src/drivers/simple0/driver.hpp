@@ -19,6 +19,10 @@ namespace simple0 {
 
 struct invalid_group_id_error : virtual error {};
 struct empty_group_id_error : virtual invalid_group_id_error {};
+struct invalid_continue_condition_error : virtual error {
+  using continue_condition =
+      boost::error_info<struct tag_continue_condition, std::string>;
+};
 
 /// \ref format_simple0_page implementation
 class driver : public single::driver {
@@ -56,7 +60,7 @@ class driver : public single::driver {
   statement_ptr m_statement;
 
   // sorted
-  std::map<std::string, std::vector<std::string>> m_test_groups;
+  std::map<std::string, TestGroup> m_test_groups;
 };
 
 }  // namespace simple0
