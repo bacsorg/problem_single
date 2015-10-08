@@ -106,10 +106,10 @@ bool list_storage::make_package(const boost::filesystem::path &destination,
     boost::filesystem::create_directories(destination);
     bunsan::pm::index index;
     // tests builder
-    index.source.import.package.insert(
-        std::make_pair(".", "bacs/system/single/list_tests"));
+    index.source.import.package.push_back(
+        {".", "bacs/system/single/list_tests"});
     // tests
-    index.source.self.insert(std::make_pair("share/tests", "tests"));
+    index.source.self.push_back({"share/tests", "tests"});
     boost::filesystem::create_directory(destination / "tests");
     for (const auto &id_data : m_tests) {
       for (const auto &id_path : id_data.second)
@@ -118,7 +118,7 @@ bool list_storage::make_package(const boost::filesystem::path &destination,
             destination / "tests" / (id_data.first + "." + id_path.first));
     }
     // configuration for tests generator
-    index.source.self.insert(std::make_pair("etc", "etc"));
+    index.source.self.push_back({"etc", "etc"});
     boost::filesystem::create_directory(destination / "etc");
     bunsan::filesystem::ofstream fout(destination / "etc/tests");
     BUNSAN_FILESYSTEM_FSTREAM_WRAP_BEGIN(fout) {

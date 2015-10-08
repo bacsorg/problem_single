@@ -29,7 +29,7 @@ void generate_verifier(const generator::options &options,
   const bunsan::pm::entry package = options.root_package / name;
   system_verifier verifier(options.system);
   if (verifier.make_package(package_root, package, options.system.revision()))
-    root_index.package.import.package.insert(std::make_pair(".", package));
+    root_index.package.import.package.push_back({".", package});
 }
 
 struct generator_generate_utility_error : virtual generator_generate_error {
@@ -50,25 +50,26 @@ void generate_utility(const std::string &name, const std::string &internal_name,
     if (utility_) {
       if (utility_->make_package(package_root, package,
                                  options.system.revision())) {
-        root_index.package.import.package.insert(std::make_pair(".", package));
+        root_index.package.import.package.push_back({".", package});
       }
       // calling conventions
-      root_index.package.import.package.insert(std::make_pair(
-          ".", bunsan::pm::entry("bacs/system/single") / internal_name /
-                   "call" /
-                   utility_->section("utility").get<std::string>("call")));
-      root_index.package.import.package.insert(std::make_pair(
-          ".",
-          bunsan::pm::entry("bacs/system/single") / internal_name / "return" /
-              utility_->section("utility").get<std::string>("return", "none")));
+      root_index.package.import.package.push_back(
+          {".", bunsan::pm::entry("bacs/system/single") / internal_name /
+                    "call" /
+                    utility_->section("utility").get<std::string>("call")});
+      root_index.package.import.package.push_back(
+          {".", bunsan::pm::entry("bacs/system/single") / internal_name /
+                    "return" /
+                    utility_->section("utility")
+                        .get<std::string>("return", "none")});
     } else {
       if (!fallback)
         BOOST_THROW_EXCEPTION(generator_generate_utility_null_fallback_error());
-      root_index.package.import.package.insert(
-          std::make_pair(".", bunsan::pm::entry(fallback)));
-      root_index.package.import.package.insert(
-          std::make_pair(".", bunsan::pm::entry("bacs/system/single") /
-                                  internal_name / "return" / "none"));
+      root_index.package.import.package.push_back(
+          {".", bunsan::pm::entry(fallback)});
+      root_index.package.import.package.push_back(
+          {".", bunsan::pm::entry("bacs/system/single") / internal_name /
+                    "return" / "none"});
     }
   } catch (std::exception &) {
     BOOST_THROW_EXCEPTION(generator_generate_utility_error()
@@ -95,8 +96,7 @@ Problem internal0::generate(const options &options_) {
     bunsan::pm::index root_index;
 
     // root package
-    root_index.package.import.package.insert(
-        std::make_pair(".", "bacs/system/single"));
+    root_index.package.import.package.push_back({".", "bacs/system/single"});
 
     BOOST_ASSERT(options_.driver->tests());
     if (!options_.driver->checker() && !options_.driver->interactor())
