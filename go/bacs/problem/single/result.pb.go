@@ -131,6 +131,7 @@ type TestGroupResult struct {
 	Id       string        `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 	Executed bool          `protobuf:"varint,2,opt,name=executed" json:"executed,omitempty"`
 	Test     []*TestResult `protobuf:"bytes,3,rep,name=test" json:"test,omitempty"`
+	Score    int64         `protobuf:"varint,4,opt,name=score" json:"score,omitempty"`
 }
 
 func (m *TestGroupResult) Reset()         { *m = TestGroupResult{} }

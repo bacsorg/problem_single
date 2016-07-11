@@ -10,6 +10,7 @@ It is generated from these files:
 	bacs/problem/single/problem.proto
 	bacs/problem/single/result.proto
 	bacs/problem/single/task.proto
+	bacs/problem/single/tests.proto
 
 It has these top-level messages:
 	IntermediateResult
@@ -24,6 +25,8 @@ It has these top-level messages:
 	JudgeResult
 	FileResult
 	Task
+	TestQuery
+	TestSequence
 */
 package single
 

@@ -8,7 +8,6 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import bacs_problem_single_process2 "github.com/bacsorg/problem_single/go/bacs/problem/single/process"
-import bacs_problem_single_test1 "github.com/bacsorg/problem_single/go/bacs/problem/single/test"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -95,8 +94,11 @@ func (*Dependency) ProtoMessage()    {}
 type TestGroup struct {
 	Id         string                                 `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 	Process    *bacs_problem_single_process2.Settings `protobuf:"bytes,2,opt,name=process" json:"process,omitempty"`
-	Tests      *bacs_problem_single_test1.Sequence    `protobuf:"bytes,3,opt,name=tests" json:"tests,omitempty"`
+	Tests      *TestSequence                          `protobuf:"bytes,3,opt,name=tests" json:"tests,omitempty"`
 	Dependency []*Dependency                          `protobuf:"bytes,4,rep,name=dependency" json:"dependency,omitempty"`
+	// partially per-test if tests.continue_condition == ALL
+	// conditionally if tests.continue_condition == WHILE_OK
+	Score int64 `protobuf:"varint,5,opt,name=score" json:"score,omitempty"`
 }
 
 func (m *TestGroup) Reset()         { *m = TestGroup{} }
@@ -110,7 +112,7 @@ func (m *TestGroup) GetProcess() *bacs_problem_single_process2.Settings {
 	return nil
 }
 
-func (m *TestGroup) GetTests() *bacs_problem_single_test1.Sequence {
+func (m *TestGroup) GetTests() *TestSequence {
 	if m != nil {
 		return m.Tests
 	}
