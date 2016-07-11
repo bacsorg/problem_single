@@ -4,7 +4,7 @@ package bacs.problem.single;
 option go_package = "single";
 
 import "bacs/problem/single/process/settings.proto";
-import "bacs/problem/single/test/sequence.proto";
+import "bacs/problem/single/tests.proto";
 
 message ProblemExtension {
   Tests tests = 1;
@@ -34,7 +34,7 @@ message Dependency {
 message TestGroup {
   string id = 1;
   single.process.Settings process = 2;
-  test.Sequence tests = 3;
+  TestSequence tests = 3;
   repeated Dependency dependency = 4;
   // partially per-test if tests.continue_condition == ALL
   // conditionally if tests.continue_condition == WHILE_OK

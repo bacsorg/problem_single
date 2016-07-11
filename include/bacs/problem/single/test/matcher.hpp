@@ -1,7 +1,7 @@
 #pragma once
 
+#include <bacs/problem/single/tests.pb.h>
 #include <bacs/problem/single/test/error.hpp>
-#include <bacs/problem/single/test/query.pb.h>
 
 #include <memory>
 
@@ -15,7 +15,7 @@ struct matcher_not_set_error : virtual matcher_error {};
 
 class matcher {
  public:
-  explicit matcher(const Query &query);
+  explicit matcher(const TestQuery &query);
   ~matcher();
 
   bool operator()(const std::string &test_id) const;
@@ -26,7 +26,7 @@ class matcher {
   class wildcard;
   class regex;
 
-  std::shared_ptr<const impl> make_query(const Query &query);
+  std::shared_ptr<const impl> make_query(const TestQuery &query);
 
  private:
   std::shared_ptr<const impl> m_impl;

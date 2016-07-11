@@ -2,12 +2,12 @@
 
 #include "tests.hpp"
 
+#include <bacs/problem/single/problem.pb.h>
 #include <bacs/file.hpp>
 #include <bacs/problem/single/error.hpp>
-#include <bacs/problem/single/problem.pb.h>
 
-#include <bacs/problem/split.hpp>
 #include <bacs/problem/resource/parse.hpp>
+#include <bacs/problem/split.hpp>
 
 #include <bunsan/static_initializer.hpp>
 
@@ -39,22 +39,21 @@ BUNSAN_STATIC_INITIALIZER(bacs_problem_single_drivers_simple0, {
 
 namespace {
 template <typename Range>
-test::Sequence::Order test_order(const Range &tests) {
+TestSequence::Order test_order(const Range &tests) {
   bool only_digits = true;
   for (const std::string &id : tests) {
     only_digits = only_digits && std::all_of(id.begin(), id.end(),
                                              boost::algorithm::is_digit());
     if (!only_digits) break;
   }
-  return only_digits ? test::Sequence::NUMERIC
-                     : test::Sequence::LEXICOGRAPHICAL;
+  return only_digits ? TestSequence::NUMERIC : TestSequence::LEXICOGRAPHICAL;
 }
 
-test::Sequence::ContinueCondition test_continue_condition(
+TestSequence::ContinueCondition test_continue_condition(
     const std::string &continue_condition_string) {
-  test::Sequence::ContinueCondition continue_condition;
-  if (!test::Sequence_ContinueCondition_Parse(continue_condition_string,
-                                              &continue_condition)) {
+  TestSequence::ContinueCondition continue_condition;
+  if (!TestSequence_ContinueCondition_Parse(continue_condition_string,
+                                            &continue_condition)) {
     BOOST_THROW_EXCEPTION(
         invalid_continue_condition_error()
         << invalid_continue_condition_error::continue_condition(
@@ -141,7 +140,7 @@ void driver::read_tests() {
         test_group.mutable_tests()->add_query()->set_id(test_id);
       }
       test_group.mutable_tests()->set_continue_condition(
-          test::Sequence::WHILE_OK);
+          TestSequence::WHILE_OK);
     }
   }
   // only after initialization set values
@@ -242,7 +241,7 @@ void driver::read_profiles() {
   for (auto &group_tgroup : m_test_groups) {
     TestGroup &test_group = *profile_extension.add_test_group();
     test_group = std::move(group_tgroup.second);
-    for (const test::Query &test_query : test_group.tests().query()) {
+    for (const TestQuery &test_query : test_group.tests().query()) {
       unused_tests.erase(test_query.id());
     }
     *test_group.mutable_process() = m_settings;

@@ -29,7 +29,7 @@ class matcher::id : public matcher::impl {
 
 class matcher::wildcard : public matcher::impl {
  public:
-  explicit wildcard(const WildcardQuery &query)
+  explicit wildcard(const TestQuery::Wildcard &query)
       : m_wildcard(query.value(), flags(query)) {}
 
   bool match(const std::string &test_id) const override {
@@ -37,11 +37,11 @@ class matcher::wildcard : public matcher::impl {
   }
 
  private:
-  bunsan::fnmatcher::flag flags(const WildcardQuery &query) {
+  bunsan::fnmatcher::flag flags(const TestQuery::Wildcard &query) {
     bunsan::fnmatcher::flag flags_ = bunsan::fnmatcher::defaults;
     for (const int flag : query.flag()) {
-      switch (static_cast<WildcardQuery::Flag>(flag)) {
-        case problem::single::test::WildcardQuery::IGNORE_CASE:
+      switch (static_cast<TestQuery::Wildcard::Flag>(flag)) {
+        case problem::single::TestQuery::Wildcard::IGNORE_CASE:
           flags_ |= bunsan::fnmatcher::icase;
           break;
       }
@@ -55,7 +55,7 @@ class matcher::wildcard : public matcher::impl {
 
 class matcher::regex : public matcher::impl {
  public:
-  explicit regex(const RegexQuery &query)
+  explicit regex(const TestQuery::Regex &query)
       : m_regex(query.value(), flags(query)) {}
 
   bool match(const std::string &test_id) const override {
@@ -64,12 +64,12 @@ class matcher::regex : public matcher::impl {
 
  private:
   boost::regex_constants::syntax_option_type flags(
-      const problem::single::test::RegexQuery &query) {
+      const problem::single::TestQuery::Regex &query) {
     boost::regex_constants::syntax_option_type flags_ =
         boost::regex_constants::normal;
     for (const int flag : query.flag()) {
-      switch (static_cast<RegexQuery::Flag>(flag)) {
-        case RegexQuery::IGNORE_CASE:
+      switch (static_cast<TestQuery::Regex::Flag>(flag)) {
+        case TestQuery::Regex::IGNORE_CASE:
           flags_ |= boost::regex_constants::icase;
           break;
       }
@@ -81,7 +81,7 @@ class matcher::regex : public matcher::impl {
   const boost::regex m_regex;
 };
 
-matcher::matcher(const Query &query) : m_impl(make_query(query)) {}
+matcher::matcher(const TestQuery &query) : m_impl(make_query(query)) {}
 
 matcher::~matcher() {}
 
@@ -90,13 +90,14 @@ bool matcher::operator()(const std::string &test_id) const {
   return m_impl->match(test_id);
 }
 
-std::shared_ptr<const matcher::impl> matcher::make_query(const Query &query) {
+std::shared_ptr<const matcher::impl> matcher::make_query(
+    const TestQuery &query) {
   switch (query.query_case()) {
-    case Query::kId:
+    case TestQuery::kId:
       return std::make_shared<id>(query.id());
-    case Query::kWildcard:
+    case TestQuery::kWildcard:
       return std::make_shared<wildcard>(query.wildcard());
-    case Query::kRegex:
+    case TestQuery::kRegex:
       return std::make_shared<regex>(query.regex());
     default:
       BOOST_THROW_EXCEPTION(matcher_not_set_error());

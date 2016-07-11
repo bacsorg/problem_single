@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package bacs.problem.single;
+option go_package = "single";
+
+message TestQuery {
+  message Wildcard {
+    enum Flag {
+      IGNORE_CASE = 0;
+    }
+    repeated Flag flag = 1;
+    string value = 2;
+  }
+  message Regex {
+    enum Flag {
+      IGNORE_CASE = 0;
+    }
+    repeated Flag flag = 1;
+    string value = 2;
+  }
+  oneof query {
+    string id = 1;
+    Wildcard wildcard = 2;
+    Regex regex = 3;
+  }
+}
+
+message TestSequence {
+  enum Order {
+    IDENTITY = 0;  ///< Preserve order from query.
+    NUMERIC = 1;   ///< Non-numeric tests are skipped.
+    LEXICOGRAPHICAL = 2;
+  }
+  enum ContinueCondition {
+    ALWAYS = 0;
+    WHILE_OK = 1;
+  }
+  repeated TestQuery query = 1;
+  Order order = 2;
+  ContinueCondition continue_condition = 3;
+}

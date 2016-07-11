@@ -22,8 +22,7 @@ bunsan_add_protobuf_cxx_library(
         bacs/problem/single/process/settings.proto
         bacs/problem/single/result.proto
         bacs/problem/single/task.proto
-        bacs/problem/single/test/query.proto
-        bacs/problem/single/test/sequence.proto
+        bacs/problem/single/tests.proto
     LIBRARIES ${bacs_problem_LIBRARIES}
     INCLUDE_DIRECTORIES ${bacs_problem_INCLUDE_DIRS}
     INSTALL

@@ -145,9 +145,8 @@ void driver::read_profiles() {
         rd.set_file_id("stdout");
       }
     }
-    test_group.mutable_tests()->set_order(test::Sequence::NUMERIC);
-    test_group.mutable_tests()->set_continue_condition(
-        test::Sequence::WHILE_OK);
+    test_group.mutable_tests()->set_order(TestSequence::NUMERIC);
+    test_group.mutable_tests()->set_continue_condition(TestSequence::WHILE_OK);
     const std::string in_test_format =
         testset.second.get<std::string>("input-path-pattern", "tests/%02d");
     const std::string out_test_format =
@@ -160,7 +159,7 @@ void driver::read_profiles() {
         if (test.first == "<xmlattr>") continue;
         const std::string test_id =
             boost::lexical_cast<std::string>(++test_id_);
-        test::Query &test_query = *test_group.mutable_tests()->add_query();
+        TestQuery &test_query = *test_group.mutable_tests()->add_query();
         test_query.set_id(test_id);
         m_tests->add_test(test_id, str(boost::format(in_test_format) % test_id),
                           str(boost::format(out_test_format) % test_id));
