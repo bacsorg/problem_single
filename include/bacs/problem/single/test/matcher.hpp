@@ -1,7 +1,7 @@
 #pragma once
 
-#include <bacs/problem/single/tests.pb.h>
 #include <bacs/problem/single/test/error.hpp>
+#include <bacs/problem/single/testing.pb.h>
 
 #include <memory>
 

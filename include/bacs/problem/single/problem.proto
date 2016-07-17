@@ -4,7 +4,7 @@ package bacs.problem.single;
 option go_package = "single";
 
 import "bacs/problem/single/process/settings.proto";
-import "bacs/problem/single/tests.proto";
+import "bacs/problem/single/testing.proto";
 
 message ProblemExtension {
   Tests tests = 1;
