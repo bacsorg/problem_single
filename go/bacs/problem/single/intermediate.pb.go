@@ -10,7 +10,7 @@ It is generated from these files:
 	bacs/problem/single/problem.proto
 	bacs/problem/single/result.proto
 	bacs/problem/single/task.proto
-	bacs/problem/single/tests.proto
+	bacs/problem/single/testing.proto
 
 It has these top-level messages:
 	IntermediateResult
